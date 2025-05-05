@@ -3,9 +3,9 @@ package handler
 import (
 	"strconv"
 
-	"github.com/alfariiizi/go-echo-fx-template/internal/core/domain"
-	serviceport "github.com/alfariiizi/go-echo-fx-template/internal/core/service/port"
-	httpport "github.com/alfariiizi/go-echo-fx-template/internal/delivery/port/http"
+	"github.com/alfariiizi/go-service/internal/core/domain"
+	serviceport "github.com/alfariiizi/go-service/internal/core/service/port"
+	httpport "github.com/alfariiizi/go-service/internal/delivery/port/http"
 )
 
 func GetAllUsersHandler(ctx httpport.HttpContext, userService serviceport.UserService) error {

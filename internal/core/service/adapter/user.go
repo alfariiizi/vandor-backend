@@ -1,9 +1,9 @@
 package serviceadapter
 
 import (
-	"github.com/alfariiizi/go-echo-fx-template/internal/core/domain"
-	"github.com/alfariiizi/go-echo-fx-template/internal/core/repository/repoport"
-	serviceport "github.com/alfariiizi/go-echo-fx-template/internal/core/service/port"
+	"github.com/alfariiizi/go-service/internal/core/domain"
+	"github.com/alfariiizi/go-service/internal/core/repository/repoport"
+	serviceport "github.com/alfariiizi/go-service/internal/core/service/port"
 )
 
 type userServiceAdapter struct {

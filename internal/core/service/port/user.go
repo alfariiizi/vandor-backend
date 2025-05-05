@@ -1,6 +1,6 @@
 package serviceport
 
-import "github.com/alfariiizi/go-echo-fx-template/internal/core/domain"
+import "github.com/alfariiizi/go-service/internal/core/domain"
 
 type UserService interface {
 	// ListUsers retrieves a list of all users.

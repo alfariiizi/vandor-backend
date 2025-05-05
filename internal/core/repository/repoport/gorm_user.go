@@ -1,6 +1,6 @@
 package repoport
 
-import "github.com/alfariiizi/go-echo-fx-template/internal/core/domain"
+import "github.com/alfariiizi/go-service/internal/core/domain"
 
 type UserRepository interface {
 	// GetAllUsers retrieves all users from the repository.

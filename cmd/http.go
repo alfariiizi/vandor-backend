@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"github.com/alfariiizi/go-echo-fx-template/config"
-	"github.com/alfariiizi/go-echo-fx-template/internal/core/repository/repoadapter"
-	serviceadapter "github.com/alfariiizi/go-echo-fx-template/internal/core/service/adapter"
-	"github.com/alfariiizi/go-echo-fx-template/internal/delivery/adapter/http"
-	portHttp "github.com/alfariiizi/go-echo-fx-template/internal/delivery/port/http"
-	"github.com/alfariiizi/go-echo-fx-template/internal/infrastructure/database"
+	"github.com/alfariiizi/go-service/config"
+	"github.com/alfariiizi/go-service/internal/core/repository/repoadapter"
+	serviceadapter "github.com/alfariiizi/go-service/internal/core/service/adapter"
+	"github.com/alfariiizi/go-service/internal/delivery/adapter/http"
+	portHttp "github.com/alfariiizi/go-service/internal/delivery/port/http"
+	"github.com/alfariiizi/go-service/internal/infrastructure/database"
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
 )

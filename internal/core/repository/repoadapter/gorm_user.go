@@ -1,9 +1,9 @@
 package repoadapter
 
 import (
-	"github.com/alfariiizi/go-echo-fx-template/internal/core/domain"
-	"github.com/alfariiizi/go-echo-fx-template/internal/core/repository/repoport"
-	"github.com/alfariiizi/go-echo-fx-template/internal/infrastructure/database"
+	"github.com/alfariiizi/go-service/internal/core/domain"
+	"github.com/alfariiizi/go-service/internal/core/repository/repoport"
+	"github.com/alfariiizi/go-service/internal/infrastructure/database"
 )
 
 type userRepository struct {

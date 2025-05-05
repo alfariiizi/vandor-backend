@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	httpport "github.com/alfariiizi/go-echo-fx-template/internal/delivery/port/http"
+	httpport "github.com/alfariiizi/go-service/internal/delivery/port/http"
 	"github.com/labstack/echo/v4"
 )
 

@@ -1,4 +1,4 @@
-module github.com/alfariiizi/go-echo-fx-template
+module github.com/alfariiizi/go-service
 
 go 1.24.1
 

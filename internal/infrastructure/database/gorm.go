@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/alfariiizi/go-echo-fx-template/config"
+	"github.com/alfariiizi/go-service/config"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

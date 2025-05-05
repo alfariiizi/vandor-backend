@@ -1,6 +1,6 @@
 package main
 
-import "github.com/alfariiizi/go-echo-fx-template/cmd"
+import "github.com/alfariiizi/go-service/cmd"
 
 func main() {
 	cmd.Execute()

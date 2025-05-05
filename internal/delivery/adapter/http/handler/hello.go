@@ -1,7 +1,7 @@
 package handler
 
 import (
-	httpport "github.com/alfariiizi/go-echo-fx-template/internal/delivery/port/http"
+	httpport "github.com/alfariiizi/go-service/internal/delivery/port/http"
 )
 
 func HelloWorldHandler(ctx httpport.HttpContext) error {
