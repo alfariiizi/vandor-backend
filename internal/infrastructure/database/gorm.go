@@ -28,7 +28,7 @@ func NewGormDB() *GormDB {
 
 	cfg := config.GetConfig()
 
-	db, err := gorm.Open(sqlite.Open(cfg.DB.Destination), &gorm.Config{
+	db, err := gorm.Open(sqlite.Open(cfg.DB.URL), &gorm.Config{
 		Logger: newLogger,
 	})
 	if err != nil {

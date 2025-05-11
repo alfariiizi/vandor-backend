@@ -79,7 +79,7 @@ func (cv *CustomValidator) Validate(i any) error {
 
 func (h *httpServer) Start() error {
 	cfg := config.GetConfig()
-	h.echo.Logger.Fatal(h.echo.Start(fmt.Sprintf(":%d", cfg.ServerPort)))
+	h.echo.Logger.Fatal(h.echo.Start(fmt.Sprintf(":%d", cfg.Http.Port)))
 	return nil
 }
 

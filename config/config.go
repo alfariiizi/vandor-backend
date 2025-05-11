@@ -1,29 +1,33 @@
 package config
 
-import "sync"
+import (
+	"fmt"
+	"log"
+	"sync"
 
-type Config struct {
-	ServerPort int      `json:"server_port"`
-	DB         dbConfig `json:"db"`
-}
-
-type dbConfig struct {
-	Destination string
-}
+	"github.com/joho/godotenv"
+)
 
 var (
-	instance *Config
+	instance *config
 	once     sync.Once
 )
 
-func GetConfig() *Config {
+func GetConfig() *config {
 	once.Do(func() {
-		instance = &Config{
-			ServerPort: 8080,
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatal(".env file not found, using system environment variables")
+		}
+		instance = &config{
+			Http: httpConfig{
+				Port: getEnvAsInt("HTTP_PORT", false, 8000),
+			},
 			DB: dbConfig{
-				Destination: "sqlite.db",
+				URL: getEnv("DB_URL", true, ""),
 			},
 		}
+		fmt.Println("Config loaded from environment variables", instance)
 	})
 	return instance
 }
