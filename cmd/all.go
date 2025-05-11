@@ -6,7 +6,7 @@ import (
 )
 
 var serviceCmd = &cobra.Command{
-	Use:   "all",
+	Use:   "serve",
 	Short: "Run all services",
 	Run: func(cmd *cobra.Command, args []string) {
 		ServiceRun()
