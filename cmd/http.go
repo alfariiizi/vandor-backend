@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"github.com/alfariiizi/go-service/config"
 	"github.com/alfariiizi/go-service/internal/core/repository/repoadapter"
 	serviceadapter "github.com/alfariiizi/go-service/internal/core/service/adapter"
 	"github.com/alfariiizi/go-service/internal/delivery/adapter/http"
@@ -15,26 +14,24 @@ var httpCmd = &cobra.Command{
 	Use:   "http",
 	Short: "Run HTTP server",
 	Run: func(cmd *cobra.Command, args []string) {
-		Run()
+		HttpServerRun()
 	},
 }
 
-func Run() {
+var HttpServerProvider = fx.Provide(
+	database.NewGormDB,
+	repoadapter.NewUserRepository,
+	serviceadapter.NewUserService,
+	http.NewHttpServer,
+)
+
+var HttpServerStart = fx.Invoke(
+	func(server portHttp.HttpServer) {},
+)
+
+func HttpServerRun() {
 	app := fx.New(
-		fx.Provide(config.NewConfig),
-
-		// database
-		fx.Provide(database.NewGormDB),
-
-		// repositories
-		fx.Provide(repoadapter.NewUserRepository),
-
-		// services
-		fx.Provide(serviceadapter.NewUserService),
-
-		// http server
-		fx.Provide(http.NewHttpServer),
-
+		HttpServerProvider,
 		fx.Invoke(func(server portHttp.HttpServer) {}),
 	)
 	app.Run()

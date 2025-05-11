@@ -15,7 +15,7 @@ type GormDB struct {
 	DB *gorm.DB
 }
 
-func NewGormDB(cfg config.Config) *GormDB {
+func NewGormDB() *GormDB {
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n[GORM] ", log.LstdFlags),
 		logger.Config{
@@ -25,6 +25,8 @@ func NewGormDB(cfg config.Config) *GormDB {
 			Colorful:                  true,
 		},
 	)
+
+	cfg := config.GetConfig()
 
 	db, err := gorm.Open(sqlite.Open(cfg.DB.Destination), &gorm.Config{
 		Logger: newLogger,

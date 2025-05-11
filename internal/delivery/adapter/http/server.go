@@ -17,7 +17,6 @@ import (
 
 type httpServer struct {
 	echo *echo.Echo
-	cfg  config.Config
 
 	userService serviceport.UserService
 }
@@ -25,7 +24,6 @@ type httpServer struct {
 // Setup sets up the HTTP server with the given configuration.
 func NewHttpServer(
 	lc fx.Lifecycle,
-	cfg config.Config,
 	userService serviceport.UserService,
 ) httpport.HttpServer {
 	e := echo.New()
@@ -42,7 +40,6 @@ func NewHttpServer(
 
 	server := &httpServer{
 		echo:        e,
-		cfg:         cfg,
 		userService: userService,
 	}
 
@@ -81,7 +78,8 @@ func (cv *CustomValidator) Validate(i any) error {
 }
 
 func (h *httpServer) Start() error {
-	h.echo.Logger.Fatal(h.echo.Start(fmt.Sprintf(":%d", h.cfg.ServerPort)))
+	cfg := config.GetConfig()
+	h.echo.Logger.Fatal(h.echo.Start(fmt.Sprintf(":%d", cfg.ServerPort)))
 	return nil
 }
 

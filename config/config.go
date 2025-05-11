@@ -1,5 +1,7 @@
 package config
 
+import "sync"
+
 type Config struct {
 	ServerPort int      `json:"server_port"`
 	DB         dbConfig `json:"db"`
@@ -9,11 +11,19 @@ type dbConfig struct {
 	Destination string
 }
 
-func NewConfig() Config {
-	return Config{
-		ServerPort: 8080,
-		DB: dbConfig{
-			Destination: "sqlite.db",
-		},
-	}
+var (
+	instance *Config
+	once     sync.Once
+)
+
+func GetConfig() *Config {
+	once.Do(func() {
+		instance = &Config{
+			ServerPort: 8080,
+			DB: dbConfig{
+				Destination: "sqlite.db",
+			},
+		}
+	})
+	return instance
 }
