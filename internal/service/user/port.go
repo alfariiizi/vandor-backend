@@ -1,19 +1,18 @@
 package user
 
 import (
-	"github.com/alfariiizi/go-service/internal/domain/entity"
 	"github.com/alfariiizi/go-service/internal/domain/model"
 )
 
 type UserService interface {
 	// ListUsers retrieves a list of all users.
-	ListUsers() ([]entity.User, error)
+	ListUsers() ([]model.UserResponse, error)
 	// GetUser retrieves a user by their ID.
-	GetUser(id uint) (entity.User, error)
+	GetUser(id uint) (model.UserResponse, error)
 	// CreateUser creates a new user with the given details.
-	CreateUser(user model.UserRequest) (entity.User, error)
+	CreateUser(user model.UserRequest) (model.UserResponse, error)
 	// UpdateUser updates the details of an existing user.
-	UpdateUser(id uint, user model.UserRequest) (entity.User, error)
+	UpdateUser(id uint, user model.UserRequest) (model.UserResponse, error)
 	// DeleteUser deletes a user by their ID.
 	DeleteUser(id uint) error
 	// // AuthenticateUser authenticates a user with the given credentials.

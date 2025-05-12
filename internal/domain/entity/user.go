@@ -1,11 +1,12 @@
 package entity
 
+import "time"
+
 type User struct {
-	ID        uint
+	ID        string `gorm:"primaryKey"`
 	Username  string
-	Email     *string
+	Email     string
 	Password  string
-	Role      string
-	CreatedAt string
-	UpdatedAt string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }

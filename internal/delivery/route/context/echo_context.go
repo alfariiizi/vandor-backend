@@ -86,11 +86,9 @@ func (h *httpContext) GetBody() any {
 
 func (h *httpContext) BindBody(v any) error {
 	if err := h.context.Bind(v); err != nil {
-		h.SendErrorResponse(400, "Failed to bind body", err)
 		return errors.New("failed to bind body")
 	}
 	if err := h.context.Validate(v); err != nil {
-		h.SendErrorResponse(400, "Validation failed", err)
 		return errors.New("validation failed")
 	}
 	return nil

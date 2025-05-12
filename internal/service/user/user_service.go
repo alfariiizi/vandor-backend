@@ -1,7 +1,6 @@
 package user
 
 import (
-	"github.com/alfariiizi/go-service/internal/domain/entity"
 	"github.com/alfariiizi/go-service/internal/domain/model"
 	"github.com/alfariiizi/go-service/internal/repository/user"
 )
@@ -16,7 +15,7 @@ func NewUserService(userRepo user.UserRepository) UserService {
 	}
 }
 
-func (u *userServiceAdapter) ListUsers() ([]entity.User, error) {
+func (u *userServiceAdapter) ListUsers() ([]model.UserResponse, error) {
 	users, err := u.userRepo.GetAllUsers()
 	if err != nil {
 		return nil, err
@@ -24,23 +23,23 @@ func (u *userServiceAdapter) ListUsers() ([]entity.User, error) {
 	return users, nil
 }
 
-func (u *userServiceAdapter) CreateUser(user model.UserRequest) (entity.User, error) {
+func (u *userServiceAdapter) CreateUser(user model.UserRequest) (model.UserResponse, error) {
 	res, err := u.userRepo.CreateUser(user)
 	return res, err
 }
 
-func (u *userServiceAdapter) GetUser(id uint) (entity.User, error) {
+func (u *userServiceAdapter) GetUser(id uint) (model.UserResponse, error) {
 	user, err := u.userRepo.GetUserByID(id)
 	if err != nil {
-		return entity.User{}, err
+		return model.ToUserResponse(nil), err
 	}
 	return user, nil
 }
 
-func (u *userServiceAdapter) UpdateUser(id uint, user model.UserRequest) (entity.User, error) {
+func (u *userServiceAdapter) UpdateUser(id uint, user model.UserRequest) (model.UserResponse, error) {
 	updatedUser, err := u.userRepo.UpdateUser(id, user)
 	if err != nil {
-		return entity.User{}, err
+		return model.ToUserResponse(nil), err
 	}
 	return updatedUser, nil
 }

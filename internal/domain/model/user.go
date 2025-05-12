@@ -1,30 +1,43 @@
 package model
 
-import "github.com/alfariiizi/go-service/internal/domain/entity"
+import (
+	"time"
+
+	"github.com/alfariiizi/go-service/internal/domain/entity"
+)
 
 type UserRequest struct {
-	Username string  `json:"username" validate:"required"`
-	Email    *string `json:"email" validate:"required,email"`
-	Password string  `json:"password" validate:"required"`
-	Role     string  `json:"role" validate:"required"`
+	Username string `json:"username" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
 }
 
 type UserResponse struct {
-	ID        uint    `json:"id"`
-	Username  string  `json:"username"`
-	Email     *string `json:"email"`
-	Role      string  `json:"role"`
-	CreatedAt string  `json:"created_at"`
-	UpdatedAt string  `json:"updated_at"`
+	ID        string    `json:"id"`
+	Username  string    `json:"username"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func ToResponse(u entity.User) UserResponse {
+func ToUserResponse(u *entity.User) UserResponse {
+	if u == nil {
+		return UserResponse{}
+	}
+
 	return UserResponse{
 		ID:        u.ID,
 		Username:  u.Username,
 		Email:     u.Email,
-		Role:      u.Role,
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
 	}
+}
+
+func ToUserResponseList(users []entity.User) []UserResponse {
+	userResponses := make([]UserResponse, len(users))
+	for i, u := range users {
+		userResponses[i] = ToUserResponse(&u)
+	}
+	return userResponses
 }
