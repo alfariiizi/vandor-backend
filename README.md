@@ -7,7 +7,7 @@ and maintainability.
 
 ## Project Structure
 
-```
+```plaintext
 .
 ├── cmd/                  # Command-line interface definitions using Cobra
 ├── config/               # Application configuration
@@ -55,7 +55,7 @@ This project uses the following core technologies and libraries:
 
 ## Prerequisites
 
-- Go 1.21 or later
+- Go 1.24 or later
 - Make
 - Docker (optional, for containerization)
 
@@ -105,7 +105,7 @@ For hot reloading with activating all delivery, you can run:
 
 ### Available Commands
 
-```
+```plaintext
 MyApp is a service with multiple modes
 
 Usage:
