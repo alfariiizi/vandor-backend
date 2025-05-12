@@ -21,8 +21,4 @@ clean:
 	@echo "Cleaning..."
 	@rm -f bin/*
 
-# Live Reload
-watch:
-	./scripts/watch.sh $(MODULE)
-
 .PHONY: all build run test clean watch
