@@ -10,9 +10,9 @@ type Repositories struct {
 }
 
 func InitRepositories(
-	db *database.GormDB,
+	db database.GormDB,
 ) *Repositories {
 	return &Repositories{
-		User: user.NewUserRepository(db),
+		User: user.NewUserRepository(db.DB),
 	}
 }

@@ -23,28 +23,28 @@ func (u *userServiceAdapter) ListUsers() ([]model.UserResponse, error) {
 	return users, nil
 }
 
+func (u *userServiceAdapter) GetUser(id string) (model.UserResponse, error) {
+	user, err := u.userRepo.GetUserByID(id)
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
 func (u *userServiceAdapter) CreateUser(user model.UserRequest) (model.UserResponse, error) {
 	res, err := u.userRepo.CreateUser(user)
 	return res, err
 }
 
-func (u *userServiceAdapter) GetUser(id uint) (model.UserResponse, error) {
-	user, err := u.userRepo.GetUserByID(id)
-	if err != nil {
-		return model.ToUserResponse(nil), err
-	}
-	return user, nil
-}
-
-func (u *userServiceAdapter) UpdateUser(id uint, user model.UserRequest) (model.UserResponse, error) {
+func (u *userServiceAdapter) UpdateUser(id string, user model.UserRequest) (model.UserResponse, error) {
 	updatedUser, err := u.userRepo.UpdateUser(id, user)
 	if err != nil {
-		return model.ToUserResponse(nil), err
+		return updatedUser, err
 	}
 	return updatedUser, nil
 }
 
-func (u *userServiceAdapter) DeleteUser(id uint) error {
+func (u *userServiceAdapter) DeleteUser(id string) error {
 	err := u.userRepo.DeleteUser(id)
 	if err != nil {
 		return err

@@ -33,9 +33,10 @@ func (h *httpApi) RegisterHandler() error {
 		r.RouteGroup("/users", func(r HttpRoute) {
 			userHandler := handler.NewUserHandler(h.services.User)
 			r.GET("", userHandler.GetAllUsers)
+			r.GET("/:id", userHandler.GetUserByID)
 			r.POST("", userHandler.CreateUser)
-			r.PUT(":id", userHandler.UpdateUser)
-			r.DELETE(":id", userHandler.DeleteUser)
+			r.PATCH("/:id", userHandler.UpdateUser)
+			r.DELETE("/:id", userHandler.DeleteUser)
 		})
 	})
 

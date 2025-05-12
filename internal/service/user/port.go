@@ -5,16 +5,11 @@ import (
 )
 
 type UserService interface {
-	// ListUsers retrieves a list of all users.
 	ListUsers() ([]model.UserResponse, error)
-	// GetUser retrieves a user by their ID.
-	GetUser(id uint) (model.UserResponse, error)
-	// CreateUser creates a new user with the given details.
+	GetUser(id string) (model.UserResponse, error)
 	CreateUser(user model.UserRequest) (model.UserResponse, error)
-	// UpdateUser updates the details of an existing user.
-	UpdateUser(id uint, user model.UserRequest) (model.UserResponse, error)
-	// DeleteUser deletes a user by their ID.
-	DeleteUser(id uint) error
+	UpdateUser(id string, user model.UserRequest) (model.UserResponse, error)
+	DeleteUser(id string) error
 	// // AuthenticateUser authenticates a user with the given credentials.
 	// AuthenticateUser(username, password string) (domain.UserResponse, error)
 	// // ChangePassword changes the password of a user.

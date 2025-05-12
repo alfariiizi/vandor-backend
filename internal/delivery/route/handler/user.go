@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"strconv"
-
 	httpctx "github.com/alfariiizi/go-service/internal/delivery/route/context"
 	"github.com/alfariiizi/go-service/internal/domain/model"
 	"github.com/alfariiizi/go-service/internal/service/user"
@@ -36,8 +34,7 @@ func (u *UserHandler) GetUserByID(ctx httpctx.HttpContext) error {
 		return ctx.SendErrorResponse(400, "ID is required", nil)
 	}
 
-	idInt, _ := strconv.Atoi(id)
-	user, err := u.userService.GetUser(uint(idInt))
+	user, err := u.userService.GetUser(id)
 	if err != nil {
 		return ctx.SendErrorResponse(500, "Failed get user by id", err)
 	}
@@ -68,14 +65,12 @@ func (u *UserHandler) UpdateUser(ctx httpctx.HttpContext) error {
 		return ctx.SendErrorResponse(400, "ID is required", nil)
 	}
 
-	idInt, _ := strconv.Atoi(id)
-
 	var userRequest model.UserRequest
 	if err := ctx.BindBody(&userRequest); err != nil {
 		return ctx.SendErrorResponse(400, "Need Request Body", err)
 	}
 
-	user, err := u.userService.UpdateUser(uint(idInt), userRequest)
+	user, err := u.userService.UpdateUser(id, userRequest)
 	if err != nil {
 		return ctx.SendErrorResponse(500, "Failed update user", err)
 	}
@@ -92,9 +87,7 @@ func (u *UserHandler) DeleteUser(ctx httpctx.HttpContext) error {
 		return ctx.SendErrorResponse(400, "ID is required", nil)
 	}
 
-	idInt, _ := strconv.Atoi(id)
-
-	err = u.userService.DeleteUser(uint(idInt))
+	err = u.userService.DeleteUser(id)
 	if err != nil {
 		return ctx.SendErrorResponse(500, "Failed delete user", err)
 	}

@@ -2,8 +2,10 @@ package http
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	netHttp "net/http"
+	"os"
 
 	"github.com/alfariiizi/go-service/config"
 	"github.com/alfariiizi/go-service/internal/delivery/route"
@@ -39,6 +41,9 @@ func NewHttpServer(
 	}
 
 	api.RegisterHandler()
+
+	data, _ := json.MarshalIndent(e.Routes(), "", "  ")
+	os.WriteFile("routes.json", data, 0644)
 
 	lc.Append(fx.Hook{
 		OnStart: func(context.Context) error {

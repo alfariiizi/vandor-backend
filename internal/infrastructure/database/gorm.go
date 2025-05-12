@@ -12,10 +12,10 @@ import (
 )
 
 type GormDB struct {
-	DB *gorm.DB
+	*gorm.DB
 }
 
-func NewGormDB() *GormDB {
+func NewGormDB() GormDB {
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n[GORM] ", log.LstdFlags),
 		logger.Config{
@@ -35,7 +35,5 @@ func NewGormDB() *GormDB {
 		panic(err)
 	}
 
-	return &GormDB{
-		DB: db,
-	}
+	return GormDB{DB: db}
 }

@@ -14,5 +14,6 @@ tmp/
 *.swp
 
 main
+routes.json
 
 .env
