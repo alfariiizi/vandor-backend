@@ -1,17 +1,16 @@
-package serviceadapter
+package user
 
 import (
 	"github.com/alfariiizi/go-service/internal/domain/entity"
 	"github.com/alfariiizi/go-service/internal/domain/model"
-	"github.com/alfariiizi/go-service/internal/repository/repoport"
-	serviceport "github.com/alfariiizi/go-service/internal/service/port"
+	"github.com/alfariiizi/go-service/internal/repository/user"
 )
 
 type userServiceAdapter struct {
-	userRepo repoport.UserRepository
+	userRepo user.UserRepository
 }
 
-func NewUserService(userRepo repoport.UserRepository) serviceport.UserService {
+func NewUserService(userRepo user.UserRepository) UserService {
 	return &userServiceAdapter{
 		userRepo: userRepo,
 	}

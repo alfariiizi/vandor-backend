@@ -4,9 +4,8 @@ import (
 	"github.com/alfariiizi/go-service/internal/delivery/http"
 	"github.com/alfariiizi/go-service/internal/delivery/route"
 	"github.com/alfariiizi/go-service/internal/infrastructure/database"
-
-	// "github.com/alfariiizi/go-service/internal/repository/repoadapter"
-	// serviceadapter "github.com/alfariiizi/go-service/internal/service/adapter"
+	"github.com/alfariiizi/go-service/internal/repository"
+	"github.com/alfariiizi/go-service/internal/service"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
@@ -22,8 +21,8 @@ var httpCmd = &cobra.Command{
 
 var HttpServerProvider = fx.Provide(
 	database.NewGormDB,
-	// repoadapter.NewUserRepository,
-	// serviceadapter.NewUserService,
+	repository.InitRepositories,
+	service.InitServices,
 	echo.New,
 	route.NewHttpApi,
 	http.NewHttpServer,

@@ -1,17 +1,18 @@
-package repoadapter
+package user
 
 import (
+	"time"
+
 	"github.com/alfariiizi/go-service/internal/domain/entity"
 	"github.com/alfariiizi/go-service/internal/domain/model"
 	"github.com/alfariiizi/go-service/internal/infrastructure/database"
-	"github.com/alfariiizi/go-service/internal/repository/repoport"
 )
 
 type userRepository struct {
 	db *database.GormDB
 }
 
-func NewUserRepository(db *database.GormDB) repoport.UserRepository {
+func NewUserRepository(db *database.GormDB) UserRepository {
 	db.DB.AutoMigrate(&entity.User{})
 	return &userRepository{
 		db: db,
@@ -38,7 +39,17 @@ func (r *userRepository) GetUserByID(id uint) (entity.User, error) {
 
 func (r *userRepository) CreateUser(user model.UserRequest) (entity.User, error) {
 	// Implementation for creating a new user in the database
-	if err := r.db.DB.Create(&user).Error; err != nil {
+	// var lastUser entity.User
+	// r.db.DB.Last(&lastUser)
+	if err := r.db.DB.Create(entity.User{
+		ID:        1,
+		Username:  user.Username,
+		Email:     user.Email,
+		Password:  user.Password,
+		Role:      user.Role,
+		CreatedAt: time.Now().String(),
+		UpdatedAt: time.Now().String(),
+	}).Error; err != nil {
 		return entity.User{}, err
 	}
 	var createdUser entity.User

@@ -1,4 +1,4 @@
-package repoport
+package user
 
 import (
 	"github.com/alfariiizi/go-service/internal/domain/entity"
