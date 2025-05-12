@@ -1,14 +1,6 @@
-package domain
+package model
 
-type User struct {
-	ID        uint
-	Username  string
-	Email     *string
-	Password  string
-	Role      string
-	CreatedAt string
-	UpdatedAt string
-}
+import "github.com/alfariiizi/go-service/internal/domain/entity"
 
 type UserRequest struct {
 	Username string  `json:"username" validate:"required"`
@@ -26,7 +18,7 @@ type UserResponse struct {
 	UpdatedAt string  `json:"updated_at"`
 }
 
-func ToResponse(u User) UserResponse {
+func ToResponse(u entity.User) UserResponse {
 	return UserResponse{
 		ID:        u.ID,
 		Username:  u.Username,

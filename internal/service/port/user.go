@@ -1,16 +1,19 @@
 package serviceport
 
-import "github.com/alfariiizi/go-service/internal/core/domain"
+import (
+	"github.com/alfariiizi/go-service/internal/domain/entity"
+	"github.com/alfariiizi/go-service/internal/domain/model"
+)
 
 type UserService interface {
 	// ListUsers retrieves a list of all users.
-	ListUsers() ([]domain.User, error)
+	ListUsers() ([]entity.User, error)
 	// GetUser retrieves a user by their ID.
-	GetUser(id uint) (domain.User, error)
+	GetUser(id uint) (entity.User, error)
 	// CreateUser creates a new user with the given details.
-	CreateUser(user domain.UserRequest) (domain.User, error)
+	CreateUser(user model.UserRequest) (entity.User, error)
 	// UpdateUser updates the details of an existing user.
-	UpdateUser(id uint, user domain.UserRequest) (domain.User, error)
+	UpdateUser(id uint, user model.UserRequest) (entity.User, error)
 	// DeleteUser deletes a user by their ID.
 	DeleteUser(id uint) error
 	// // AuthenticateUser authenticates a user with the given credentials.

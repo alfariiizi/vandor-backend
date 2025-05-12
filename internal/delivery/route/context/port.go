@@ -1,4 +1,4 @@
-package httpport
+package httpctx
 
 type HttpContext interface {
 	// GetPath returns the path of the HTTP request.

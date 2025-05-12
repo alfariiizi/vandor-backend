@@ -1,11 +1,10 @@
-package http
+package httpctx
 
 import (
 	"errors"
 	"fmt"
 	"time"
 
-	httpport "github.com/alfariiizi/go-service/internal/delivery/port/http"
 	"github.com/labstack/echo/v4"
 )
 
@@ -13,7 +12,7 @@ type httpContext struct {
 	context echo.Context
 }
 
-func NewHttpContext(c echo.Context) httpport.HttpContext {
+func NewHttpContext(c echo.Context) HttpContext {
 	return &httpContext{
 		context: c,
 	}
