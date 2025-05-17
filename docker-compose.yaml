@@ -1,0 +1,7 @@
+services:
+  go-service:
+    image: go-service:v1.0.2
+    ports:
+      - "8000:3124"
+    env_file:
+      - .env
