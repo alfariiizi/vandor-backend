@@ -12,7 +12,6 @@ type HttpContext interface {
 	GetHeader(key string, required bool) (string, error)
 
 	// GetBody returns the body of the HTTP request.
-	GetBody() any
 	BindBody(v any) error
 
 	// GetParams returns all parameters from the HTTP request.
@@ -26,5 +25,6 @@ type HttpContext interface {
 	GetQueryParam(key string, required bool) (string, error)
 
 	SendSuccessResponse(statusCode int, data any) error
+	SendSuccessMessageResponse(statusCode int, message string) error
 	SendErrorResponse(statusCode int, message string, error error) error
 }

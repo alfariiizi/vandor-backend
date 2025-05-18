@@ -2,8 +2,6 @@ package httpctx
 
 import (
 	"errors"
-	"fmt"
-	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -76,14 +74,6 @@ func (h *httpContext) GetQueryParam(key string, required bool) (string, error) {
 	return value, nil
 }
 
-func (h *httpContext) GetBody() any {
-	var body any
-	if err := h.context.Bind(&body); err != nil {
-		return nil
-	}
-	return body
-}
-
 func (h *httpContext) BindBody(v any) error {
 	if err := h.context.Bind(v); err != nil {
 		return errors.New("failed to bind body")
@@ -94,36 +84,24 @@ func (h *httpContext) BindBody(v any) error {
 	return nil
 }
 
-type SuccessResponse struct {
-	Data      any    `json:"data"`
-	Status    string `json:"status"`
-	Code      int    `json:"code"`
-	Signature string `json:"signature"`
-}
-
 func (h *httpContext) SendSuccessResponse(statusCode int, data any) error {
 	return h.context.JSON(statusCode, SuccessResponse{
-		Data:      data,
-		Status:    "success",
-		Code:      statusCode,
-		Signature: fmt.Sprintf(" ©%d Alfarizi", time.Now().Year()),
+		Data:         data,
+		baseResponse: generateBaseResponse("success", statusCode),
 	})
 }
 
-type ErrorResponse struct {
-	Message   string `json:"message"`
-	Error     error  `json:"error"`
-	Status    string `json:"status"`
-	Code      int    `json:"code"`
-	Signature string `json:"signature"`
+func (h *httpContext) SendSuccessMessageResponse(statusCode int, message string) error {
+	return h.context.JSON(statusCode, SuccessMessageResponse{
+		Message:      message,
+		baseResponse: generateBaseResponse("success", statusCode),
+	})
 }
 
 func (h *httpContext) SendErrorResponse(statusCode int, message string, error error) error {
 	return h.context.JSON(statusCode, ErrorResponse{
-		Message:   message,
-		Error:     error,
-		Status:    "error",
-		Code:      statusCode,
-		Signature: fmt.Sprintf(" ©%d Alfarizi", time.Now().Year()),
+		Message:      message,
+		Error:        error,
+		baseResponse: generateBaseResponse("error", statusCode),
 	})
 }
