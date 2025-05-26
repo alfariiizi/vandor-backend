@@ -1,7 +1,7 @@
 package user
 
 import (
-	"github.com/alfariiizi/go-service/internal/domain/model"
+	"github.com/alfariiizi/go-service/internal/model"
 )
 
 type UserRepository interface {

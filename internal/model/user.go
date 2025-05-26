@@ -3,7 +3,7 @@ package model
 import (
 	"time"
 
-	"github.com/alfariiizi/go-service/internal/domain/entity"
+	"github.com/alfariiizi/go-service/database/db"
 )
 
 type UserRequest struct {
@@ -20,13 +20,13 @@ type UserResponse struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func ToUserResponse(u *entity.User) UserResponse {
+func ToUserResponse(u *db.User) UserResponse {
 	if u == nil {
 		return UserResponse{}
 	}
 
 	return UserResponse{
-		ID:        u.ID,
+		ID:        u.ID.String(),
 		Username:  u.Username,
 		Email:     u.Email,
 		CreatedAt: u.CreatedAt,
@@ -34,7 +34,7 @@ func ToUserResponse(u *entity.User) UserResponse {
 	}
 }
 
-func ToUserResponseList(users []entity.User) []UserResponse {
+func ToUserResponseList(users []db.User) []UserResponse {
 	userResponses := make([]UserResponse, len(users))
 	for i, u := range users {
 		userResponses[i] = ToUserResponse(&u)

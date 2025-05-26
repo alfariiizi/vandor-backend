@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/alfariiizi/go-service/internal/infrastructure/database"
+	"github.com/alfariiizi/go-service/database/db"
 	"github.com/alfariiizi/go-service/internal/repository/user"
 )
 
@@ -10,9 +10,9 @@ type Repositories struct {
 }
 
 func InitRepositories(
-	db database.GormDB,
+	db *db.Queries,
 ) *Repositories {
 	return &Repositories{
-		User: user.NewUserRepository(db.DB),
+		User: user.NewUserRepository(db),
 	}
 }

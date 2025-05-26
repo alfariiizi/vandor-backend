@@ -2,7 +2,7 @@ package handler
 
 import (
 	httpctx "github.com/alfariiizi/go-service/internal/delivery/route/context"
-	"github.com/alfariiizi/go-service/internal/domain/model"
+	"github.com/alfariiizi/go-service/internal/model"
 	"github.com/alfariiizi/go-service/internal/service/user"
 )
 

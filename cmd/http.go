@@ -20,7 +20,7 @@ var httpCmd = &cobra.Command{
 }
 
 var HttpServerProvider = fx.Provide(
-	database.NewGormDB,
+	database.CreateSQLCDB,
 	repository.InitRepositories,
 	service.InitServices,
 	echo.New,
