@@ -1,4 +1,9 @@
-package route
+package utils
+
+import (
+	"fmt"
+	"time"
+)
 
 type BaseResponse struct {
 	Status    string `json:"status"`
@@ -28,7 +33,7 @@ func GenerateBaseResponse(status string, code int) BaseResponse {
 	return BaseResponse{
 		Status:    status,
 		Code:      code,
-		Signature: "© Alfarizi",
+		Signature: fmt.Sprintf("©%d go-services", time.Now().Year()),
 	}
 }
 
