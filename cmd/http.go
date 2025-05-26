@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"github.com/alfariiizi/go-service/internal/delivery/http"
-	"github.com/alfariiizi/go-service/internal/delivery/route"
+	"github.com/alfariiizi/go-service/internal/delivery/http/api"
+	http "github.com/alfariiizi/go-service/internal/delivery/http/server"
 	"github.com/alfariiizi/go-service/internal/infrastructure/database"
 	"github.com/alfariiizi/go-service/internal/repository"
 	"github.com/alfariiizi/go-service/internal/service"
-	"github.com/labstack/echo/v4"
+	"github.com/go-chi/chi/v5"
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
 )
@@ -23,13 +23,15 @@ var HttpServerProvider = fx.Provide(
 	database.CreateSQLCDB,
 	repository.InitRepositories,
 	service.InitServices,
-	echo.New,
-	route.NewHttpApi,
+	chi.NewMux,
+	// echo.New,
+	// route.NewHttpApi,
+	api.NewHttpApi,
 	http.NewHttpServer,
 )
 
 var HttpServerStart = fx.Invoke(
-	func(server http.HttpServer) {},
+	func(server *http.HttpServer) {},
 )
 
 func HttpServerRun() {
