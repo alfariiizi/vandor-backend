@@ -29,18 +29,12 @@ func (h *HttpApi) RegisterHandler() error {
 	base := huma.NewGroup(h.Api, "/api")
 
 	commonHandler := handler.NewCommonHandler()
-	huma.Register(base, huma.Operation{
-		OperationID: "GETHealth",
-		Method:      "GET",
-		Path:        "/health",
+	GET(base, "/health", Operation{
 		Summary:     "Get Health",
 		Description: "Get the health status of the service",
 		Tags:        []string{"Common"},
 	}, commonHandler.GetHealth)
-	huma.Register(base, huma.Operation{
-		OperationID: "GETPing",
-		Method:      "GET",
-		Path:        "/ping",
+	GET(base, "/ping", Operation{
 		Summary:     "Ping the service",
 		Description: "Ping the service to check if it is alive",
 		Tags:        []string{"Common"},
