@@ -1,219 +1,370 @@
-# Go Hexagonal Architecture Template
+# Go-Service
 
-This project provides a template for building Go applications using hexagonal
-architecture (also known as ports and adapters architecture). It offers a
-structured starting point that emphasizes separation of concerns, testability,
-and maintainability.
+A robust backend service built with Go, implementing Domain-Driven Design (DDD)
+and Hexagonal Architecture patterns. This service provides a scalable foundation
+for building enterprise-grade applications with clean separation of concerns and
+dependency injection.
+
+## Architecture Overview
+
+This project follows the principles of **Domain-Driven Design (DDD)** combined
+with **Hexagonal Architecture** (also known as Ports and Adapters pattern). This
+architectural approach ensures that your business logic remains independent of
+external frameworks and infrastructure concerns.
+
+### Core Architecture Components
+
+**Core Layer** - The heart of your application containing pure business logic:
+
+- **Models**: Domain entities and value objects that represent your business
+  concepts
+- **Services**: Business logic grouped by domain (e.g., auth, user management)
+  with one struct per service group and focused methods
+- **Repositories**: Data access interfaces generated using Ent.go for type-safe
+  database operations
+- **Use Cases**: Application-specific business rules, implemented as
+  single-responsibility structs with one method each
+
+**Infrastructure Layer** - External concerns and technical implementations:
+
+- **Database**: PostgreSQL integration with connection pooling and transaction
+  management
+- **Redis**: Caching and session management capabilities
+- **External APIs**: Third-party service integrations
+
+**Delivery Layer** - How your application communicates with the outside world:
+
+- **HTTP**: RESTful API endpoints using Chi router and Huma for API
+  documentation
+- **Cron**: Scheduled background tasks using gocron
+- **CLI**: Command-line interface built with Cobra for administrative tasks
+
+### Dependency Management
+
+The project uses **Uber FX** for dependency injection, which provides a robust
+and testable way to manage dependencies throughout your application. This
+approach ensures loose coupling between components and makes your code more
+maintainable and testable.
+
+## Technology Stack
+
+### Core Framework & Language
+
+- **Go 1.24.1**: Latest Go version with improved performance and language
+  features
+- **Uber FX**: Dependency injection container for managing application lifecycle
+  and dependencies
+
+### Database & ORM
+
+- **PostgreSQL**: Primary database with robust ACID compliance and advanced
+  features
+- **Ent.go**: Type-safe ORM with code generation for database operations
+- **Atlas**: Database schema migration tool for version control of your database
+  structure
+- **pgx/v5**: High-performance PostgreSQL driver with connection pooling
+
+### Web Framework & API
+
+- **Chi Router**: Lightweight and fast HTTP router with middleware support
+- **Huma v2**: OpenAPI 3.0 specification and automatic API documentation
+  generation
+- **CORS**: Cross-Origin Resource Sharing middleware for web API security
+
+### Authentication & Security
+
+- **JWX v2**: JSON Web Token implementation for secure authentication
+- **bcrypt**: Password hashing with configurable cost for security
+
+### Caching & Background Processing
+
+- **Redis**: In-memory data structure store for caching and session management
+- **Gocron**: Cron job scheduler for background task processing
+
+### Development & Build Tools
+
+- **Task**: Modern task runner as an alternative to Make
+- **Docker**: Containerization for consistent deployment environments
+- **Cobra**: CLI framework for building command-line applications
 
 ## Project Structure
 
 ```plaintext
-.
-├── cmd/                  # Command-line interface definitions using Cobra
-├── config/               # Application configuration
-├── internal/             # Private application code
-│   ├── delivery/         # Input adapters (how the app receives requests)
-│   │   ├── http/         # HTTP handlers
-│   │   └── route/        # Route definitions
-│   ├── domain/           # Domain layer (business logic core)
-│   │   ├── entity/       # Business entities
-│   │   └── model/        # Data models
-│   ├── infrastructure/   # Infrastructure concerns
-│   │   └── database/     # Database connections and initialization
-│   ├── repository/       # Data access layer (output ports)
-│   └── service/          # Business logic services (use cases)
-├── scripts/              # Utility scripts
-└── ...
+go-service/
+├── bin
+├── cmd
+│   ├── app
+│   ├── service-generator
+│   └── usecase-generator
+├── config
+├── database
+│   ├── migrate
+│   │   └── migrations
+│   └── schema
+├── docker
+├── internal
+│   ├── core
+│   │   ├── model
+│   │   ├── repository
+│   │   ├── service
+│   │   │   ├── auth
+│   │   │   ├── system
+│   │   │   └── user
+│   │   └── usecase
+│   ├── cron
+│   ├── delivery
+│   │   ├── cmd
+│   │   └── http
+│   │       ├── api
+│   │       │   └── middleware
+│   │       ├── method
+│   │       ├── route
+│   │       │   └── system
+│   │       └── server
+│   ├── infrastructure
+│   │   ├── database
+│   │   └── redis
+│   ├── types
+│   └── utils
+├── scripts
+├── seeder
+├── storage
+│   ├── logs
+│   └── public
 ```
-
-## Tech Stack
-
-This project uses the following core technologies and libraries:
-
-- **Go**: Version 1.24.1
-- **Echo**: Fast and minimalist web framework (v4.13.3)
-- **Uber FX**: Dependency injection framework for modular applications
-- **GORM**: Feature-rich ORM with SQLite driver
-- **Cobra**: CLI application framework with command nesting and flag support
-- **Validator**: Request validation using go-playground/validator
-- **UUID**: Google's UUID implementation
-- **Zap**: High-performance logging (via Uber FX)
-- **GoDotEnv**: Environment variable management
-
-## Features
-
-- **Hexagonal Architecture**: Clean separation between domain logic, application
-  services, and external interfaces
-- **CLI Interface**: Command-line interface using Cobra
-- **Configuration Management**: Environment-based configuration
-- **Database Integration**: SQLite database support (easily extendable to other
-  databases)
-- **Dependency Injection**: Modular application structure with Uber FX
-- **Request Validation**: Structured input validation
-- **Docker Support**: Containerization for consistent deployment
-- **Development Tools**: Air for hot reloading during development
-
-## Prerequisites
-
-- Go 1.24 or later
-- Make
-- Docker (optional, for containerization)
 
 ## Getting Started
 
-### Environment Setup
+### Prerequisites
 
-Copy the example environment file and adjust as needed:
+Before you begin, ensure you have the following installed on your development
+machine:
 
-```bash
-cp .env.example .env
-```
+- **Go 1.24.1 or later**: Download from
+  [golang.org](https://golang.org/download/)
+- **Docker & Docker Compose**: For running databases and containerized services
+- **Task**: Install via `go install github.com/go-task/task/v3/cmd/task@latest`
+- **PostgreSQL**: Either locally installed or via Docker
+- **Redis**: Either locally installed or via Docker
 
-### Building the Application
+### Installation & Setup
 
-```bash
-make build
-```
+1. **Clone the repository**:
 
-This will create a binary in the `bin/` directory.
+   ```bash
+   git clone https://github.com/alfariiizi/go-service.git
+   cd go-service
+   ```
+
+2. **Install dependencies**:
+
+   ```bash
+   go mod download
+   ```
+
+3. **Set up environment variables**: Copy `.env.example` file to `.env` and fill up the env file
+
+4. **Start required services**: If using Docker for databases:
+
+   ```bash
+   docker-compose up -d postgres redis
+   ```
+
+5. **Generate repository code**:
+
+   ```bash
+   task generate:repo
+   ```
+
+6. **Run database migrations**:
+
+   ```bash
+   task migrate:up
+   ```
+
+## Development Workflow
 
 ### Running the Application
 
-To run all services:
+**Development Mode** (with hot reload):
 
 ```bash
-./bin/main serve
+task run:dev
 ```
 
-To run only the HTTP server:
+This command will generate repositories, start file watching, and automatically
+restart the server when code changes are detected.
+
+**Production Build**:
 
 ```bash
-./bin/main http
+task build
+./bin/main
 ```
 
-For development with hot reloading:
+### Database Operations
+
+**Check migration status**:
 
 ```bash
-./scripts/watch.sh  # Requires the Air tool
+task migrate:status
 ```
 
-For hot reloading with activating all delivery, you can run:
+**Create a new migration**:
 
 ```bash
-./scripts/watch.sh serve
+task migrate:diff NAME=add_user_table
 ```
 
-### Available Commands
+**Apply pending migrations**:
 
-```plaintext
-MyApp is a service with multiple modes
-
-Usage:
-  myapp [command]
-
-Available Commands:
-  completion  Generate the autocompletion script for the specified shell
-  help        Help about any command
-  http        Run HTTP server
-  serve       Run all services
-
-Flags:
-  -h, --help   help for myapp
+```bash
+task migrate:up
 ```
 
-## Development
+### Code Generation
 
-### Project Structure Explanation
+This project includes powerful code generation tools to maintain consistency and
+reduce boilerplate:
 
-This project follows hexagonal architecture principles:
+**Generate repository code** (after modifying Ent schemas):
 
-1. **Domain Layer**: Contains the core business logic and entities
+```bash
+task generate:repo
+```
 
-   - Located in `internal/domain/`
-   - Independent of external concerns
+**Generate a new use case**:
 
-2. **Application Layer**: Implements use cases that orchestrate domain objects
+```bash
+task generate:usecase name=CreateUser
+```
 
-   - Located in `internal/service/`
-   - Defines interfaces (ports) that will be implemented by adapters
+**Generate a new service** (grouped by domain):
 
-3. **Adapter Layer**: Connects the application to external systems
-   - Input adapters in `internal/delivery/` handle incoming requests
-   - Output adapters in `internal/repository/` handle outgoing requests
-
-### Adding a New Feature
-
-To add a new feature:
-
-1. Define any needed entities in `internal/domain/entity/`
-2. Create necessary repositories interfaces in `internal/repository/`
-3. Implement the repository in a subdirectory of `internal/repository/`
-4. Create service logic in `internal/service/`
-5. Add HTTP handlers in `internal/delivery/http/`
-6. Update routes in `internal/delivery/route/`
+```bash
+task generate:service group=auth name=LoginUser
+```
 
 ### Testing
 
-Run the test suite:
+**Run all tests**:
 
 ```bash
-make test
+task test
 ```
 
-## Docker
-
-Build the Docker image:
+**Run tests with coverage**:
 
 ```bash
-docker build -t myapp .
+go test -cover ./...
 ```
 
-Run the container:
+## Docker Deployment
+
+The project includes Docker support for both the application and database
+migrations:
+
+### Building Docker Images
+
+**Build application image**:
 
 ```bash
-docker run -p 8000:8000 --env-file .env myapp serve
+./build.sh app
 ```
 
-## License
+**Build migration image**:
 
-This project is licensed under the MIT License.
+```bash
+./build.sh migrate
+```
+
+**Build both images**:
+
+```bash
+./build.sh all
+```
+
+### Docker Images
+
+- **alfariiizi/go-app:latest**: Main application server
+- **alfariiizi/go-migrate:latest**: Database migration runner
+
+## API Documentation
+
+Once the application is running, you can access the automatically generated API
+documentation at:
+
+- **Swagger UI**: `http://localhost:8080/docs`
+- **OpenAPI Spec**: `http://localhost:8080/openapi.json`
+
+The API documentation is automatically generated from your code using Huma v2,
+ensuring it stays synchronized with your implementation.
+
+## Architecture Benefits
+
+### Domain-Driven Design (DDD)
+
+- **Clear Business Logic**: Core business rules are isolated and easily testable
+- **Ubiquitous Language**: Code reflects the business domain language
+- **Bounded Contexts**: Different parts of the system have clear boundaries
+
+### Hexagonal Architecture
+
+- **Technology Independence**: Business logic doesn't depend on frameworks
+- **Testability**: Easy to test business logic in isolation
+- **Flexibility**: Easy to swap out infrastructure components
+
+### Dependency Injection with Uber FX
+
+- **Loose Coupling**: Components depend on interfaces, not concrete
+  implementations
+- **Lifecycle Management**: Automatic startup and shutdown of components
+- **Testing**: Easy to mock dependencies for unit testing
 
 ## Contributing
 
-Contributions are welcome and appreciated! Here's how you can contribute to this
-project:
+When contributing to this project, please follow these guidelines:
 
-### Getting Started
+1. **Code Organization**: Place new code in the appropriate architectural layer
+2. **Testing**: Write unit tests for new functionality
+3. **Documentation**: Update this README if you add new features or change the
+   architecture
+4. **Migrations**: Always create migrations for database schema changes
+5. **Code Generation**: Use the provided generators for consistency
 
-1. **Fork the repository** and clone it locally
-2. **Create a new branch** for your feature or bug fix
-3. **Set up your development environment** using the instructions above
+## Development Scripts
 
-### Making Changes
+The project includes several helpful scripts in the `scripts/` directory:
 
-1. **Follow the existing code style** and project structure
-2. **Write tests** for new features or bug fixes
-3. **Update documentation** to reflect any changes
-4. **Make meaningful commit messages** that clearly explain your changes
+- `ent-tools.sh`: Ent.go code generation utilities
+- `atlas-tool.sh`: Database migration management
+- `watch.sh`: File watching for development mode
 
-### Submitting Changes
+## Performance Considerations
 
-1. **Push your changes** to your forked repository
-2. **Create a pull request** against the main branch of this repository
-3. **Describe your changes** in detail, including the problem they solve
-4. **Wait for review** and be open to feedback and suggestions
+- **Connection Pooling**: PostgreSQL connections are pooled for optimal
+  performance
+- **Redis Caching**: Implement caching strategies for frequently accessed data
+- **Structured Logging**: Use structured logging for better observability
+- **Graceful Shutdown**: The application handles shutdown signals gracefully
 
-### Code of Conduct
+## Security Features
 
-- Be respectful and inclusive in your interactions with others
-- Focus on constructive feedback and discussions
-- Help others when possible and share knowledge openly
+- **JWT Authentication**: Secure token-based authentication
+- **Password Hashing**: Bcrypt for secure password storage
+- **CORS Configuration**: Proper cross-origin request handling
+- **Input Validation**: Request validation using Huma v2
 
-### Issue Reporting
+## Monitoring & Observability
 
-If you find a bug or have a feature request:
+Consider integrating the following for production deployments:
 
-1. Check if the issue already exists in the project's issue tracker
-2. If not, create a new issue with a clear title and detailed description
-3. Include steps to reproduce bugs and expected behavior
-4. Add relevant screenshots or error messages if applicable
+- **Structured Logging**: Already configured with appropriate log levels
+- **Metrics Collection**: Add Prometheus metrics for monitoring
+- **Distributed Tracing**: Consider adding OpenTelemetry for request tracing
+- **Health Checks**: Implement health check endpoints for load balancers
+
+This README provides a comprehensive guide to understanding and working with the
+Go-Service project. The architecture decisions made here prioritize
+maintainability, testability, and scalability while following established
+patterns in the Go community.

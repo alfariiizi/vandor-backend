@@ -7,12 +7,12 @@ MIGRATE_IMAGE_NAME="alfariiizi/go-migrate:latest"
 
 build_app() {
   echo "🔧 Building app image..."
-  docker build -t $APP_IMAGE_NAME -f docker/Dockerfile --platform=linux/amd64 .
+  docker buildx build -t $APP_IMAGE_NAME -f docker/Dockerfile --platform=linux/amd64 .
 }
 
 build_migrate() {
   echo "🔧 Building migration image..."
-  docker build -t $MIGRATE_IMAGE_NAME -f docker/Dockerfile.migrate --platform=linux/amd64 .
+  docker buildx build -t $MIGRATE_IMAGE_NAME -f docker/Dockerfile.migrate --platform=linux/amd64 .
 }
 
 case "$1" in
