@@ -21,9 +21,7 @@ WORKDIR /app
 RUN apk add --no-cache ca-certificates bash curl
 
 COPY --from=builder /app/main .
-# COPY --from=builder /app/ent/migrate ./ent/migrate
-# COPY --from=builder /app/scripts ./scripts
-COPY --from=builder /app/public ./public
+COPY --from=builder /app/storage ./storage
 
 # Copy the entrypoint
 COPY docker/entrypoint.sh .

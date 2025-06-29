@@ -9,6 +9,27 @@ build:
 run:
 	@go run cmd/app/main.go
 
+run-dev:
+	@echo "Running in development mode..."
+	@$(MAKE) run-entgo cmd=generate
+	@./scripts/watch.sh all
+
+run-entgo:
+	@echo "Running Entgo..."
+	@./scripts/ent-tools.sh ${cmd} ${name}
+
+run-atlas-status:
+	@echo "Running Atlas status..."
+	@./scripts/atlas-tools.sh status
+
+run-atlas-diff:
+	@echo "Running Atlas migrate..."
+	@./scripts/atlas-tools.sh diff ${name}
+
+run-atlas-migrate:
+	@echo "Running Atlas migrate..."
+	@./scripts/atlas-tools.sh apply 
+
 generate-usecase:
 	@echo "Generating usecase: ${name}"
 	@go run ./cmd/usecase-generator/main.go ${name}
@@ -31,4 +52,4 @@ clean:
 	@echo "Cleaning..."
 	@rm -f bin/*
 
-.PHONY: all build run test clean watch generate-usecase generate-service test-usecase
+.PHONY: all build run run-dev test clean watch generate-usecase generate-service test-usecase

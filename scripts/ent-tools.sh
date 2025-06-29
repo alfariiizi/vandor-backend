@@ -5,7 +5,7 @@
 set -e
 
 ENT_CMD="entgo.io/ent/cmd/ent"
-SCHEMA_DIR="ent/schema"
+SCHEMA_DIR="./database/schema"
 GENERATED_DIR="internal/core/repository"
 
 function usage() {
@@ -29,12 +29,12 @@ function create_schema() {
     exit 1
   fi
 
-  go run -mod=mod "$ENT_CMD" new "$1"
+  go run -mod=mod "$ENT_CMD" new "$1" --target "$SCHEMA_DIR"
   echo "Schema '$1' created in $SCHEMA_DIR/$1.go"
 }
 
 function generate() {
-  go run -mod=mod "$ENT_CMD" generate ./ent/schema --target "$GENERATED_DIR"
+  go run -mod=mod "$ENT_CMD" generate "$SCHEMA_DIR" --target "$GENERATED_DIR"
   echo "Code generation complete."
 }
 

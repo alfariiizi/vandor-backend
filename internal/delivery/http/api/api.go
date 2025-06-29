@@ -3,12 +3,12 @@ package api
 import (
 	"net/http"
 
+	"github.com/alfariiizi/go-service/config"
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
-	"github.com/alfariiizi/go-service/config"
 )
 
 type HttpApi struct {

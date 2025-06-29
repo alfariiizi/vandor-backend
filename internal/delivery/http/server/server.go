@@ -35,7 +35,7 @@ func NewHttpServer(
 	}
 
 	// Serve static files from ./public at root path
-	router.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("./public"))))
+	router.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("./storage/public"))))
 
 	lc.Append(fx.Hook{
 		OnStart: func(context.Context) error {

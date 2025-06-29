@@ -5,7 +5,7 @@ package repository
 import (
 	"time"
 
-	"github.com/alfariiizi/go-service/ent/schema"
+	"github.com/alfariiizi/go-service/database/schema"
 	"github.com/alfariiizi/go-service/internal/core/repository/user"
 )
 

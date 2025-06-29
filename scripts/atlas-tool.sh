@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Shared configuration
-MIGRATIONS_DIR="file://ent/migrate/migrations"
-ENT_SCHEMA_URL="ent://ent/schema"
+MIGRATIONS_DIR="file://database/migrate/migrations"
+ENT_SCHEMA_URL="ent://database/schema"
 DEV_URL="docker://postgres/15/test?search_path=public"
 
 # Choose how to load env

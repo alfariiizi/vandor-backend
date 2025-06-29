@@ -1,0 +1,75 @@
+version: "3"
+
+tasks:
+  build:
+    desc: Build the project
+    cmds:
+      - echo "Building..."
+      - go build -o bin/main cmd/app/main.go
+
+  run:dev:
+    desc: Run the application in development mode
+    cmds:
+      - echo "Running in development mode..."
+      - echo "Generating repositories..."
+      - ./scripts/ent-tools.sh generate
+      - echo "Starting the application..."
+      - ./scripts/watch.sh all
+
+  migrate:status:
+    desc: Check the status of database migrations
+    cmds:
+      - echo "Checking migration status..."
+      - ./scripts/atlas-tool.sh status
+
+  migrate:diff:
+    desc: Generate a migration diff
+    cmds:
+      - echo "Generating migration diff for {{.NAME}}..."
+      - ./scripts/atlas-tool.sh diff {{.NAME}}
+    requires:
+      vars: [NAME]
+
+  migrate:up:
+    desc: Apply database migrations
+    cmds:
+      - echo "Applying migrations..."
+      - ./scripts/atlas-tool.sh apply
+
+  generate:repo:
+    desc: Generate repository code
+    cmds:
+      - echo "Generating repositories..."
+      - ./scripts/ent-tools.sh generate
+
+  generate:usecase:
+    desc: Generate usecase code
+    cmds:
+      - echo "Generating usecases..."
+      - go run ./cmd/usecase-generator/main.go {{.name}}
+    requires:
+      vars: [name]
+
+  generate:service:
+    desc: Generate service code
+    cmds:
+      - echo "Generating services..."
+      - go run ./cmd/service-generator/main.go {{.group}} {{.name}}
+    requires:
+      vars: [group, name]
+
+  test:
+    desc: Run tests
+    cmds:
+      - echo "Running tests..."
+      - go test ./...
+
+  clean:
+    desc: Clean up build artifacts
+    cmds:
+      - echo "Cleaning up..."
+      - rm -f myapp
+
+  all:
+    desc: Build, test, and clean
+    deps: [build, test, clean]
