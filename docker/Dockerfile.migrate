@@ -1,0 +1,12 @@
+FROM alpine:latest
+
+WORKDIR /app
+
+RUN apk add --no-cache ca-certificates bash curl
+
+COPY ./ent/migrate ./ent/migrate
+COPY ./scripts ./scripts
+
+RUN curl -sSf https://atlasgo.sh | sh
+
+CMD ["sleep", "1800"]

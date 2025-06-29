@@ -3,6 +3,8 @@ package config
 import (
 	"fmt"
 	"log"
+	"net/url"
+	"strconv"
 	"sync"
 
 	"github.com/joho/godotenv"
@@ -15,16 +17,48 @@ var (
 
 func GetConfig() *config {
 	once.Do(func() {
-		err := godotenv.Load()
+		if err := godotenv.Load(); err != nil {
+			log.Println(".env file not found, assuming environment variables are set by Docker")
+		}
+		appUrl, err := url.Parse(getEnv("APP_URL", true, ""))
 		if err != nil {
-			log.Fatal(".env file not found, using system environment variables")
+			log.Fatal("Invalid APP_URL format, must be a valid URL")
+		}
+		port, err := strconv.Atoi(appUrl.Port())
+		if err != nil {
+			log.Println("Using default port 8000, as APP_URL does not specify a port")
+			port = 8000
+		}
+		redisOption, err := parseRedisURL(getEnv("REDIS_URL", true, ""))
+		if err != nil {
+			log.Fatal("Invalid REDIS_URL format, must be a valid URL")
 		}
 		instance = &config{
+			Superadmin: superadminConfig{
+				Name:     getEnv("SUPERADMIN_NAME", true, ""),
+				Email:    getEnv("SUPERADMIN_EMAIL", true, ""),
+				Password: getEnv("SUPERADMIN_PASSWORD", true, ""),
+			},
 			Http: httpConfig{
-				Port: getEnvAsInt("HTTP_PORT", false, 8000),
+				AppURL: appUrl.String(),
+				Port:   port,
 			},
 			DB: dbConfig{
-				URL: getEnv("DB_URL", true, ""),
+				Driver: getEnv("DB_DRIVER", true, ""),
+				URL:    getEnv("DB_URL", true, ""),
+			},
+			Docs: docsConfig{
+				Username: getEnv("DOCS_USERNAME", true, ""),
+				Password: getEnv("DOCS_PASSWORD", true, ""),
+			},
+			Redis: *redisOption,
+			Auth: authConfig{
+				SecretKey: getEnv("AUTH_SECRET_KEY", true, ""),
+			},
+			Email: emailConfig{
+				Url:    getEnv("EMAIL_URL", true, ""),
+				Domain: getEnv("EMAIL_DOMAIN", true, ""),
+				Secret: getEnv("EMAIL_SECRET", true, ""),
 			},
 		}
 		fmt.Println("Config loaded from environment variables", instance)

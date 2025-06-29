@@ -1,14 +1,44 @@
 package config
 
+import "github.com/redis/go-redis/v9"
+
 type config struct {
-	Http httpConfig
-	DB   dbConfig
+	Superadmin superadminConfig
+	Http       httpConfig
+	DB         dbConfig
+	Docs       docsConfig
+	Redis      redis.Options
+	Auth       authConfig
+	Email      emailConfig
 }
 
 type httpConfig struct {
-	Port int
+	AppURL string
+	Port   int
 }
 
 type dbConfig struct {
-	URL string
+	Driver string
+	URL    string
+}
+
+type authConfig struct {
+	SecretKey string
+}
+
+type superadminConfig struct {
+	Name     string
+	Email    string
+	Password string
+}
+
+type docsConfig struct {
+	Username string
+	Password string
+}
+
+type emailConfig struct {
+	Url    string
+	Domain string
+	Secret string
 }

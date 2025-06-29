@@ -1,0 +1,33 @@
+package usecase
+
+import (
+	"context"
+
+	"github.com/alfariiizi/go-service/internal/core/repository"
+	"github.com/alfariiizi/go-service/internal/core/model"
+	"github.com/alfariiizi/go-service/internal/types"
+)
+
+type {{.Name}}Input struct {
+	// TODO: Define fields
+}
+type {{.Name}}Output struct {
+	// TODO: Define fields
+}
+type {{.Name}} model.Usecase[{{.Name}}Input, {{.Name}}Output]
+
+type {{.Receiver}} struct {
+	client *repository.Client
+}
+
+func New{{.Name}}(repo *repository.Client) {{.Name}} {
+	return &{{.Receiver}}{
+		client: repo,
+	}
+}
+
+func (uc *{{.Receiver}}) Execute(ctx context.Context, input {{.Name}}Input) types.Result[{{.Name}}Output]  {
+	// TODO: Implement logic
+
+	return types.Ok({{.Name}}Output{})
+}

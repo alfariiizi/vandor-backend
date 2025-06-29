@@ -33,7 +33,7 @@ func GenerateBaseResponse(status string, code int) BaseResponse {
 	return BaseResponse{
 		Status:    status,
 		Code:      code,
-		Signature: fmt.Sprintf("©%d go-services", time.Now().Year()),
+		Signature: fmt.Sprintf("©%d pentaverses.com", time.Now().Year()),
 	}
 }
 

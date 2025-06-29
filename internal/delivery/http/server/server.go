@@ -27,12 +27,15 @@ func NewHttpServer(
 	// router := chi.NewMux()
 	cfg := config.GetConfig()
 
-	api.RegisterHandler()
+	// api.RegisterHandler()
 
 	server := http.Server{
 		Addr:    fmt.Sprintf(":%d", cfg.Http.Port),
 		Handler: router,
 	}
+
+	// Serve static files from ./public at root path
+	router.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("./public"))))
 
 	lc.Append(fx.Hook{
 		OnStart: func(context.Context) error {

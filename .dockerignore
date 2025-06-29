@@ -1,2 +1,11 @@
 Dockerfile
 .dockerfile
+
+.git
+*.md
+node_modules
+scripts/**/*.sh~  # temp script files
+*.log
+.DS_Store
+*.swp
+tmp/
