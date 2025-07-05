@@ -5,32 +5,37 @@ import (
 
 	"github.com/alfariiizi/go-service/internal/core/model"
 	"github.com/alfariiizi/go-service/internal/core/repository"
+	"github.com/alfariiizi/go-service/internal/core/usecase"
 	"github.com/alfariiizi/go-service/internal/types"
-	"go.uber.org/fx"
 )
 
 type HealthInput struct {
 	// TODO: Define fields
 }
 type HealthOutput struct {
-	Status string `json:"status"`
+	Message string
 }
 type Health model.Service[HealthInput, HealthOutput]
 
 type health struct {
-	fx.In
-	Client *repository.Client
+	client  *repository.Client
+	usecase *usecase.Usecases
 }
 
-func NewHealth(params health) Health {
-	return &params
+func NewHealth(
+	repo *repository.Client,
+	usecase *usecase.Usecases,
+) Health {
+	return &health{
+		client:  repo,
+		usecase: usecase,
+	}
 }
 
-func (uc *health) Execute(ctx context.Context, input HealthInput) types.Result[HealthOutput] {
+func (s *health) Execute(ctx context.Context, input HealthInput) types.Result[HealthOutput] {
+	// TODO: Implement logic
+
 	return types.Ok(HealthOutput{
-		Status: "healthy",
+		Message: "Service is healthy",
 	})
-	// return &HealthOutput{
-	// 	Status: "healthy",
-	// }, nil
 }

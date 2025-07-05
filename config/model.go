@@ -3,6 +3,7 @@ package config
 import "github.com/redis/go-redis/v9"
 
 type config struct {
+	App        appInfoConfig
 	Superadmin superadminConfig
 	Http       httpConfig
 	DB         dbConfig
@@ -10,6 +11,12 @@ type config struct {
 	Redis      redis.Options
 	Auth       authConfig
 	Email      emailConfig
+}
+
+type appInfoConfig struct {
+	Name              string
+	SignatureResponse string
+	Version           string
 }
 
 type httpConfig struct {

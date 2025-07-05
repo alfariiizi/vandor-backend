@@ -36,27 +36,88 @@ tasks:
       - echo "Applying migrations..."
       - ./scripts/atlas-tool.sh apply
 
+  create:schema:
+    desc: Create a new schema
+    cmds:
+      - echo "Creating new schema..."
+      - ./scripts/atlas-tool.sh new {{.name}}
+    requires:
+      vars: [name]
+
+  create:usecase:
+    desc: Create a new usecase
+    cmds:
+      - echo "Creating new usecase..."
+      - go run ./cmd/usecase/cmd-new-usecase/main.go {{.name}}
+    requires:
+      vars: [name]
+
+  create:service:
+    desc: Create a new service
+    cmds:
+      - echo "Creating new service..."
+      - go run ./cmd/service/cmd-new-service/main.go {{.group}} {{.name}}
+    requires:
+      vars: [group, name]
+
+  create:http-handler:
+    desc: Create a new HTTP handler
+    cmds:
+      - echo "Creating new HTTP handler..."
+      - go run ./cmd/http/cmd-new-handler/main.go {{.group}} {{.name}}
+        {{.method}}
+    requires:
+      vars: [group, name, method]
+
+  create:service:http-handler:
+    desc: Create a new HTTP handler for a service
+    cmds:
+      - echo "Creating new Service and HTTP handler..."
+      - go run ./cmd/service/cmd-new-service/main.go {{.group}} {{.name}}
+      - go run ./cmd/http/cmd-new-handler/main.go {{.group}} {{.name}}
+        {{.method}}
+    requires:
+      vars: [group, name, method]
+
+  generate:all:
+    desc: Generate all code
+    cmds:
+      - echo "Regenerating all code..."
+      - go run ./cmd/usecase/cmd-regenerate-usecase/main.go
+      - go run ./cmd/service/cmd-regenerate-service/main.go
+      - go run ./cmd/http/cmd-regenerate-handler/main.go
+      - ./scripts/ent-tools.sh generate
+
+  generate:core:
+    desc: Generate core code
+    cmds:
+      - echo "Regenerate core code..."
+      - go run ./cmd/usecase/cmd-regenerate-usecase/main.go
+      - go run ./cmd/service/cmd-regenerate-service/main.go
+
+  generate:usecase:
+    desc: Generate usecase code
+    cmds:
+      - echo "Regenerate usecases..."
+      - go run ./cmd/usecase/cmd-regenerate-usecase/main.go
+
+  generate:service:
+    desc: Generate service code
+    cmds:
+      - echo "Regenerate service..."
+      - go run ./cmd/service/cmd-regenerate-service/main.go
+
+  generate:http-handler:
+    desc: Generate HTTP handler code
+    cmds:
+      - echo "Regenerate HTTP handlers..."
+      - go run ./cmd/http/cmd-regenerate-handler/main.go
+
   generate:repo:
     desc: Generate repository code
     cmds:
       - echo "Generating repositories..."
       - ./scripts/ent-tools.sh generate
-
-  generate:usecase:
-    desc: Generate usecase code
-    cmds:
-      - echo "Generating usecases..."
-      - go run ./cmd/usecase-generator/main.go {{.name}}
-    requires:
-      vars: [name]
-
-  generate:service:
-    desc: Generate service code
-    cmds:
-      - echo "Generating services..."
-      - go run ./cmd/service-generator/main.go {{.group}} {{.name}}
-    requires:
-      vars: [group, name]
 
   test:
     desc: Run tests

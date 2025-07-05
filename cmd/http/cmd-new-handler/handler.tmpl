@@ -1,0 +1,144 @@
+package {{.Group}}_handler
+
+import (
+	"context"
+
+	"github.com/alfariiizi/go-service/internal/core/model"
+	"github.com/alfariiizi/go-service/internal/core/service"
+	"github.com/alfariiizi/go-service/internal/delivery/http/api"
+	"github.com/alfariiizi/go-service/internal/delivery/http/method"
+	"github.com/alfariiizi/go-service/internal/types"
+	"github.com/danielgtaylor/huma/v2"
+)
+
+{{- if eq .Method "POST" }}
+type {{.Name}}Payload struct {
+	// Example POST input
+	Name string `json:"name" doc:"Name of the item" example:"Book" required:"true"`
+	Description string `json:"description"`
+}
+{{- else if eq .Method "PUT" }}
+type {{.Name}}Payload struct {
+	// Example PUT input
+	Name *string `json:"name" doc:"Name of the item" example:"Book"`
+	Description *string `json:"description"`
+}
+{{- else if eq .Method "PATCH" }}
+type {{.Name}}Payload struct {
+	// Example PATCH input
+	Name *string `json:"name" doc:"Name of the item" example:"Book"`
+	Description *string `json:"description"`
+}
+{{- end }}
+
+// NOTE:
+// Hint Tags for input parameters
+// @ref: https://huma.rocks/features/request-inputs
+// 
+// Tag       | Description                           | Example
+// -------------------------------------------------------------------
+// path      | Name of the path parameter            | path:"thing-id"
+// query     | Name of the query string parameter    | query:"q"
+// header    | Name of the header parameter          | header:"Authorization"
+// cookie    | Name of the cookie parameter          | cookie:"session"
+// required  | Mark a query/header param as required | required:"true"
+
+type {{.Name}}Input struct {
+	{{- if eq .Method "GET" }}
+	// Example GET input
+	ID string `path:"id" doc:"ID of the item" example:"123"`
+	Query string `query:"q" doc:"Query parameter for filtering" example:"search term"`
+	{{- else if eq .Method "DELETE" }}
+	ID string `path:"id" doc:"ID of the item to delete" example:"123"`
+	{{- else if eq .Method "PUT" }}
+	ID string `path:"id" doc:"ID of the item to update" example:"123"`
+	Body {{.Name}}Payload `json:"body" contentType:"application/json"`
+	{{- else if eq .Method "PATCH" }}
+	ID string `path:"id" doc:"ID of the item to update" example:"123"`
+	Body {{.Name}}Payload `json:"body" contentType:"application/json"`
+	{{- else }}
+	// JSON body for {{.Method}}
+	Body {{.Name}}Payload `json:"body" contentType:"application/json"`
+	{{- end }}
+}
+
+// NOTE:
+// You can use this for output
+// types.OutputResponseData[T] -> for data responses
+// types.OutputResponseMessage -> for message responses
+// types.OutputResponsePagination[T] -> for paginated responses
+
+type {{.Name}}Output types.OutputResponseData[{{.Name}}Data]
+
+type {{.Name}}Data struct {
+	// Example response data
+	ID          string `json:"id" example:"123"`
+	Name        string `json:"name" example:"Book"`
+	Description string `json:"description" example:"A great book"`
+}
+
+type {{.Name}}Handler model.HTTPHandler[{{.Name}}Input, {{.Name}}Output]
+
+type {{.Receiver}} struct {
+	api     huma.API
+	service *service.Services
+}
+
+func New{{.Name}}(
+	api *api.HttpApi,
+	service *service.Services,
+) {{.Name}}Handler {
+	h := &{{.Receiver}}{
+		api:     api.BaseAPI,
+		service: service,
+	}
+	h.RegisterRoutes()
+	return h
+}
+
+func (h *{{.Receiver}}) RegisterRoutes() {
+	api := h.api
+	{{- if eq .Method "GET" }}
+	method.GET(api, "/{{.Path}}", method.Operation{
+		Summary:     "{{.Name}}",
+		Description: "{{.Name}} handler",
+		Tags:        []string{"{{.GroupTitle}}"},
+		BearerAuth:  false,
+	}, h.Handler)
+	{{- else if eq .Method "POST" }}
+	method.POST(api, "/{{.Path}}", method.Operation{
+		Summary:     "{{.Name}}",
+		Description: "{{.Name}} handler",
+		Tags:        []string{"{{.GroupTitle}}"},
+		BearerAuth:  false,
+	}, h.Handler)
+	{{- else if eq .Method "PUT" }}
+	method.PUT(api, "/{{.Path}}", method.Operation{
+		Summary:     "{{.Name}}",
+		Description: "{{.Name}} handler",
+		Tags:        []string{"{{.GroupTitle}}"},
+		BearerAuth:  false,
+	}, h.Handler)
+	{{- else if eq .Method "PATCH" }}
+	method.PATCH(api, "/{{.Path}}", method.Operation{
+		Summary:     "{{.Name}}",
+		Description: "{{.Name}} handler",
+		Tags:        []string{"{{.GroupTitle}}"},
+		BearerAuth:  false,
+	}, h.Handler)
+	{{- else if eq .Method "DELETE" }}
+	method.DELETE(api, "/{{.Path}}", method.Operation{
+		Summary:     "{{.Name}}",
+		Description: "{{.Name}} handler",
+		Tags:        []string{"{{.GroupTitle}}"},
+		BearerAuth:  false,
+	}, h.Handler)
+	{{- end }}
+}
+
+func (h *{{.Receiver}}) Handler(ctx context.Context, input *{{.Name}}Input) (*{{.Name}}Output, error) {
+	// TODO: Implement handler logic here
+	// res := h.service.{{.GroupTitle}}.SomeService.Execute(ctx, ...)
+	// return (*{{.Name}}Output)(types.GenerateOutputResponseData(res.Unwrap())), nil
+	return nil, nil
+}

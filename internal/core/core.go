@@ -1,3 +1,4 @@
+// Package core provides the core business logic of the application.
 package core
 
 import (

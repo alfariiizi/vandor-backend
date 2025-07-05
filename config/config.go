@@ -39,6 +39,11 @@ func GetConfig() *config {
 				Email:    getEnv("SUPERADMIN_EMAIL", true, ""),
 				Password: getEnv("SUPERADMIN_PASSWORD", true, ""),
 			},
+			App: appInfoConfig{
+				Name:              getEnv("APP_NAME", false, "Go Service"),
+				SignatureResponse: getEnv("APP_SIGNATURE_RESPONSE", false, "rizalalfarizi.com"),
+				Version:           getEnv("APP_VERSION", false, "1.0.0"),
+			},
 			Http: httpConfig{
 				AppURL: appUrl.String(),
 				Port:   port,

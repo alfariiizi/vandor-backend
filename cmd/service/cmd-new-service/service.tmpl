@@ -3,8 +3,9 @@ package {{.ServiceName}}_service
 import (
 	"context"
 
-	"github.com/alfariiizi/go-service/internal/core/repository"
 	"github.com/alfariiizi/go-service/internal/core/model"
+	"github.com/alfariiizi/go-service/internal/core/repository"
+	"github.com/alfariiizi/go-service/internal/core/usecase"
 	"github.com/alfariiizi/go-service/internal/types"
 )
 
@@ -17,16 +18,21 @@ type {{.Name}}Output struct {
 type {{.Name}} model.Service[{{.Name}}Input, {{.Name}}Output]
 
 type {{.Receiver}} struct {
-	client *repository.Client
+	client  *repository.Client
+	usecase *usecase.Usecases
 }
 
-func New{{.Name}}(repo *repository.Client) {{.Name}} {
+func New{{.Name}}(
+        repo *repository.Client,
+	usecase *usecase.Usecases,
+) {{.Name}} {
 	return &{{.Receiver}}{
 		client: repo,
+		usecase: usecase,
 	}
 }
 
-func (uc *{{.Receiver}}) Execute(ctx context.Context, input {{.Name}}Input) types.Result[{{.Name}}Output]  {
+func (s *{{.Receiver}}) Execute(ctx context.Context, input {{.Name}}Input) types.Result[{{.Name}}Output]  {
 	// TODO: Implement logic
 
 	return types.Ok({{.Name}}Output{})

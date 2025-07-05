@@ -5,29 +5,35 @@ import (
 
 	"github.com/alfariiizi/go-service/internal/core/model"
 	"github.com/alfariiizi/go-service/internal/core/repository"
+	"github.com/alfariiizi/go-service/internal/core/usecase"
 	"github.com/alfariiizi/go-service/internal/types"
-	"go.uber.org/fx"
 )
 
 type PingInput struct {
 	// TODO: Define fields
 }
 type PingOutput struct {
-	Message string `json:"message"`
+	Message string
 }
 type Ping model.Service[PingInput, PingOutput]
 
 type ping struct {
-	fx.In
-	Client *repository.Client
+	client  *repository.Client
+	usecase *usecase.Usecases
 }
 
-func NewPing(param ping) Ping {
-	return &param
+func NewPing(
+	repo *repository.Client,
+	usecase *usecase.Usecases,
+) Ping {
+	return &ping{
+		client:  repo,
+		usecase: usecase,
+	}
 }
 
-func (uc *ping) Execute(ctx context.Context, input PingInput) types.Result[PingOutput] {
+func (s *ping) Execute(ctx context.Context, input PingInput) types.Result[PingOutput] {
 	return types.Ok(PingOutput{
-		Message: "pong",
+		Message: "Pong",
 	})
 }

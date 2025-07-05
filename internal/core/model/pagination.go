@@ -11,7 +11,7 @@ type PaginationMeta struct {
 	Page       int `json:"page"`
 	PerPage    int `json:"per_page"`
 	TotalPages int `json:"total_pages"`
-	TotalCount int `json:"total_count"`
+	TotalItems int `json:"total_items"`
 }
 
 type PaginationOutput[I any] struct {

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/alfariiizi/go-service/config"
@@ -12,7 +13,8 @@ import (
 )
 
 type HttpApi struct {
-	Api huma.API
+	Api     huma.API
+	BaseAPI huma.API
 }
 
 func NewHttpApi(
@@ -30,7 +32,8 @@ func NewHttpApi(
 	}))
 	router.Use(middleware.Logger)
 
-	humaCfg := huma.DefaultConfig("Pentaverses Auth", "1.0.0")
+	cfg := config.GetConfig()
+	humaCfg := huma.DefaultConfig(cfg.App.Name, cfg.App.Version)
 	humaCfg.Components.SecuritySchemes = map[string]*huma.SecurityScheme{
 		"bearerAuth": {
 			Type:         "http",
@@ -41,13 +44,12 @@ func NewHttpApi(
 	}
 	api := humachi.New(router, humaCfg)
 
-	cfg := config.GetConfig()
 	username := cfg.Docs.Username
 	password := cfg.Docs.Password
 
 	// Create a subrouter that requires authentication
 	router.Group(func(r chi.Router) {
-		r.Use(middleware.BasicAuth("Pentaverses Docs", map[string]string{
+		r.Use(middleware.BasicAuth(fmt.Sprintf("%s Docs", cfg.App.Name), map[string]string{
 			username: password,
 		}))
 
@@ -56,7 +58,7 @@ func NewHttpApi(
 			w.Write([]byte(`<!doctype html>
 			<html>
 			  <head>
-			    <title>API Reference | Pentaverses Auth</title>
+			    <title>API Reference</title>
 			    <meta charset="utf-8" />
 			    <meta name="viewport" content="width=device-width, initial-scale=1" />
 			  </head>
@@ -74,7 +76,9 @@ func NewHttpApi(
 		})
 	})
 
+	baseAPI := huma.NewGroup(api, "/api/v1")
 	return &HttpApi{
-		Api: api,
+		Api:     api,
+		BaseAPI: baseAPI,
 	}
 }
