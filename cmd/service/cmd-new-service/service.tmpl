@@ -3,10 +3,9 @@ package {{.ServiceName}}_service
 import (
 	"context"
 
-	"github.com/alfariiizi/go-service/internal/core/model"
-	"github.com/alfariiizi/go-service/internal/core/repository"
-	"github.com/alfariiizi/go-service/internal/core/usecase"
-	"github.com/alfariiizi/go-service/internal/types"
+	"{{.ModuleName}}/internal/core/model"
+	"{{.ModuleName}}/internal/core/repository"
+	"{{.ModuleName}}/internal/core/usecase"
 )
 
 type {{.Name}}Input struct {
@@ -32,8 +31,8 @@ func New{{.Name}}(
 	}
 }
 
-func (s *{{.Receiver}}) Execute(ctx context.Context, input {{.Name}}Input) types.Result[{{.Name}}Output]  {
+func (s *{{.Receiver}}) Execute(ctx context.Context, input {{.Name}}Input) (*{{.Name}}Output, error) { {
 	// TODO: Implement logic
 
-	return types.Ok({{.Name}}Output{})
+	return &{{.Name}}Output{}, nil
 }

@@ -6,13 +6,16 @@ package user_service
 import "go.uber.org/fx"
 
 type UserService struct {
+	GetUserPaginationOutput GetUserPaginationOutput
 	GetUserPagination GetUserPagination
 }
 
 func NewUserService(
+	getUserPaginationOutput GetUserPaginationOutput,
 	getUserPagination GetUserPagination,
 ) UserService {
 	return UserService{
+		GetUserPaginationOutput: getUserPaginationOutput,
 		GetUserPagination: getUserPagination,
 	}
 }
@@ -20,6 +23,7 @@ func NewUserService(
 var Module = fx.Module(
 	"user_service",
 	fx.Provide(
+		NewGetUserPaginationOutput,
 		NewGetUserPagination,
 		NewUserService,
 	),

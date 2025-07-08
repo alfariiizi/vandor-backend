@@ -9,6 +9,7 @@ import (
 	"text/template"
 
 	"github.com/alfariiizi/go-service/cmd/service/utils"
+	cmdutils "github.com/alfariiizi/go-service/cmd/utils"
 )
 
 func main() {
@@ -31,6 +32,7 @@ func main() {
 		targetFile,
 		filepath.Join("cmd", "service", "cmd-new-service", "service.tmpl"),
 		map[string]string{
+			"ModuleName":  cmdutils.GetModuleName(),
 			"ServiceName": group,
 			"Name":        name,
 			"Receiver":    receiver,

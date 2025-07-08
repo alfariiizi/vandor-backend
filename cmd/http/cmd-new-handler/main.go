@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/alfariiizi/go-service/cmd/http/utils"
+	cmdutils "github.com/alfariiizi/go-service/cmd/utils"
 )
 
 func main() {
@@ -27,7 +28,7 @@ func main() {
 	path := strings.ToLower(name)      // for route path
 	groupTitle := strings.Title(group) // for tag/title
 	targetDir := filepath.Join("internal/delivery/http/route", group)
-	targetFile := filepath.Join(targetDir, strings.ToLower(name)+".go")
+	targetFile := filepath.Join(targetDir, receiver+".go")
 
 	err := os.MkdirAll(targetDir, 0o755)
 	if err != nil {
@@ -48,6 +49,7 @@ func main() {
 	defer f.Close()
 
 	err = tmpl.Execute(f, map[string]string{
+		"ModuleName": cmdutils.GetModuleName(),
 		"Group":      group,
 		"GroupTitle": groupTitle,
 		"Name":       name,

@@ -3,11 +3,10 @@ package {{.Group}}_handler
 import (
 	"context"
 
-	"github.com/alfariiizi/go-service/internal/core/model"
-	"github.com/alfariiizi/go-service/internal/core/service"
-	"github.com/alfariiizi/go-service/internal/delivery/http/api"
-	"github.com/alfariiizi/go-service/internal/delivery/http/method"
-	"github.com/alfariiizi/go-service/internal/types"
+	"{{.ModuleName}}/internal/core/model"
+	"{{.ModuleName}}/internal/core/service"
+	"{{.ModuleName}}/internal/delivery/http/api"
+	"{{.ModuleName}}/internal/delivery/http/method"
 	"github.com/danielgtaylor/huma/v2"
 )
 
@@ -138,7 +137,5 @@ func (h *{{.Receiver}}) RegisterRoutes() {
 
 func (h *{{.Receiver}}) Handler(ctx context.Context, input *{{.Name}}Input) (*{{.Name}}Output, error) {
 	// TODO: Implement handler logic here
-	// res := h.service.{{.GroupTitle}}.SomeService.Execute(ctx, ...)
-	// return (*{{.Name}}Output)(types.GenerateOutputResponseData(res.Unwrap())), nil
 	return nil, nil
 }

@@ -9,6 +9,7 @@ import (
 	"text/template"
 
 	"github.com/alfariiizi/go-service/cmd/usecase/utils"
+	cmdutils "github.com/alfariiizi/go-service/cmd/utils"
 )
 
 func main() {
@@ -58,8 +59,9 @@ func createUsecaseFile(name, receiver, targetFile string) {
 	defer f.Close()
 
 	err = tmpl.Execute(f, map[string]string{
-		"Name":     name,
-		"Receiver": receiver,
+		"ModuleName": cmdutils.GetModuleName(),
+		"Name":       name,
+		"Receiver":   receiver,
 	})
 	if err != nil {
 		log.Fatalf("failed to render template: %v", err)
