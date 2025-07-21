@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/alfariiizi/go-service/internal/core/model"
+	"github.com/alfariiizi/vandor/internal/core/model"
 )
 
 func PaginateQuery[T any](
@@ -30,7 +30,7 @@ func PaginateQuery[T any](
 	meta := model.PaginationMeta{
 		Page:       page,
 		PerPage:    limit,
-		TotalCount: totalCount,
+		TotalItems: totalCount,
 		TotalPages: (totalCount + limit - 1) / limit,
 	}
 

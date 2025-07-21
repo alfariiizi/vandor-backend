@@ -7,7 +7,7 @@ import (
 
 	"github.com/lestrrat-go/jwx/v2/jwa"
 	"github.com/lestrrat-go/jwx/v2/jwt"
-	"github.com/alfariiizi/go-service/config"
+	"github.com/alfariiizi/vandor/config"
 )
 
 func GenerateAccessToken(userID string, sessionID string, name string, email string, role string, expire time.Time) (string, error) {

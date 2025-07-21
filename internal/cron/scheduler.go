@@ -5,19 +5,19 @@ import (
 	"log"
 	"time"
 
+	"github.com/alfariiizi/vandor/internal/infrastructure/db"
 	"github.com/go-co-op/gocron"
-	"github.com/alfariiizi/go-service/internal/core/repository"
 	"go.uber.org/fx"
 )
 
 type Scheduler struct {
 	Scheduler *gocron.Scheduler
-	Client    *repository.Client
+	Client    *db.Client
 }
 
 type SchedulerParams struct {
 	fx.In
-	Client *repository.Client
+	Client *db.Client
 }
 
 func NewScheduler(

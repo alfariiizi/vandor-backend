@@ -1,6 +1,6 @@
 package model
 
-import "github.com/alfariiizi/go-service/internal/types"
+import "github.com/alfariiizi/vandor/internal/types"
 
 type PaginationInput struct {
 	Page  types.Optional[int] `json:"page"`

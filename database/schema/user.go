@@ -4,8 +4,9 @@ import (
 	"time"
 
 	"entgo.io/ent"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
-	"entgo.io/ent/schema/index"
+	"github.com/google/uuid"
 )
 
 // User holds the schema definition for the User entity.
@@ -16,17 +17,19 @@ type User struct {
 // Fields of the User.
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("id").
-			Unique().
-			Immutable(),
-		field.String("email").
+		field.UUID("id", uuid.UUID{}).
+			Default(uuid.New).
 			Unique(),
-		field.String("username").
+		field.String("email").
+			NotEmpty().
 			Unique(),
 		field.String("first_name"),
 		field.String("last_name"),
-		field.String("phone").
-			Optional(),
+		field.String("password_hash").
+			NotEmpty().
+			Sensitive(),
+		field.Enum("role").
+			Values("USER", "ADMIN", "SUPERADMIN"),
 		field.Time("created_at").
 			Default(time.Now).
 			Immutable(),
@@ -36,18 +39,9 @@ func (User) Fields() []ent.Field {
 	}
 }
 
-// Edges of the User.
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
-		// edge.To("posts", Post.Type)
-	}
-}
-
-// Indexes of the User.
-func (User) Indexes() []ent.Index {
-	return []ent.Index{
-		index.Fields("email").
-			Unique(),
-		index.Fields("created_at"),
+		edge.To("products", Product.Type),
+		edge.To("sessions", Session.Type),
 	}
 }

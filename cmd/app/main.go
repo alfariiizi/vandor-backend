@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/alfariiizi/go-service/config"
-	"github.com/alfariiizi/go-service/internal/delivery/cmd"
+	"github.com/alfariiizi/vandor/config"
+	"github.com/alfariiizi/vandor/internal/delivery/cmd"
 )
 
 func main() {

@@ -3,9 +3,11 @@ package {{.ServiceName}}_service
 import (
 	"context"
 
+	domain_entries "{{.ModuleName}}/internal/core/domain"
 	"{{.ModuleName}}/internal/core/model"
-	"{{.ModuleName}}/internal/core/repository"
 	"{{.ModuleName}}/internal/core/usecase"
+	"{{.ModuleName}}/internal/infrastructure/db"
+	"{{.ModuleName}}/pkg/validator"
 )
 
 type {{.Name}}Input struct {
@@ -17,22 +19,39 @@ type {{.Name}}Output struct {
 type {{.Name}} model.Service[{{.Name}}Input, {{.Name}}Output]
 
 type {{.Receiver}} struct {
-	client  *repository.Client
+	domain  *domain_entries.Domain
+	client  *db.Client
 	usecase *usecase.Usecases
+	validator validator.Validator
 }
 
 func New{{.Name}}(
-        repo *repository.Client,
+	domain *domain_entries.Domain,
+        client *db.Client,
 	usecase *usecase.Usecases,
+	validator validator.Validator,
 ) {{.Name}} {
 	return &{{.Receiver}}{
-		client: repo,
+		domain:  domain,
+		client: client,
 		usecase: usecase,
+		validator: validator,
 	}
 }
 
-func (s *{{.Receiver}}) Execute(ctx context.Context, input {{.Name}}Input) (*{{.Name}}Output, error) { {
+func (s *{{.Receiver}}) Validate(input {{.Name}}Input) error {
+	return s.validator.Validate(input)
+}
+
+func (s *{{.Receiver}}) Execute(ctx context.Context, input {{.Name}}Input) (*{{.Name}}Output, error) {
+	if err := s.Validate(input); err != nil {
+		return nil, err
+	}
+	return s.Process(ctx, input)
+}
+
+func (s *{{.Receiver}}) Process(ctx context.Context, input {{.Name}}Input) (*{{.Name}}Output, error) {
 	// TODO: Implement logic
 
-	return &{{.Name}}Output{}, nil
+	return nil, nil
 }

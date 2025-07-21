@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"github.com/alfariiizi/go-service/internal/core"
-	"github.com/alfariiizi/go-service/internal/delivery/http"
-	"github.com/alfariiizi/go-service/internal/infrastructure"
+	"github.com/alfariiizi/vandor/internal/core"
+	"github.com/alfariiizi/vandor/internal/delivery/http"
+	"github.com/alfariiizi/vandor/internal/infrastructure"
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
 )

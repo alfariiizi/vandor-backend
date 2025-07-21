@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/alfariiizi/go-service/config"
-	"github.com/alfariiizi/go-service/internal/delivery/http/api"
+	"github.com/alfariiizi/vandor/config"
+	"github.com/alfariiizi/vandor/internal/delivery/http/api"
 	"go.uber.org/fx"
 
 	"github.com/go-chi/chi/v5"

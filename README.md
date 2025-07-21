@@ -152,7 +152,7 @@ machine:
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/alfariiizi/go-service.git
+   git clone https://github.com/alfariiizi/vandor.git
    cd go-service
    ```
 

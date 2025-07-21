@@ -3,10 +3,10 @@ package system_service
 import (
 	"context"
 
-	"github.com/alfariiizi/go-service/internal/core/model"
-	"github.com/alfariiizi/go-service/internal/core/repository"
-	"github.com/alfariiizi/go-service/internal/core/usecase"
-	"github.com/alfariiizi/go-service/internal/types"
+	domain_entries "github.com/alfariiizi/vandor/internal/core/domain"
+	"github.com/alfariiizi/vandor/internal/core/model"
+	"github.com/alfariiizi/vandor/internal/core/usecase"
+	"github.com/alfariiizi/vandor/internal/infrastructure/db"
 )
 
 type PingInput struct {
@@ -18,22 +18,26 @@ type PingOutput struct {
 type Ping model.Service[PingInput, PingOutput]
 
 type ping struct {
-	client  *repository.Client
+	client  *db.Client
 	usecase *usecase.Usecases
+	domain  *domain_entries.Domain
 }
 
 func NewPing(
-	repo *repository.Client,
+	repo *db.Client,
 	usecase *usecase.Usecases,
+	domain *domain_entries.Domain,
 ) Ping {
 	return &ping{
 		client:  repo,
 		usecase: usecase,
+		domain:  domain,
 	}
 }
 
-func (s *ping) Execute(ctx context.Context, input PingInput) types.Result[PingOutput] {
-	return types.Ok(PingOutput{
-		Message: "Pong",
-	})
+func (s *ping) Execute(ctx context.Context, input PingInput) (*PingOutput, error) {
+	// Return a successful ping response
+	return &PingOutput{
+		Message: "pong",
+	}, nil
 }

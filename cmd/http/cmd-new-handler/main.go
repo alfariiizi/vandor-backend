@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/alfariiizi/go-service/cmd/http/utils"
-	cmdutils "github.com/alfariiizi/go-service/cmd/utils"
+	"github.com/alfariiizi/vandor/cmd/http/utils"
+	cmdutils "github.com/alfariiizi/vandor/cmd/utils"
 )
 
 func main() {

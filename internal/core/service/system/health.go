@@ -3,10 +3,9 @@ package system_service
 import (
 	"context"
 
-	"github.com/alfariiizi/go-service/internal/core/model"
-	"github.com/alfariiizi/go-service/internal/core/repository"
-	"github.com/alfariiizi/go-service/internal/core/usecase"
-	"github.com/alfariiizi/go-service/internal/types"
+	"github.com/alfariiizi/vandor/internal/core/model"
+	"github.com/alfariiizi/vandor/internal/core/usecase"
+	"github.com/alfariiizi/vandor/internal/infrastructure/db"
 )
 
 type HealthInput struct {
@@ -18,12 +17,12 @@ type HealthOutput struct {
 type Health model.Service[HealthInput, HealthOutput]
 
 type health struct {
-	client  *repository.Client
+	client  *db.Client
 	usecase *usecase.Usecases
 }
 
 func NewHealth(
-	repo *repository.Client,
+	repo *db.Client,
 	usecase *usecase.Usecases,
 ) Health {
 	return &health{
@@ -32,10 +31,9 @@ func NewHealth(
 	}
 }
 
-func (s *health) Execute(ctx context.Context, input HealthInput) types.Result[HealthOutput] {
+func (s *health) Execute(ctx context.Context, input HealthInput) (*HealthOutput, error) {
 	// TODO: Implement logic
-
-	return types.Ok(HealthOutput{
+	return &HealthOutput{
 		Message: "Service is healthy",
-	})
+	}, nil
 }

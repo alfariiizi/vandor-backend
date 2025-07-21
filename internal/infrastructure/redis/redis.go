@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/redis/go-redis/v9"
-	"github.com/alfariiizi/go-service/config"
+	"github.com/alfariiizi/vandor/config"
 )
 
 type Redis struct {

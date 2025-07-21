@@ -3,12 +3,12 @@ package system_handler
 import (
 	"context"
 
-	"github.com/alfariiizi/go-service/internal/core/model"
-	"github.com/alfariiizi/go-service/internal/core/service"
-	system_service "github.com/alfariiizi/go-service/internal/core/service/system"
-	"github.com/alfariiizi/go-service/internal/delivery/http/api"
-	"github.com/alfariiizi/go-service/internal/delivery/http/method"
-	"github.com/alfariiizi/go-service/internal/types"
+	"github.com/alfariiizi/vandor/internal/core/model"
+	"github.com/alfariiizi/vandor/internal/core/service"
+	system_service "github.com/alfariiizi/vandor/internal/core/service/system"
+	"github.com/alfariiizi/vandor/internal/delivery/http/api"
+	"github.com/alfariiizi/vandor/internal/delivery/http/method"
+	"github.com/alfariiizi/vandor/internal/types"
 	"github.com/danielgtaylor/huma/v2"
 )
 
@@ -63,9 +63,9 @@ func (h *health) RegisterRoutes() {
 }
 
 func (h *health) Handler(ctx context.Context, input *HealthInput) (*HealthOutput, error) {
-	res := h.service.System.Health.Execute(ctx, system_service.HealthInput{})
-	if res.IsErr() {
-		return nil, res.Error()
+	res, err := h.service.System.Health.Execute(ctx, system_service.HealthInput{})
+	if err != nil {
+		return nil, err
 	}
-	return (*HealthOutput)(types.GenerateOutputResponseMessage(res.Unwrap().Message)), nil
+	return (*HealthOutput)(types.GenerateOutputResponseMessage(res.Message)), nil
 }

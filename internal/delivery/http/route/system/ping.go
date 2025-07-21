@@ -3,12 +3,12 @@ package system_handler
 import (
 	"context"
 
-	"github.com/alfariiizi/go-service/internal/core/model"
-	"github.com/alfariiizi/go-service/internal/core/service"
-	system_service "github.com/alfariiizi/go-service/internal/core/service/system"
-	"github.com/alfariiizi/go-service/internal/delivery/http/api"
-	"github.com/alfariiizi/go-service/internal/delivery/http/method"
-	"github.com/alfariiizi/go-service/internal/types"
+	"github.com/alfariiizi/vandor/internal/core/model"
+	"github.com/alfariiizi/vandor/internal/core/service"
+	system_service "github.com/alfariiizi/vandor/internal/core/service/system"
+	"github.com/alfariiizi/vandor/internal/delivery/http/api"
+	"github.com/alfariiizi/vandor/internal/delivery/http/method"
+	"github.com/alfariiizi/vandor/internal/types"
 	"github.com/danielgtaylor/huma/v2"
 )
 
@@ -55,11 +55,11 @@ func (h *ping) RegisterRoutes() {
 }
 
 func (h *ping) Handler(ctx context.Context, input *PingInput) (*PingOutput, error) {
-	res := h.service.System.Ping.Execute(ctx, system_service.PingInput{})
-	if res.IsErr() {
-		return nil, res.Error()
+	res, err := h.service.System.Ping.Execute(ctx, system_service.PingInput{})
+	if err != nil {
+		return nil, err
 	}
 	return (*PingOutput)(types.GenerateOutputResponseData(PingData{
-		Message: res.Unwrap().Message,
+		Message: res.Message,
 	})), nil
 }

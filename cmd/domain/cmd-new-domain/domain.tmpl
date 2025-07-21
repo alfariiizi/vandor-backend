@@ -1,0 +1,32 @@
+package {{ .PackageName }}
+
+import (
+	"fmt"
+
+	domain_builder "{{.ModuleName}}/internal/core/domain/builder"
+	"{{.ModuleName}}/internal/infrastructure/db"
+)
+
+type {{ .Name }} struct {
+	*db.{{ .Name }}
+	client *db.Client
+}
+
+func New{{ .Name }}Domain(client *db.Client) domain_builder.Domain[*db.{{ .Name }}, *{{ .Name }}] {
+	return domain_builder.NewDomain(
+		func(e *db.{{ .Name }}, c *db.Client) *{{ .Name }} {
+			return &{{ .Name }}{
+				{{ .Name }}:   e,
+				client: c,
+			}
+		}, client)
+}
+
+// TODO: Add your domain methods here
+// Example methods:
+
+func ({{ .LowerName }} *{{ .Name }}) String() string {
+	return fmt.Sprintf("{{ .Name }}{ID: %d}", {{ .LowerName }}.ID)
+}
+
+// Add more business logic methods as needed

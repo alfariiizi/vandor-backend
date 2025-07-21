@@ -3,8 +3,10 @@ package usecase
 import (
 	"context"
 
+	domain_entries "{{.ModuleName}}/internal/core/domain"
 	"{{.ModuleName}}/internal/core/model"
-	"{{.ModuleName}}/internal/core/repository"
+	"{{.ModuleName}}/internal/infrastructure/db"
+	"{{.ModuleName}}/pkg/validator"
 )
 
 type {{.Name}}Input struct {
@@ -16,16 +18,35 @@ type {{.Name}}Output struct {
 type {{.Name}} model.Usecase[{{.Name}}Input, {{.Name}}Output]
 
 type {{.Receiver}} struct {
-	client *repository.Client
+	client *db.Client
+	domain  *domain_entries.Domain
+	validator validator.Validator
 }
 
-func New{{.Name}}(repo *repository.Client) {{.Name}} {
+func New{{.Name}}(
+	client *db.Client,
+	domain *domain_entries.Domain,
+	validator validator.Validator,
+) {{.Name}} {	
 	return &{{.Receiver}}{
-		client: repo,
+		client: client,
+		domain:  domain,
+		validator: validator,
 	}
 }
 
+func (uc *{{.Receiver}}) Validate(input {{.Name}}Input) error {
+	return uc.validator.Validate(input)
+}
+
 func (uc *{{.Receiver}}) Execute(ctx context.Context, input {{.Name}}Input) (*{{.Name}}Output, error) {
+	if err := uc.Validate(input); err != nil {
+		return nil, err
+	}
+	return uc.Process(ctx, input)
+}
+
+func (uc *{{.Receiver}}) Process(ctx context.Context, input {{.Name}}Input) (*{{.Name}}Output, error) {
 	// TODO: Implement logic
 
 	return &{{.Name}}Output{}, nil

@@ -4,10 +4,10 @@ import (
 	"log"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/alfariiizi/go-service/config"
-	"github.com/alfariiizi/go-service/internal/delivery/http/api"
-	"github.com/alfariiizi/go-service/internal/delivery/http/route"
-	http "github.com/alfariiizi/go-service/internal/delivery/http/server"
+	"github.com/alfariiizi/vandor/config"
+	"github.com/alfariiizi/vandor/internal/delivery/http/api"
+	"github.com/alfariiizi/vandor/internal/delivery/http/route"
+	http "github.com/alfariiizi/vandor/internal/delivery/http/server"
 	"go.uber.org/fx"
 )
 

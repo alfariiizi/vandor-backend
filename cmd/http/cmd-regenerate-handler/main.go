@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/alfariiizi/go-service/cmd/http/utils"
+	"github.com/alfariiizi/vandor/cmd/http/utils"
 )
 
 func main() {

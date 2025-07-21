@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	ent "github.com/alfariiizi/go-service/internal/core/repository"
+	ent "github.com/alfariiizi/vandor/internal/infrastructure/db"
 )
 
 // TxFunc represents a function that operates within a transaction

@@ -1,15 +1,17 @@
 package cmd
 
 import (
+	"github.com/alfariiizi/vandor/internal/infrastructure/db"
+	"github.com/alfariiizi/vandor/internal/seeder"
 	"github.com/spf13/cobra"
 )
 
 var seederCmd = &cobra.Command{
 	Use:   "seed",
-	Short: "Run ",
+	Short: "Run Seeder",
 	Run: func(cmd *cobra.Command, args []string) {
-		// client := repository.NewClient()
-		// seeder.GenerateAdmin(client)
+		client := db.NewDB()
+		seeder.GenerateAdmin(client)
 	},
 }
 

@@ -4,7 +4,7 @@ package model
 import (
 	"context"
 
-	"github.com/alfariiizi/go-service/internal/types"
+	"github.com/alfariiizi/vandor/internal/types"
 )
 
 type HTTPHandler[I, O any] interface {

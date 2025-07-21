@@ -1,15 +1,15 @@
 package infrastructure
 
 import (
-	"github.com/alfariiizi/go-service/internal/infrastructure/database"
-	"github.com/alfariiizi/go-service/internal/infrastructure/redis"
+	"github.com/alfariiizi/vandor/internal/infrastructure/db"
+	"github.com/alfariiizi/vandor/internal/infrastructure/redis"
 	"go.uber.org/fx"
 )
 
 var Module = fx.Module(
 	"database",
 	fx.Provide(
-		database.NewDB,
+		db.NewDB,
 		redis.NewRedis,
 	),
 )

@@ -6,7 +6,7 @@ set -e
 
 ENT_CMD="entgo.io/ent/cmd/ent"
 SCHEMA_DIR="./database/schema"
-GENERATED_DIR="internal/core/repository"
+GENERATED_DIR="internal/infrastructure/db"
 
 function usage() {
   echo "Usage:"

@@ -16,6 +16,12 @@ tasks:
       - echo "Starting the application..."
       - ./scripts/watch.sh all
 
+  run:seed:
+    desc: Generate seed data
+    cmds:
+      - echo "Running seeder..."
+      - go run ./cmd/app/main.go seed
+
   migrate:status:
     desc: Check the status of database migrations
     cmds:
@@ -25,10 +31,10 @@ tasks:
   migrate:diff:
     desc: Generate a migration diff
     cmds:
-      - echo "Generating migration diff for {{.NAME}}..."
-      - ./scripts/atlas-tool.sh diff {{.NAME}}
+      - echo "Generating migration diff for {{.name}}..."
+      - ./scripts/atlas-tool.sh diff {{.name}}
     requires:
-      vars: [NAME]
+      vars: [name]
 
   migrate:up:
     desc: Apply database migrations
@@ -40,7 +46,16 @@ tasks:
     desc: Create a new schema
     cmds:
       - echo "Creating new schema..."
-      - ./scripts/atlas-tool.sh new {{.name}}
+      - ./scripts/ent-tools.sh new {{.name}}
+    requires:
+      vars: [name]
+
+  create:domain:
+    desc: Create a new domain
+    cmds:
+      - echo "Creating new domain..."
+      - go run ./cmd/domain/cmd-new-domain/main.go {{.name}}
+      - go run ./cmd/domain/cmd-regenerate-domain/main.go
     requires:
       vars: [name]
 
@@ -79,44 +94,52 @@ tasks:
     requires:
       vars: [group, name, method]
 
-  generate:all:
+  gen:all:
     desc: Generate all code
     cmds:
       - echo "Regenerating all code..."
+      - go run ./cmd/domain/cmd-regenerate-domain/main.go
       - go run ./cmd/usecase/cmd-regenerate-usecase/main.go
       - go run ./cmd/service/cmd-regenerate-service/main.go
       - go run ./cmd/http/cmd-regenerate-handler/main.go
       - ./scripts/ent-tools.sh generate
 
-  generate:core:
+  gen:core:
     desc: Generate core code
     cmds:
       - echo "Regenerate core code..."
       - go run ./cmd/usecase/cmd-regenerate-usecase/main.go
       - go run ./cmd/service/cmd-regenerate-service/main.go
+      - go run ./cmd/domain/cmd-regenerate-domain/main.go
 
-  generate:usecase:
+  gen:domain:
+    desc: Generate domain code
+    cmds:
+      - echo "Regenerate domain code..."
+      - go run ./cmd/domain/cmd-regenerate-domain/main.go
+
+  gen:usecase:
     desc: Generate usecase code
     cmds:
       - echo "Regenerate usecases..."
       - go run ./cmd/usecase/cmd-regenerate-usecase/main.go
 
-  generate:service:
+  gen:service:
     desc: Generate service code
     cmds:
       - echo "Regenerate service..."
       - go run ./cmd/service/cmd-regenerate-service/main.go
 
-  generate:http-handler:
+  gen:http-handler:
     desc: Generate HTTP handler code
     cmds:
       - echo "Regenerate HTTP handlers..."
       - go run ./cmd/http/cmd-regenerate-handler/main.go
 
-  generate:repo:
-    desc: Generate repository code
+  gen:db-model:
+    desc: Generate DB Model code
     cmds:
-      - echo "Generating repositories..."
+      - echo "Generating DB Model..."
       - ./scripts/ent-tools.sh generate
 
   test:
