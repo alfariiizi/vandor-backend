@@ -1,0 +1,12 @@
+type: OrderStatus
+description: Description for OrderStatus enum
+values:
+  PENDING: Order is pending
+  PROCESSING: Order is being processed
+  SHIPPED: Order has been shipped
+  DELIVERED: Order has been delivered
+  CANCELLED: Order has been cancelled
+  RETURNED: Order has been returned
+  REFUNDED: Order has been refunded
+  ON_HOLD: Order is on hold
+  FAILED: Order has failed

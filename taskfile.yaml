@@ -75,6 +75,14 @@ tasks:
     requires:
       vars: [group, name]
 
+  create:enum:
+    desc: Create a new enum
+    cmds:
+      - echo "Creating new enum..."
+      - go run ./cmd/enum/cmd/main.go add {{.name | lower}}
+    requires:
+      vars: [name]
+
   create:http-handler:
     desc: Create a new HTTP handler
     cmds:
@@ -129,6 +137,12 @@ tasks:
     cmds:
       - echo "Regenerate service..."
       - go run ./cmd/service/cmd-regenerate-service/main.go
+
+  gen:enum:
+    desc: Generate enum code
+    cmds:
+      - echo "Regenerate enums..."
+      - go run ./cmd/enum/cmd/main.go generate
 
   gen:http-handler:
     desc: Generate HTTP handler code
