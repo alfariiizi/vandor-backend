@@ -10,8 +10,8 @@ import (
 )
 
 type Services struct {
-	System system_service.SystemService
 	Auth auth_service.AuthService
+	System system_service.SystemService
 }
 
 func NewServices(
@@ -19,8 +19,8 @@ func NewServices(
 	system system_service.SystemService,
 ) *Services {
 	return &Services{
-		System: system,
 		Auth: auth,
+		System: system,
 	}
 }
 

@@ -56,7 +56,14 @@ func (s *login) Execute(ctx context.Context, input LoginInput) (*LoginOutput, er
 	if err := s.Validate(input); err != nil {
 		return nil, err
 	}
+	if err := s.Observer(ctx, input); err != nil {
+		fmt.Println("Observer error:", err)
+	}
 	return s.Process(ctx, input)
+}
+
+func (s *login) Observer(ctx context.Context, input LoginInput) error {
+	return nil
 }
 
 func (s *login) Process(ctx context.Context, input LoginInput) (*LoginOutput, error) {

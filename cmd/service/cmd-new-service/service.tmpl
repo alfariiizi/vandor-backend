@@ -2,6 +2,7 @@ package {{.ServiceName}}_service
 
 import (
 	"context"
+	"log"
 
 	domain_entries "{{.ModuleName}}/internal/core/domain"
 	"{{.ModuleName}}/internal/core/model"
@@ -47,7 +48,17 @@ func (s *{{.Receiver}}) Execute(ctx context.Context, input {{.Name}}Input) (*{{.
 	if err := s.Validate(input); err != nil {
 		return nil, err
 	}
+	if err := s.Observer(ctx, input); err != nil {
+		log.Printf("Observer service '{{.Name}}' error: %s", err.Error())
+	}
 	return s.Process(ctx, input)
+}
+
+func (s *{{.Receiver}}) Observer(ctx context.Context, input {{.Name}}Input) error {
+        // TODO: Implement observer logic
+	// This is optional. You can leave this blank if not needed.
+
+	return nil
 }
 
 func (s *{{.Receiver}}) Process(ctx context.Context, input {{.Name}}Input) (*{{.Name}}Output, error) {
