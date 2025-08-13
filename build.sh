@@ -2,12 +2,12 @@
 
 set -e
 
-APP_IMAGE_NAME="alfariiizi/go-app:latest"
-MIGRATE_IMAGE_NAME="alfariiizi/go-migrate:latest"
+APP_IMAGE_NAME="jogiia/jogiia:clinic-backend-1.0.0"
+MIGRATE_IMAGE_NAME="jogiia/jogiia:clinic-migration-1.0.0"
 
 build_app() {
   echo "🔧 Building app image..."
-  docker buildx build -t $APP_IMAGE_NAME -f docker/Dockerfile --platform=linux/amd64 .
+  docker buildx build --builder desktop-linux -t $APP_IMAGE_NAME -f docker/Dockerfile --platform=linux/amd64 .
 }
 
 build_migrate() {

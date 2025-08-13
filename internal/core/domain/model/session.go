@@ -31,7 +31,7 @@ func (session *Session) String() string {
 }
 
 func (session *Session) IsAvailable() bool {
-	return time.Now().Before(session.ExpiresAt) && session.RevokedAt != nil
+	return time.Now().Before(session.ExpiresAt) && session.RevokedAt == nil
 }
 
 // Add more business logic methods as needed

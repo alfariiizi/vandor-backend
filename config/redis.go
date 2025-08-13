@@ -1,33 +1,19 @@
 package config
 
 import (
-	"net/url"
-	"strconv"
-
 	"github.com/redis/go-redis/v9"
 )
 
-func parseRedisURL(redisURL string) (*redis.Options, error) {
-	u, err := url.Parse(redisURL)
-	if err != nil {
-		return nil, err
-	}
-
-	db := 0
-	if len(u.Path) > 1 {
-		db, err = strconv.Atoi(u.Path[1:])
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	password := ""
-	if u.User != nil {
-		password, _ = u.User.Password()
-	}
-
+func parseRedisURL(
+	host string,
+	port string,
+	username string,
+	password string,
+	db int,
+) (*redis.Options, error) {
 	return &redis.Options{
-		Addr:     u.Host,
+		Addr:     host + ":" + port,
+		Username: username,
 		Password: password,
 		DB:       db,
 	}, nil

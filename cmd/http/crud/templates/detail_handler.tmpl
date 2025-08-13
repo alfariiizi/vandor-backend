@@ -1,0 +1,69 @@
+package {{.SnakeCase}}_handler
+
+import (
+	"context"
+
+	"github.com/danielgtaylor/huma/v2"
+	"{{.Module}}/internal/core/model"
+	"{{.Module}}/internal/infrastructure/db"
+	"{{.Module}}/internal/infrastructure/db/{{.SnakeCase}}"
+	"{{.Module}}/internal/core/service"
+	"{{.Module}}/internal/delivery/http/api"
+	"{{.Module}}/internal/delivery/http/method"
+	"{{.Module}}/internal/types"
+	"{{.Module}}/internal/utils"
+)
+
+type Detail{{.Model}}Input struct {
+	ID string `path:"id" doc:"ID of the item" example:"123"`
+}
+
+type Detail{{.Model}}Output types.OutputResponseData[Detail{{.Model}}Data]
+
+type Detail{{.Model}}Data *db.{{.Model}}
+
+type Detail{{.Model}}Handler model.HTTPHandler[Detail{{.Model}}Input, Detail{{.Model}}Output]
+
+type detail{{.Model}} struct {
+	api     huma.API
+	service *service.Services
+	client  *db.Client
+}
+
+func NewDetail{{.Model}}(
+	api *api.HttpApi,
+	service *service.Services,
+	client *db.Client,
+) Detail{{.Model}}Handler {
+	h := &detail{{.Model}}{
+		api:     api.BaseAPI,
+		service: service,
+		client:  client,
+	}
+	h.RegisterRoutes()
+	return h
+}
+
+func (h *detail{{.Model}}) RegisterRoutes() {
+	api := h.api
+	method.GET(api, "/{{.PluralKebab}}/{id}", method.Operation{
+		Summary:     "Detail {{.Model}}",
+		Description: "Retrieve details of a {{.ModelLower}} by ID",
+		Tags:        []string{"{{.Model}}"},
+		BearerAuth:  true,
+	}, h.Handler)
+}
+
+func (h *detail{{.Model}}) Handler(ctx context.Context, input *Detail{{.Model}}Input) (*Detail{{.Model}}Output, error) {
+	id, err := utils.IDParser(input.ID)
+	if err != nil {
+		return nil, err
+	}
+	item, err := h.client.{{.Model}}.Query().
+		Where({{.SnakeCase}}.ID(*id)).
+		Only(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return (*Detail{{.Model}}Output)(types.GenerateOutputResponseData(Detail{{.Model}}Data(item))), nil
+}

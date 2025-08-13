@@ -30,7 +30,7 @@ func NewHttpServer(
 	// api.RegisterHandler()
 
 	server := http.Server{
-		Addr:    fmt.Sprintf(":%d", cfg.Http.Port),
+		Addr:    fmt.Sprintf("0.0.0.0:%d", cfg.Http.Port),
 		Handler: router,
 	}
 

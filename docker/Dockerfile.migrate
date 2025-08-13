@@ -4,7 +4,7 @@ WORKDIR /app
 
 RUN apk add --no-cache ca-certificates bash curl
 
-COPY ./ent/migrate ./ent/migrate
+COPY ./database/migrate ./database/migrate
 COPY ./scripts ./scripts
 
 RUN curl -sSf https://atlasgo.sh | sh

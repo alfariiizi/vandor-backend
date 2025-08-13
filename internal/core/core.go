@@ -3,6 +3,7 @@ package core
 
 import (
 	domain_entries "github.com/alfariiizi/vandor/internal/core/domain"
+	"github.com/alfariiizi/vandor/internal/core/job"
 	"github.com/alfariiizi/vandor/internal/core/service"
 	"github.com/alfariiizi/vandor/internal/core/usecase"
 	"github.com/alfariiizi/vandor/pkg/validator"
@@ -15,4 +16,5 @@ var Module = fx.Module(
 	usecase.Module,
 	service.Module,
 	domain_entries.Module,
+	job.Module,
 )

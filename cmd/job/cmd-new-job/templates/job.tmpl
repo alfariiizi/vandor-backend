@@ -1,0 +1,60 @@
+package job
+
+import (
+        "context"
+        "encoding/json"
+
+	domain_entries "github.com/alfariiizi/vandor/internal/core/domain"
+	"github.com/alfariiizi/vandor/internal/core/model"
+	"github.com/alfariiizi/vandor/internal/delivery/worker"
+	"github.com/alfariiizi/vandor/internal/infrastructure/db"
+	"github.com/alfariiizi/vandor/pkg/validator"
+	"github.com/hibiken/asynq"
+)
+
+type {{.StructName}}Payload struct {
+        // TODO: add fields for payload
+}
+
+type {{.StructName}} model.Job[{{.StructName}}Payload]
+
+type {{.VarName}} struct {
+        client    *db.Client
+        domain    *domain_entries.Domain
+        validator validator.Validator
+        worker     *worker.Client
+}
+
+func New{{.StructName}}(
+        client *db.Client,
+        domain *domain_entries.Domain,
+        validator validator.Validator,
+        worker *worker.Client,
+) {{.StructName}} {
+    return &{{.VarName}}{
+        client:    client,
+        domain:    domain,
+        validator: validator,
+        worker:     worker,
+    }
+}
+
+func (j *{{.VarName}}) Key() string {
+        return "{{.JobKey}}"
+}
+
+func (j *{{.VarName}}) Enqueue(ctx context.Context, payload {{.StructName}}Payload) (*asynq.TaskInfo, error) {
+        if err := j.validator.Validate(payload); err != nil {
+            return nil, err
+        }
+
+        data, _ := json.Marshal(payload)
+        task := asynq.NewTask(j.Key(), data)
+        return j.worker.EnqueueContext(ctx, task, asynq.Queue("default"))
+}
+
+func (j *{{.VarName}}) Handle(ctx context.Context, payload {{.StructName}}Payload) error {
+        // TODO: implement job here
+
+        return nil
+}

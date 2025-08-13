@@ -18,6 +18,7 @@ type CreateAccessTokenInput struct {
 	Name      string `json:"name" validate:"required"`
 	Email     string `json:"email" validate:"required,email"`
 	Role      string `json:"role" validate:"required"`
+	Tenant    string `json:"tenant" validate:"required"` // Tenant ID or name
 }
 
 type CreateAccessTokenOutput struct {

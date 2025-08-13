@@ -5,7 +5,6 @@ package route
 
 import (
 	auth_handler "github.com/alfariiizi/vandor/internal/delivery/http/route/auth"
-	system_handler "github.com/alfariiizi/vandor/internal/delivery/http/route/system"
 	"go.uber.org/fx"
 )
 
@@ -15,7 +14,5 @@ var Module = fx.Module(
 		auth_handler.NewLogin,
 		auth_handler.NewLoginAdmin,
 		auth_handler.NewRefresh,
-		system_handler.NewHealth,
-		system_handler.NewPing,
 	),
 )

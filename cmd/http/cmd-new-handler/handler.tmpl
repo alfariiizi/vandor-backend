@@ -5,6 +5,7 @@ import (
 
 	"{{.ModuleName}}/internal/core/model"
 	"{{.ModuleName}}/internal/core/service"
+	"{{.ModuleName}}/internal/infrastructure/db"
 	"{{.ModuleName}}/internal/delivery/http/api"
 	"{{.ModuleName}}/internal/delivery/http/method"
 	"{{.ModuleName}}/internal/types"
@@ -82,15 +83,18 @@ type {{.Name}}Handler model.HTTPHandler[{{.Name}}Input, {{.Name}}Output]
 type {{.Receiver}} struct {
 	api     huma.API
 	service *service.Services
+	client  *db.Client
 }
 
 func New{{.Name}}(
 	api *api.HttpApi,
 	service *service.Services,
+	client *db.Client,
 ) {{.Name}}Handler {
 	h := &{{.Receiver}}{
 		api:     api.BaseAPI,
 		service: service,
+		client:  client,
 	}
 	h.RegisterRoutes()
 	return h
@@ -142,5 +146,6 @@ func (h *{{.Receiver}}) GenerateResponse(data {{.Name}}Data) *{{.Name}}Output {
 
 func (h *{{.Receiver}}) Handler(ctx context.Context, input *{{.Name}}Input) (*{{.Name}}Output, error) {
 	// TODO: Implement handler logic here
+
 	return h.GenerateResponse({{.Name}}Data{}), nil
 }

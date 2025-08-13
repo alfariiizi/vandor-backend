@@ -64,7 +64,7 @@ func NewRefresh(
 
 func (h *refresh) RegisterRoutes() {
 	api := h.api
-	method.POST(api, "/refresh", method.Operation{
+	method.POST(api, "/auth/refresh", method.Operation{
 		Summary:     "Refresh",
 		Description: "Refresh handler",
 		Tags:        []string{"Auth"},

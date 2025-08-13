@@ -17,7 +17,7 @@ import (
 type LoginInput struct {
 	Email    string `json:"email" validate:"required,email" doc:"Email address of the user"`
 	Password string `json:"password" validate:"required,min=6" doc:"Password of the user, minimum length is 8 characters"`
-	IsAdmin  bool   `json:"is_admin" validate:"required" doc:"Is the user an admin? Set to true if the user is an admin"`
+	// IsAdmin  bool   `json:"is_admin" validate:"required" doc:"Is the user an admin? Set to true if the user is an admin"`
 }
 type LoginOutput struct {
 	AccessToken           string `json:"access_token"`
@@ -67,42 +67,43 @@ func (s *login) Observer(ctx context.Context, input LoginInput) error {
 }
 
 func (s *login) Process(ctx context.Context, input LoginInput) (*LoginOutput, error) {
-	password, err := utils.HashPassword(input.Password)
-	if err != nil {
-		return nil, err
-	}
-
-	query := s.client.User.Query().
-		Where(user.Email(input.Email)).
-		Where(user.PasswordHash(*password))
-
-	if !input.IsAdmin {
-		query = query.Where(user.RoleEQ(user.RoleUSER))
-	}
-
-	user, err := s.domain.User.One(
-		query.Only(ctx),
+	userOne, err := s.domain.User.One(
+		s.client.User.Query().
+			Where(user.Email(input.Email)).
+			Only(ctx),
 	)
 	if err != nil {
 		return nil, err
 	}
-	if user == nil {
+	if userOne == nil {
 		return nil, fmt.Errorf("user not found with email: %s", input.Email)
+	}
+	if !userOne.IsPasswordMatches(input.Password) {
+		return nil, fmt.Errorf("invalid credentials for user: %s", input.Email)
+	}
+
+	refreshToken, err := utils.GenerateRefreshToken()
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate refresh token: %w", err)
 	}
 
 	session, err := s.domain.Session.One(
-		s.client.Session.Create().Save(ctx),
+		s.client.Session.Create().
+			SetRefreshToken(refreshToken).
+			SetUserID(userOne.ID).
+			Save(ctx),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create session: %w", err)
 	}
+
 	accessTokenExpiresAt := time.Now().Add(time.Minute * 17)
 	accessToken, err := utils.GenerateAccessToken(
-		user.ID.String(),
+		userOne.ID.String(),
 		session.ID.String(),
-		user.FullName(),
-		user.Email,
-		user.Role.String(),
+		userOne.FullName(),
+		userOne.Email,
+		userOne.Role.String(),
 		accessTokenExpiresAt,
 	)
 	if err != nil {

@@ -5,9 +5,9 @@ import (
 	"encoding/hex"
 	"time"
 
+	"github.com/alfariiizi/vandor/config"
 	"github.com/lestrrat-go/jwx/v2/jwa"
 	"github.com/lestrrat-go/jwx/v2/jwt"
-	"github.com/alfariiizi/vandor/config"
 )
 
 func GenerateAccessToken(userID string, sessionID string, name string, email string, role string, expire time.Time) (string, error) {

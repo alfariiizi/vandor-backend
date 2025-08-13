@@ -1,0 +1,559 @@
+- name: Customer
+  fields:
+    - name: name
+      type: string
+    - name: phone_number
+      type: string
+    - name: created_at
+      type: time.Time
+    - name: updated_at
+      type: time.Time
+    - name: deleted_at
+      type: time.Time
+  relations:
+    - type: hasMany
+      target: QueueEntry
+    - type: hasMany
+      target: Thread
+- name: CustomerResponder
+  fields:
+    - name: status
+      type: customerresponder.Status
+    - name: user_id
+      type: uuid.UUID
+    - name: tenant_id
+      type: uuid.UUID
+    - name: created_at
+      type: time.Time
+    - name: updated_at
+      type: time.Time
+    - name: deleted_at
+      type: time.Time
+  relations:
+    - type: hasOne
+      target: User
+    - type: hasOne
+      target: Tenant
+- name: Message
+  fields:
+    - name: content_type
+      type: string
+    - name: content
+      type: string
+    - name: sender_type
+      type: message.SenderType
+    - name: created_at
+      type: time.Time
+    - name: updated_at
+      type: time.Time
+    - name: deleted_at
+      type: time.Time
+    - name: thread_id
+      type: uuid.UUID
+    - name: user_id
+      type: uuid.UUID
+    - name: order_id
+      type: uuid.UUID
+  relations:
+    - type: hasOne
+      target: Thread
+    - type: hasOne
+      target: User
+    - type: hasOne
+      target: Order
+- name: Order
+  fields:
+    - name: order_number
+      type: string
+    - name: order_type
+      type: order.OrderType
+    - name: status
+      type: order.Status
+    - name: subtotal
+      type: float64
+    - name: tax_amount
+      type: float64
+    - name: discount_amount
+      type: float64
+    - name: shipping_cost
+      type: float64
+    - name: total_amount
+      type: float64
+    - name: currency
+      type: string
+    - name: payment_status
+      type: order.PaymentStatus
+    - name: payment_method
+      type: order.PaymentMethod
+    - name: shipping_address
+      type: map[string]interface {}
+    - name: billing_address
+      type: map[string]interface {}
+    - name: delivered_at
+      type: time.Time
+    - name: notes
+      type: string
+    - name: cancellation_reason
+      type: string
+    - name: created_at
+      type: time.Time
+    - name: updated_at
+      type: time.Time
+  relations:
+    - type: hasOne
+      target: Tenant
+    - type: hasMany
+      target: OrderItem
+    - type: hasMany
+      target: Message
+- name: OrderItem
+  fields:
+    - name: item_type
+      type: orderitem.ItemType
+    - name: item_name
+      type: string
+    - name: item_description
+      type: string
+    - name: quantity
+      type: int
+    - name: unit_price
+      type: float64
+    - name: discount_amount
+      type: float64
+    - name: total_price
+      type: float64
+    - name: item_metadata
+      type: map[string]interface {}
+    - name: created_at
+      type: time.Time
+  relations:
+    - type: hasOne
+      target: Order
+    - type: hasOne
+      target: Product
+    - type: hasOne
+      target: Service
+- name: Platform
+  fields:
+    - name: slug
+      type: string
+    - name: name
+      type: string
+    - name: image
+      type: string
+    - name: description
+      type: string
+    - name: is_active
+      type: bool
+    - name: created_at
+      type: time.Time
+    - name: updated_at
+      type: time.Time
+  relations:
+    - type: hasMany
+      target: PlatformIntegration
+- name: PlatformIntegration
+  fields:
+    - name: account_name
+      type: string
+    - name: account_id
+      type: string
+    - name: status
+      type: platformintegration.Status
+    - name: created_at
+      type: time.Time
+    - name: data_connection
+      type: map[string]interface {}
+    - name: updated_at
+      type: time.Time
+    - name: tenant_id
+      type: uuid.UUID
+    - name: platform_id
+      type: uuid.UUID
+  relations:
+    - type: hasMany
+      target: Thread
+    - type: hasOne
+      target: Platform
+    - type: hasOne
+      target: Tenant
+- name: PlaygroundMessage
+  fields:
+    - name: content_type
+      type: string
+    - name: content
+      type: string
+    - name: sender_type
+      type: playgroundmessage.SenderType
+    - name: created_at
+      type: time.Time
+    - name: updated_at
+      type: time.Time
+    - name: deleted_at
+      type: time.Time
+    - name: tenant_id
+      type: uuid.UUID
+    - name: user_id
+      type: uuid.UUID
+  relations:
+    - type: hasOne
+      target: Tenant
+    - type: hasOne
+      target: User
+- name: Product
+  fields:
+    - name: sku
+      type: string
+    - name: name
+      type: string
+    - name: description
+      type: string
+    - name: short_description
+      type: string
+    - name: brand
+      type: string
+    - name: specifications
+      type: map[string]interface {}
+    - name: usage_instructions
+      type: '[]string'
+    - name: warnings
+      type: '[]string'
+    - name: status
+      type: product.Status
+    - name: featured
+      type: bool
+    - name: created_at
+      type: time.Time
+    - name: updated_at
+      type: time.Time
+  relations:
+    - type: hasOne
+      target: Tenant
+    - type: hasOne
+      target: ProductCategory
+    - type: hasMany
+      target: ProductVariant
+    - type: hasMany
+      target: OrderItem
+- name: ProductCategory
+  fields:
+    - name: name
+      type: string
+    - name: description
+      type: string
+  relations:
+    - type: hasMany
+      target: Product
+- name: ProductVariant
+  fields:
+    - name: variant_name
+      type: string
+    - name: sku
+      type: string
+    - name: images
+      type: '[]string'
+    - name: purchase_price
+      type: float64
+    - name: selling_price
+      type: float64
+    - name: discount_price
+      type: float64
+    - name: unit
+      type: string
+    - name: min_stock_level
+      type: int
+    - name: current_stock
+      type: int
+    - name: track_inventory
+      type: bool
+    - name: prescription_required
+      type: bool
+    - name: expiry_date
+      type: time.Time
+    - name: batch_number
+      type: string
+    - name: length
+      type: float64
+    - name: width
+      type: float64
+    - name: height
+      type: float64
+    - name: weight
+      type: float64
+    - name: tags
+      type: '[]string'
+    - name: status
+      type: productvariant.Status
+    - name: created_at
+      type: time.Time
+    - name: updated_at
+      type: time.Time
+  relations:
+    - type: hasOne
+      target: Product
+    - type: hasMany
+      target: OrderItem
+- name: QueueEntry
+  fields:
+    - name: queue_number
+      type: string
+    - name: status
+      type: queueentry.Status
+    - name: estimated_time
+      type: time.Time
+    - name: notes
+      type: string
+    - name: created_at
+      type: time.Time
+    - name: updated_at
+      type: time.Time
+    - name: called_at
+      type: time.Time
+    - name: completed_at
+      type: time.Time
+    - name: tenant_id
+      type: uuid.UUID
+    - name: customer_id
+      type: uuid.UUID
+    - name: service_user_id
+      type: string
+    - name: service_id
+      type: string
+  relations:
+    - type: hasOne
+      target: Tenant
+    - type: hasOne
+      target: Customer
+- name: Role
+  fields:
+    - name: name
+      type: string
+    - name: type
+      type: role.Type
+    - name: description
+      type: string
+    - name: created_at
+      type: time.Time
+    - name: updated_at
+      type: time.Time
+  relations:
+    - type: hasMany
+      target: TenantUserRole
+- name: Service
+  fields:
+    - name: name
+      type: string
+    - name: description
+      type: string
+    - name: duration
+      type: int
+    - name: price
+      type: float64
+    - name: active
+      type: bool
+    - name: created_at
+      type: time.Time
+    - name: updated_at
+      type: time.Time
+    - name: deleted_at
+      type: time.Time
+    - name: tenant_id
+      type: uuid.UUID
+  relations:
+    - type: hasMany
+      target: OrderItem
+    - type: hasMany
+      target: ServiceUser
+    - type: hasOne
+      target: Tenant
+- name: ServiceUser
+  fields:
+    - name: status
+      type: serviceuser.Status
+    - name: service_id
+      type: uuid.UUID
+    - name: user_id
+      type: uuid.UUID
+    - name: tenant_id
+      type: uuid.UUID
+    - name: created_at
+      type: time.Time
+    - name: updated_at
+      type: time.Time
+    - name: deleted_at
+      type: time.Time
+  relations:
+    - type: hasMany
+      target: ServiceUserSchedule
+    - type: hasOne
+      target: Service
+    - type: hasOne
+      target: User
+    - type: hasOne
+      target: Tenant
+- name: ServiceUserSchedule
+  fields:
+    - name: date
+      type: time.Time
+    - name: start_time
+      type: time.Time
+    - name: end_time
+      type: time.Time
+    - name: created_at
+      type: time.Time
+    - name: updated_at
+      type: time.Time
+    - name: deleted_at
+      type: time.Time
+    - name: service_user_id
+      type: uuid.UUID
+  relations:
+    - type: hasOne
+      target: ServiceUser
+- name: Session
+  fields:
+    - name: refresh_token
+      type: string
+    - name: ip_address
+      type: string
+    - name: user_agent
+      type: string
+    - name: device_id
+      type: string
+    - name: number_of_uses
+      type: uint64
+    - name: expires_at
+      type: time.Time
+    - name: last_used_at
+      type: time.Time
+    - name: created_at
+      type: time.Time
+    - name: revoked_at
+      type: time.Time
+  relations:
+    - type: hasOne
+      target: User
+- name: Tenant
+  fields:
+    - name: name
+      type: string
+    - name: phone
+      type: string
+    - name: email
+      type: string
+    - name: address
+      type: string
+    - name: type
+      type: string
+    - name: status
+      type: tenant.Status
+    - name: business_hours
+      type: map[string]interface {}
+    - name: website
+      type: string
+    - name: logo_url
+      type: string
+    - name: whatsapp_number
+      type: string
+    - name: active
+      type: bool
+    - name: created_at
+      type: time.Time
+    - name: updated_at
+      type: time.Time
+    - name: deleted_at
+      type: time.Time
+  relations:
+    - type: hasMany
+      target: Service
+    - type: hasMany
+      target: TenantUserRole
+    - type: hasMany
+      target: Product
+    - type: hasMany
+      target: ProductCategory
+    - type: hasMany
+      target: Order
+    - type: hasMany
+      target: PlatformIntegration
+    - type: hasMany
+      target: CustomerResponder
+    - type: hasMany
+      target: QueueEntry
+    - type: hasMany
+      target: ServiceUser
+    - type: hasMany
+      target: PlaygroundMessage
+- name: TenantUserRole
+  fields:
+    - name: tenant_id
+      type: uuid.UUID
+    - name: user_id
+      type: uuid.UUID
+    - name: role_id
+      type: uuid.UUID
+  relations:
+    - type: hasOne
+      target: Tenant
+    - type: hasOne
+      target: User
+    - type: hasOne
+      target: Role
+- name: Thread
+  fields:
+    - name: account_id
+      type: string
+    - name: account_name
+      type: string
+    - name: status
+      type: thread.Status
+    - name: created_at
+      type: time.Time
+    - name: updated_at
+      type: time.Time
+    - name: deleted_at
+      type: time.Time
+    - name: platform_integration_id
+      type: uuid.UUID
+    - name: user_id
+      type: uuid.UUID
+    - name: customer_id
+      type: uuid.UUID
+  relations:
+    - type: hasMany
+      target: Message
+    - type: hasOne
+      target: PlatformIntegration
+    - type: hasOne
+      target: User
+    - type: hasOne
+      target: Customer
+- name: User
+  fields:
+    - name: email
+      type: string
+    - name: password_hash
+      type: string
+    - name: name
+      type: string
+    - name: created_at
+      type: time.Time
+    - name: updated_at
+      type: time.Time
+    - name: deleted_at
+      type: time.Time
+  relations:
+    - type: hasMany
+      target: Session
+    - type: hasMany
+      target: TenantUserRole
+    - type: hasMany
+      target: Thread
+    - type: hasMany
+      target: CustomerResponder
+    - type: hasMany
+      target: Message
+    - type: hasMany
+      target: ServiceUser
+    - type: hasMany
+      target: PlaygroundMessage

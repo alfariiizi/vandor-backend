@@ -9,6 +9,7 @@ type config struct {
 	DB         dbConfig
 	Docs       docsConfig
 	Redis      redis.Options
+	Worker     workerConfig
 	Auth       authConfig
 	Email      emailConfig
 }
@@ -37,6 +38,10 @@ type superadminConfig struct {
 	Name     string
 	Email    string
 	Password string
+}
+
+type workerConfig struct {
+	Concurrency int
 }
 
 type docsConfig struct {

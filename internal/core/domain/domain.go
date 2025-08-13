@@ -11,14 +11,12 @@ import (
 )
 
 type Domain struct {
-	Product domain_builder.Domain[*db.Product, *domain.Product]
 	Session domain_builder.Domain[*db.Session, *domain.Session]
 	User domain_builder.Domain[*db.User, *domain.User]
 }
 
 func NewDomain(client *db.Client) *Domain {
 	return &Domain{
-		Product: domain.NewProductDomain(client),
 		Session: domain.NewSessionDomain(client),
 		User: domain.NewUserDomain(client),
 	}

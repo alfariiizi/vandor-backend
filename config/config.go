@@ -29,7 +29,13 @@ func GetConfig() *config {
 			log.Println("Using default port 8000, as APP_URL does not specify a port")
 			port = 8000
 		}
-		redisOption, err := parseRedisURL(getEnv("REDIS_URL", true, ""))
+		redisOption, err := parseRedisURL(
+			getEnv("REDIS_HOST", true, ""),
+			getEnv("REDIS_PORT", true, ""),
+			getEnv("REDIS_USERNAME", false, ""),
+			getEnv("REDIS_PASSWORD", false, ""),
+			getEnvAsInt("REDIS_DB", false, 0),
+		)
 		if err != nil {
 			log.Fatal("Invalid REDIS_URL format, must be a valid URL")
 		}
@@ -57,6 +63,9 @@ func GetConfig() *config {
 				Password: getEnv("DOCS_PASSWORD", true, ""),
 			},
 			Redis: *redisOption,
+			Worker: workerConfig{
+				Concurrency: getEnvAsInt("WORKER_CONCURRENCY", false, 10),
+			},
 			Auth: authConfig{
 				SecretKey: getEnv("AUTH_SECRET_KEY", true, ""),
 			},

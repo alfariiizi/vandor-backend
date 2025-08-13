@@ -1,0 +1,110 @@
+package {{.SnakeCase}}_handler
+
+import (
+	"context"
+	"math"
+
+	"github.com/danielgtaylor/huma/v2"
+	"{{.Module}}/internal/core/model"
+	"{{.Module}}/internal/infrastructure/db"
+	"{{.Module}}/internal/core/service"
+	"{{.Module}}/internal/delivery/http/api"
+	"{{.Module}}/internal/delivery/http/method"
+	"{{.Module}}/internal/types"
+	"{{.Module}}/internal/utils"
+)
+
+type List{{.Model}}FilterInput struct {
+	Query string `query:"q" doc:"Query parameter for filtering" example:"search term"`
+}
+
+type List{{.Model}}Input struct {
+	model.HTTPInputParamsPagination
+	List{{.Model}}FilterInput
+}
+
+type List{{.Model}}Output types.OutputResponsePagination[List{{.Model}}Data]
+
+type List{{.Model}}Data []*db.{{.Model}}
+
+type List{{.Model}}Handler model.HTTPHandler[List{{.Model}}Input, List{{.Model}}Output]
+
+type list{{.Model}} struct {
+	api     huma.API
+	service *service.Services
+	client  *db.Client
+}
+
+func NewList{{.Model}}(
+	api *api.HttpApi,
+	service *service.Services,
+	client *db.Client,
+) List{{.Model}}Handler {
+	h := &list{{.Model}}{
+		api:     api.BaseAPI,
+		service: service,
+		client:  client,
+	}
+	h.RegisterRoutes()
+	return h
+}
+
+func (h *list{{.Model}}) RegisterRoutes() {
+	api := h.api
+	method.GET(api, "/{{.PluralKebab}}", method.Operation{
+		Summary:     "List {{.ModelPlural}}",
+		Description: "Retrieve a list of {{.ModelPluralLower}}",
+		Tags:        []string{"{{.Model}}"},
+		BearerAuth:  true,
+	}, h.Handler)
+}
+
+func (h *list{{.Model}}) Handler(ctx context.Context, input *List{{.Model}}Input) (*List{{.Model}}Output, error) {
+	token, err := utils.ExtractJWT(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	page := 1
+	limit := 10
+	if input.Page > 0 {
+		page = input.Page
+	}
+	if input.Limit > 0 {
+		limit = input.Limit
+	}
+
+	query := h.FilterQuery(h.client.{{.Model}}.Query(), input.List{{.Model}}FilterInput)
+
+	total, err := query.Clone().Count(ctx)
+	if err != nil {
+		return nil, err
+	}
+	items, err := query.
+		Offset((page - 1) * limit).
+		Limit(limit).
+		All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var totalPages int
+	if limit == 0 {
+		totalPages = 1
+	}
+	totalPages = int(math.Ceil(float64(total) / float64(limit)))
+	if totalPages == 0 {
+		totalPages = 1
+	}
+
+	data := make(List{{.Model}}Data, len(items))
+	copy(data, items)
+	res := types.GenerateOutputPaginationData(
+		data, page, limit, totalPages, total,
+	)
+
+	return (*List{{.Model}}Output)(&res), nil
+}
+
+func (h *list{{.Model}}) FilterQuery(query *db.{{.Model}}Query, filter List{{.Model}}FilterInput) *db.{{.Model}}Query {
+	return query.Where()
+}

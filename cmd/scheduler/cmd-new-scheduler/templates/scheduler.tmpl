@@ -1,0 +1,21 @@
+package scheduler
+
+import (
+    "context"
+    "log"
+
+    "{{.ModuleName}}/internal/core/job"
+    cron "{{.ModuleName}}/internal/cron/init"
+)
+
+func Register{{.PascalName}}Job(s *cron.Scheduler) {
+    s.Scheduler.Every(1).Minute().Do(func() {
+        log.Println("[cron] Running {{.PascalName}} job...")
+
+        payload := job.LogSystemPayload{Message: "{{.PascalName}} job executed"}
+
+        if _, err := s.Jobs.LogSystem.Enqueue(context.Background(), payload); err != nil {
+            log.Printf("[cron] Error enqueueing {{.PascalName}} job: %v", err)
+        }
+    })
+}

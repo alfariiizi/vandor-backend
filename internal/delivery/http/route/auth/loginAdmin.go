@@ -79,7 +79,7 @@ func (h *loginAdmin) Handler(ctx context.Context, input *LoginAdminInput) (*Logi
 	res, err := h.service.Auth.Login.Execute(ctx, auth_service.LoginInput{
 		Email:    payload.Email,
 		Password: payload.Password,
-		IsAdmin:  false,
+		// IsAdmin:  false,
 	})
 	if err != nil {
 		return nil, err

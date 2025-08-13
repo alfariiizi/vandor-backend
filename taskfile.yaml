@@ -31,8 +31,10 @@ tasks:
   migrate:diff:
     desc: Generate a migration diff
     cmds:
-      - echo "Generating migration diff for {{.name}}..."
-      - ./scripts/atlas-tool.sh diff {{.name}}
+      - |
+        name_sanitized={{ .name | lower | replace " " "_" }}
+        echo "Generating migration diff for ${name_sanitized}..."
+        ./scripts/atlas-tool.sh diff ${name_sanitized}
     requires:
       vars: [name]
 
@@ -75,6 +77,24 @@ tasks:
     requires:
       vars: [group, name]
 
+  create:job:
+    desc: Create a new job
+    cmds:
+      - echo "Creating new job..."
+      - go run ./cmd/job/cmd-new-job/main.go {{.name}}
+      - go run ./cmd/job/cmd-regenerate-job/main.go
+    requires:
+      vars: [name]
+
+  create:scheduler:
+    desc: Create a new scheduler
+    cmds:
+      - echo "Creating new scheduler..."
+      - go run ./cmd/scheduler/cmd-new-scheduler/main.go {{.name}}
+      - go run ./cmd/scheduler/cmd-regenerate-scheduler/main.go
+    requires:
+      vars: [name]
+
   create:enum:
     desc: Create a new enum
     cmds:
@@ -91,6 +111,15 @@ tasks:
         {{.method}}
     requires:
       vars: [group, name, method]
+
+  create:http-handler:crud:
+    desc: Generate CRUD for HTTP handler code
+    cmds:
+      - echo "Regenerate CRUD HTTP handlers..."
+      - go run ./cmd/http/crud/main.go {{.model | title}}
+      - go run ./cmd/http/cmd-regenerate-handler/main.go
+    requires:
+      vars: [model]
 
   create:service:http-handler:
     desc: Create a new HTTP handler for a service
@@ -110,6 +139,8 @@ tasks:
       - go run ./cmd/usecase/cmd-regenerate-usecase/main.go
       - go run ./cmd/service/cmd-regenerate-service/main.go
       - go run ./cmd/http/cmd-regenerate-handler/main.go
+      - go run ./cmd/job/cmd-regenerate-job/main.go
+      - go run ./cmd/scheduler/cmd-regenerate-scheduler/main.go
       - ./scripts/ent-tools.sh generate
 
   gen:core:
@@ -137,6 +168,18 @@ tasks:
     cmds:
       - echo "Regenerate service..."
       - go run ./cmd/service/cmd-regenerate-service/main.go
+
+  gen:job:
+    desc: Generate job code
+    cmds:
+      - echo "Regenerate jobs..."
+      - go run ./cmd/job/cmd-regenerate-job/main.go
+
+  gen:scheduler:
+    desc: Generate scheduler code
+    cmds:
+      - echo "Regenerate schedulers..."
+      - go run ./cmd/scheduler/cmd-regenerate-scheduler/main.go
 
   gen:enum:
     desc: Generate enum code

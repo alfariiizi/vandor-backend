@@ -1,0 +1,79 @@
+package {{.SnakeCase}}_handler
+
+import (
+	"context"
+	"time"
+
+	"github.com/danielgtaylor/huma/v2"
+	"{{.Module}}/internal/core/model"
+	"{{.Module}}/internal/infrastructure/db"
+	"{{.Module}}/internal/core/service"
+	"{{.Module}}/internal/delivery/http/api"
+	"{{.Module}}/internal/delivery/http/method"
+	"{{.Module}}/internal/types"
+	"{{.Module}}/internal/utils"
+)
+
+type Create{{.Model}}Payload struct {
+	// TODO: Add fields
+}
+
+type Create{{.Model}}Input struct {
+	Body Create{{.Model}}Payload `json:"body" contentType:"application/json"`
+}
+
+type Create{{.Model}}Output types.OutputResponseData[Create{{.Model}}Data]
+
+type Create{{.Model}}Data *db.{{.Model}}
+
+type Create{{.Model}}Handler model.HTTPHandler[Create{{.Model}}Input, Create{{.Model}}Output]
+
+type create{{.Model}} struct {
+	api     huma.API
+	service *service.Services
+	client  *db.Client
+}
+
+func NewCreate{{.Model}}(
+	api *api.HttpApi,
+	service *service.Services,
+	client *db.Client,
+) Create{{.Model}}Handler {
+	h := &create{{.Model}}{
+		api:     api.BaseAPI,
+		service: service,
+		client:  client,
+	}
+	h.RegisterRoutes()
+	return h
+}
+
+func (h *create{{.Model}}) RegisterRoutes() {
+	api := h.api
+	method.POST(api, "/{{.PluralKebab}}", method.Operation{
+		Summary:     "Create {{.Model}}",
+		Description: "Create a new {{.ModelLower}}",
+		Tags:        []string{"{{.Model}}"},
+		BearerAuth:  true,
+	}, h.Handler)
+}
+
+func (h *create{{.Model}}) Handler(ctx context.Context, input *Create{{.Model}}Input) (*Create{{.Model}}Output, error) {
+	token, err := utils.ExtractJWT(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: Add field mapping
+
+        // payload := input.Body
+	item, err := h.client.{{.Model}}.Create().
+		// Example: SetField(input.Body.Field).
+		SetCreatedAt(time.Now()).
+		Save(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return (*Create{{.Model}}Output)(types.GenerateOutputResponseData(Create{{.Model}}Data(item))), nil
+}

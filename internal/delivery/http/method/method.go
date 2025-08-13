@@ -16,6 +16,7 @@ type Operation struct {
 	Description string
 	Tags        []string
 	BearerAuth  bool
+	Tenant      bool
 	Extensions  map[string]any
 }
 
@@ -35,6 +36,11 @@ func generateBaseAPI[I, O any](api huma.API, path string, method string, operati
 			{},
 		}
 	}
+
+	if operation.Tenant {
+		route.UseMiddleware(middleware.NewTenantMiddleware(route))
+	}
+
 	huma.Register(route, huma.Operation{
 		OperationID: fmt.Sprintf("%s-%s", strings.ToLower(method), path),
 		Method:      method,

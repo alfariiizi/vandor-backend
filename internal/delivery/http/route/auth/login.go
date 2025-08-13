@@ -65,7 +65,7 @@ func NewLogin(
 
 func (h *login) RegisterRoutes() {
 	api := h.api
-	method.POST(api, "/login", method.Operation{
+	method.POST(api, "/auth/login", method.Operation{
 		Summary:     "Login",
 		Description: "Login handler",
 		Tags:        []string{"Auth"},
@@ -78,7 +78,7 @@ func (h *login) Handler(ctx context.Context, input *LoginInput) (*LoginOutput, e
 	res, err := h.service.Auth.Login.Execute(ctx, auth_service.LoginInput{
 		Email:    payload.Email,
 		Password: payload.Password,
-		IsAdmin:  false,
+		// IsAdmin:  false,
 	})
 	if err != nil {
 		return nil, err

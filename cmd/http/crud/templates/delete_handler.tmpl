@@ -1,0 +1,65 @@
+package {{.SnakeCase}}_handler
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/danielgtaylor/huma/v2"
+	"{{.Module}}/internal/core/model"
+	"{{.Module}}/internal/infrastructure/db"
+	"{{.Module}}/internal/core/service"
+	"{{.Module}}/internal/delivery/http/api"
+	"{{.Module}}/internal/delivery/http/method"
+	"{{.Module}}/internal/types"
+)
+
+type Delete{{.Model}}Input struct {
+	ID string `path:"id" doc:"ID of the item to delete" example:"123"`
+}
+
+type Delete{{.Model}}Output types.OutputResponseMessage
+
+type Delete{{.Model}}Handler model.HTTPHandler[Delete{{.Model}}Input, Delete{{.Model}}Output]
+
+type delete{{.Model}} struct {
+	api     huma.API
+	service *service.Services
+	client  *db.Client
+}
+
+func NewDelete{{.Model}}(
+	api *api.HttpApi,
+	service *service.Services,
+	client *db.Client,
+) Delete{{.Model}}Handler {
+	h := &delete{{.Model}}{
+		api:     api.BaseAPI,
+		service: service,
+		client:  client,
+	}
+	h.RegisterRoutes()
+	return h
+}
+
+func (h *delete{{.Model}}) RegisterRoutes() {
+	api := h.api
+	method.DELETE(api, "/{{.PluralKebab}}/{id}", method.Operation{
+		Summary:     "Delete {{.Model}}",
+		Description: "Delete a {{.ModelLower}} by ID",
+		Tags:        []string{"{{.Model}}"},
+		BearerAuth:  true,
+	}, h.Handler)
+}
+
+func (h *delete{{.Model}}) Handler(ctx context.Context, input *Delete{{.Model}}Input) (*Delete{{.Model}}Output, error) {
+	id, err := utils.GetData(utils.IDParser(input.ID))
+	if err != nil {
+		return nil, fmt.Errorf("invalid {{.ModelLower}} ID: %w", err)
+	}
+	err = h.client.{{.Model}}.DeleteOneID(id).Exec(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to delete {{.ModelLower}}: %w", err)
+	}
+
+	return (*Delete{{.Model}}Output)(types.GenerateOutputResponseMessage("Successfully deleted {{.ModelLower}}")), nil
+}

@@ -1,10 +1,11 @@
-package cron
+package croninit
 
 import (
 	"context"
 	"log"
 	"time"
 
+	"github.com/alfariiizi/vandor/internal/core/job"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db"
 	"github.com/go-co-op/gocron"
 	"go.uber.org/fx"
@@ -13,11 +14,13 @@ import (
 type Scheduler struct {
 	Scheduler *gocron.Scheduler
 	Client    *db.Client
+	Jobs      *job.Jobs
 }
 
 type SchedulerParams struct {
 	fx.In
 	Client *db.Client
+	Jobs   *job.Jobs
 }
 
 func NewScheduler(
@@ -42,19 +45,6 @@ func NewScheduler(
 	return &Scheduler{
 		Scheduler: s,
 		Client:    params.Client,
+		Jobs:      params.Jobs,
 	}
-}
-
-func (s *Scheduler) RegisterJobs() {
-	// Check if there's session last activity older than 14 days
-	// s.scheduler.Every(15).Minutes().Do(func() {
-	// 	log.Println("[cron] Revoke sessions older than 14 days...")
-	// 	_, err := s.revokeSessionUc.Execute(context.Background(), usecase.RevokeAllSessionsInput{
-	// 		MaxLastUsed: -14,
-	// 	})
-	// 	if err != nil {
-	// 		log.Printf("[cron] Error revoke old sessions: %v", err)
-	// 		return
-	// 	}
-	// })
 }

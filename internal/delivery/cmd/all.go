@@ -4,6 +4,7 @@ import (
 	"github.com/alfariiizi/vandor/internal/core"
 	"github.com/alfariiizi/vandor/internal/cron"
 	"github.com/alfariiizi/vandor/internal/delivery/http"
+	"github.com/alfariiizi/vandor/internal/delivery/worker"
 	"github.com/alfariiizi/vandor/internal/infrastructure"
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
@@ -20,6 +21,8 @@ var allServiceCmd = &cobra.Command{
 			http.Module,
 			// Cron Jobs
 			cron.Module,
+			// Worker
+			worker.Module,
 		)
 		app.Run()
 	},

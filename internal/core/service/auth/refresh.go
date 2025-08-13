@@ -56,7 +56,6 @@ func (s *refresh) Process(ctx context.Context, input RefreshInput) (*RefreshOutp
 	sessionOne, err := s.domain.Session.One(
 		s.client.Session.Query().
 			Where(session.RefreshToken(input.RefreshToken)).
-			WithUser().
 			Only(ctx),
 	)
 	if err != nil {
@@ -75,7 +74,7 @@ func (s *refresh) Process(ctx context.Context, input RefreshInput) (*RefreshOutp
 
 	userOne := s.domain.User.Convert(sessionOne.Edges.User)
 	accessToken, err := s.usecase.CreateAccessToken.Execute(ctx, usecase.CreateAccessTokenInput{
-		UserID:    sessionOne.UserID.String(),
+		UserID:    sessionOne.Edges.User.ID.String(),
 		SessionID: sessionOne.ID.String(),
 		Name:      userOne.FullName(),
 		Email:     userOne.Email,

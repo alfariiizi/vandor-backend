@@ -1,0 +1,86 @@
+package {{.SnakeCase}}_handler
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/danielgtaylor/huma/v2"
+	"{{.Module}}/internal/core/model"
+	"{{.Module}}/internal/infrastructure/db"
+	"{{.Module}}/internal/infrastructure/db/{{.SnakeCase}}"
+	"{{.Module}}/internal/core/service"
+	"{{.Module}}/internal/delivery/http/api"
+	"{{.Module}}/internal/delivery/http/method"
+	"{{.Module}}/internal/types"
+)
+
+type Update{{.Model}}Payload Create{{.Model}}Payload
+
+type Update{{.Model}}Input struct {
+	ID   string               `path:"id" doc:"ID of the item to update" example:"123"`
+	Body Update{{.Model}}Payload `json:"body" contentType:"application/json"`
+}
+
+type Update{{.Model}}Output types.OutputResponseMessage
+
+type Update{{.Model}}Handler model.HTTPHandler[Update{{.Model}}Input, Update{{.Model}}Output]
+
+type update{{.Model}} struct {
+	api     huma.API
+	service *service.Services
+	client  *db.Client
+}
+
+func NewUpdate{{.Model}}(
+	api *api.HttpApi,
+	service *service.Services,
+	client *db.Client,
+) Update{{.Model}}Handler {
+	h := &update{{.Model}}{
+		api:     api.BaseAPI,
+		service: service,
+		client:  client,
+	}
+	h.RegisterRoutes()
+	return h
+}
+
+func (h *update{{.Model}}) RegisterRoutes() {
+	api := h.api
+	method.PUT(api, "/{{.PluralKebab}}", method.Operation{
+		Summary:     "Update {{.ModelLower}}",
+		Description: "Update an existing {{.ModelLower}} by ID",
+		Tags:        []string{"{{.Model}}"},
+		BearerAuth:  true,
+	}, h.Handler)
+}
+
+func (h *update{{.Model}}) Handler(ctx context.Context, input *Update{{.Model}}Input) (*Update{{.Model}}Output, error) {
+	id, err := utils.GetData(utils.IDParser(input.ID))
+	if err != nil {
+		return nil, fmt.Errorf("invalid ID format: %w", err)
+	}
+
+	// payload := input.Body
+
+	existing, err := h.client.{{.Model}}.Get(ctx, id)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find {{.ModelLower}} with ID %s: %w", id, err)
+	}
+	if existing == nil {
+		return nil, fmt.Errorf("{{.ModelLower}} with ID %s not found", id)
+	}
+
+	exec := h.client.{{.Model}}.Update()
+	// TODO: Set fields like:
+	// if payload.Field != nil {
+	//     exec.SetField(*payload.Field)
+	// }
+
+	_, err = exec.Where({{.SnakeCase}}.ID(id)).Save(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to update {{.ModelLower}} with ID %s: %w", id, err)
+	}
+
+	return (*Update{{.Model}}Output)(types.GenerateOutputResponseMessage("Successfully updated {{.ModelLower}}")), nil
+}
