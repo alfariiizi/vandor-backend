@@ -1,370 +1,236 @@
-# Go-Service
+# Vandor Backend
 
-A robust backend service built with Go, implementing Domain-Driven Design (DDD)
-and Hexagonal Architecture patterns. This service provides a scalable foundation
-for building enterprise-grade applications with clean separation of concerns and
-dependency injection.
+A production-ready Go service template implementing **Hexagonal Architecture** /
+DDD with Huma, Uber FX, Ent (Ent.go), Cobra CLI and other tools to build
+scalable, testable microservices. This README provides quickstart, development
+workflow, code-generation hints, and deployment instructions. ([GitHub][1])
 
-## Architecture Overview
+---
 
-This project follows the principles of **Domain-Driven Design (DDD)** combined
-with **Hexagonal Architecture** (also known as Ports and Adapters pattern). This
-architectural approach ensures that your business logic remains independent of
-external frameworks and infrastructure concerns.
+## Table of Contents
 
-### Core Architecture Components
+- [Highlights](#highlights)
+- [Tech stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Quickstart (local with Docker)](#quickstart-local-with-docker)
+- [Development workflow](#development-workflow)
+- [Code generation & migrations](#code-generation--migrations)
+- [Docker / Production build](#docker--production-build)
+- [API docs](#api-docs)
+- [Project structure](#project-structure)
+- [Environment variables (example)](#environment-variables-example)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [License & Maintainer](#license--maintainer)
+- [Troubleshooting & FAQ](#troubleshooting--faq)
 
-**Core Layer** - The heart of your application containing pure business logic:
+# Highlights
 
-- **Models**: Domain entities and value objects that represent your business
-  concepts
-- **Services**: Business logic grouped by domain (e.g., auth, user management)
-  with one struct per service group and focused methods
-- **Repositories**: Data access interfaces generated using Ent.go for type-safe
-  database operations
-- **Use Cases**: Application-specific business rules, implemented as
-  single-responsibility structs with one method each
+- Clean **Hexagonal / Ports & Adapters** layout separating domain,
+  infrastructure and delivery layers.
+- DI via **Uber FX** for lifecycle management and testability.
+- Type-safe DB access via **Ent.go** and migrations via **Atlas**.
+- Auto-generated API docs using **Huma v2**. ([GitHub][1])
 
-**Infrastructure Layer** - External concerns and technical implementations:
+# Tech stack
 
-- **Database**: PostgreSQL integration with connection pooling and transaction
-  management
-- **Redis**: Caching and session management capabilities
-- **External APIs**: Third-party service integrations
+- **Language:** Go (recommended 1.24.1)
+- **DI / Lifecycle:** Uber FX
+- **ORM / Codegen:** Ent.go + Atlas migrations
+- **HTTP / API:** Chi router + Huma (OpenAPI)
+- **DB / Driver:** PostgreSQL, pgx/v5
+- **Cache / Broker:** Redis
+- **CLI:** Cobra
+- **Task runner:** Task (github.com/go-task/task)
+- **Scheduler:** gocron
+- **Auth:** JWX / bcrypt for token hashing & passwords
+- **Containerization:** Docker (image build scripts included) ([GitHub][1])
 
-**Delivery Layer** - How your application communicates with the outside world:
+# Prerequisites
 
-- **HTTP**: RESTful API endpoints using Chi router and Huma for API
-  documentation
-- **Cron**: Scheduled background tasks using gocron
-- **CLI**: Command-line interface built with Cobra for administrative tasks
+- Go ≥ 1.24.1
+- Docker & Docker Compose (or local Postgres + Redis)
+- `task` (install with `go install github.com/go-task/task/v3/cmd/task@latest`)
+- Optional: `atlas` & `ent` tooling if you will modify schemas and run
+  migrations locally. ([GitHub][1])
 
-### Dependency Management
+# Quickstart (local with Docker)
 
-The project uses **Uber FX** for dependency injection, which provides a robust
-and testable way to manage dependencies throughout your application. This
-approach ensures loose coupling between components and makes your code more
-maintainable and testable.
-
-## Technology Stack
-
-### Core Framework & Language
-
-- **Go 1.24.1**: Latest Go version with improved performance and language
-  features
-- **Uber FX**: Dependency injection container for managing application lifecycle
-  and dependencies
-
-### Database & ORM
-
-- **PostgreSQL**: Primary database with robust ACID compliance and advanced
-  features
-- **Ent.go**: Type-safe ORM with code generation for database operations
-- **Atlas**: Database schema migration tool for version control of your database
-  structure
-- **pgx/v5**: High-performance PostgreSQL driver with connection pooling
-
-### Web Framework & API
-
-- **Chi Router**: Lightweight and fast HTTP router with middleware support
-- **Huma v2**: OpenAPI 3.0 specification and automatic API documentation
-  generation
-- **CORS**: Cross-Origin Resource Sharing middleware for web API security
-
-### Authentication & Security
-
-- **JWX v2**: JSON Web Token implementation for secure authentication
-- **bcrypt**: Password hashing with configurable cost for security
-
-### Caching & Background Processing
-
-- **Redis**: In-memory data structure store for caching and session management
-- **Gocron**: Cron job scheduler for background task processing
-
-### Development & Build Tools
-
-- **Task**: Modern task runner as an alternative to Make
-- **Docker**: Containerization for consistent deployment environments
-- **Cobra**: CLI framework for building command-line applications
-
-## Project Structure
-
-```plaintext
-go-service/
-├── bin
-├── cmd
-│   ├── app
-│   ├── service-generator
-│   └── usecase-generator
-├── config
-├── database
-│   ├── migrate
-│   │   └── migrations
-│   └── schema
-├── docker
-├── internal
-│   ├── core
-│   │   ├── model
-│   │   ├── repository
-│   │   ├── service
-│   │   │   ├── auth
-│   │   │   ├── system
-│   │   │   └── user
-│   │   └── usecase
-│   ├── cron
-│   ├── delivery
-│   │   ├── cmd
-│   │   └── http
-│   │       ├── api
-│   │       │   └── middleware
-│   │       ├── method
-│   │       ├── route
-│   │       │   └── system
-│   │       └── server
-│   ├── infrastructure
-│   │   ├── database
-│   │   └── redis
-│   ├── types
-│   └── utils
-├── scripts
-├── seeder
-├── storage
-│   ├── logs
-│   └── public
-```
-
-## Getting Started
-
-### Prerequisites
-
-Before you begin, ensure you have the following installed on your development
-machine:
-
-- **Go 1.24.1 or later**: Download from
-  [golang.org](https://golang.org/download/)
-- **Docker & Docker Compose**: For running databases and containerized services
-- **Task**: Install via `go install github.com/go-task/task/v3/cmd/task@latest`
-- **PostgreSQL**: Either locally installed or via Docker
-- **Redis**: Either locally installed or via Docker
-
-### Installation & Setup
-
-1. **Clone the repository**:
-
-   ```bash
-   git clone https://github.com/alfariiizi/vandor.git
-   cd go-service
-   ```
-
-2. **Install dependencies**:
-
-   ```bash
-   go mod download
-   ```
-
-3. **Set up environment variables**: Copy `.env.example` file to `.env` and fill up the env file
-
-4. **Start required services**: If using Docker for databases:
-
-   ```bash
-   docker-compose up -d postgres redis
-   ```
-
-5. **Generate repository code**:
-
-   ```bash
-   task generate:repo
-   ```
-
-6. **Run database migrations**:
-
-   ```bash
-   task migrate:up
-   ```
-
-## Development Workflow
-
-### Running the Application
-
-**Development Mode** (with hot reload):
+1. Clone the repo:
 
 ```bash
-task run:dev
+git clone https://github.com/alfariiizi/vandor-backend.git
+cd vandor-backend
 ```
 
-This command will generate repositories, start file watching, and automatically
-restart the server when code changes are detected.
-
-**Production Build**:
+2. Copy or create config file:
 
 ```bash
-task build
-./bin/main
+cp ./config/config.yaml.example ./config/config.yaml
 ```
 
-### Database Operations
-
-**Check migration status**:
+3. Start required services (example):
 
 ```bash
-task migrate:status
+docker-compose up -d postgres redis
 ```
 
-**Create a new migration**:
+4. Download go modules:
 
 ```bash
-task migrate:diff NAME=add_user_table
+go mod tidy
 ```
 
-**Apply pending migrations**:
+5. Generate repository code (Ent / generated repositories) if needed:
+
+```bash
+task gen:db-model
+```
+
+6. Run database migrations:
 
 ```bash
 task migrate:up
 ```
 
-### Code Generation
-
-This project includes powerful code generation tools to maintain consistency and
-reduce boilerplate:
-
-**Generate repository code** (after modifying Ent schemas):
+7. Start development server (hot reload mode):
 
 ```bash
-task generate:repo
+task run:dev
 ```
 
-**Generate a new use case**:
+You should now be able to visit the API docs and OpenAPI JSON locally.
+([GitHub][1])
+
+# Development workflow
+
+- **Dev (hot reload):** `task run:dev` — watches files, regenerate code and
+  restarts.
+- **Build:** `task build` then run the binary from `./bin/main`.
+- **Run (production binary):**
 
 ```bash
-task generate:usecase name=CreateUser
+./bin/main
 ```
 
-**Generate a new service** (grouped by domain):
+- **Add new usecase/service:** use the provided generators:
+  - Generate a new usecase: `task create:usecase name=CreateUser`
+  - Generate a new service: `task create:service group=auth name=LoginUser`
+    ([GitHub][1])
+
+# Code generation & migrations
+
+- Ent schema changes → generate code:
 
 ```bash
-task generate:service group=auth name=LoginUser
+# edit schemas under database/schema (or internal/core/model)
+task gen:db-model
 ```
 
-### Testing
+- Atlas / migrations:
 
-**Run all tests**:
+```bash
+task migrate:diff name="add users table"
+task migrate:up
+task migrate:status
+```
+
+(Adjust commands to match the installed atlas/ent tooling on your machine.)
+([GitHub][1])
+
+# Docker / Production build
+
+Build images using the included `build.sh` helper:
+
+```bash
+# application image
+./build.sh app
+
+# migration image
+./build.sh migrate
+
+# both
+./build.sh all
+```
+
+Images referenced in docs:
+
+- `alfariiizi/go-app:latest` (app server)
+- `alfariiizi/go-migrate:latest` (migration runner) ([GitHub][1])
+
+# API docs
+
+When the server runs locally:
+
+- **Swagger UI / docs:** `http://localhost:8080/docs`
+- **OpenAPI spec:** `http://localhost:8080/openapi.json` The API documentation
+  is generated by Huma from your code and stays in sync with route definitions.
+  ([GitHub][1])
+
+# Project structure (high level)
+
+```
+.
+├── cmd/                # command-line entrypoints (app, generators)
+├── config/
+├── database/
+│   ├── migrate/        # migrations
+│   └── schema/         # ent schemas
+├── docker/
+├── docs/
+├── internal/
+│   ├── core/           # domain (models, repositories, services, usecases)
+│   ├── delivery/       # http server, routes, middleware
+│   ├── infrastructure/ # db, redis adapters
+│   └── utils/
+├── plugin/             # optional plugins (e.g., file management)
+├── scripts/            # helper scripts (ent-tools.sh, atlas-tool.sh, watch.sh)
+├── build.sh
+├── taskfile.yaml
+└── go.mod
+```
+
+(Trimmed for brevity; see repo for full tree.) ([GitHub][1])
+
+# Testing
+
+- Run unit tests:
 
 ```bash
 task test
+# or
+go test ./... -v
 ```
 
-**Run tests with coverage**:
+- Coverage:
 
 ```bash
 go test -cover ./...
 ```
 
-## Docker Deployment
+# Contributing
 
-The project includes Docker support for both the application and database
-migrations:
+1. Fork the repo and create feature branches in the pattern:
+   `feat/<area>-short-desc` or `fix/<issue>-short-desc`.
+2. Keep domain code in `internal/core`, delivery in `internal/delivery`, infra
+   adapters in `internal/infrastructure`.
+3. Add tests for new features and run all generator. files.
+4. Open a PR with a clear description and mention any migration steps.
+   ([GitHub][1])
 
-### Building Docker Images
+# License & Maintainer
 
-**Build application image**:
+- **Maintainer:** GitHub — `alfariiizi` (this repo).
 
-```bash
-./build.sh app
-```
+# Troubleshooting & FAQ
 
-**Build migration image**:
+- **Migration failures:** Ensure the `atlas` or migration image has proper DB
+  credentials and that `task migrate:diff` was run from repo root.
+- **Codegen not running:** Make sure Ent & Task are installed and the task
+  runner is in your PATH. Use `go install` for the task binary.
 
-```bash
-./build.sh migrate
-```
+---
 
-**Build both images**:
-
-```bash
-./build.sh all
-```
-
-### Docker Images
-
-- **alfariiizi/go-app:latest**: Main application server
-- **alfariiizi/go-migrate:latest**: Database migration runner
-
-## API Documentation
-
-Once the application is running, you can access the automatically generated API
-documentation at:
-
-- **Swagger UI**: `http://localhost:8080/docs`
-- **OpenAPI Spec**: `http://localhost:8080/openapi.json`
-
-The API documentation is automatically generated from your code using Huma v2,
-ensuring it stays synchronized with your implementation.
-
-## Architecture Benefits
-
-### Domain-Driven Design (DDD)
-
-- **Clear Business Logic**: Core business rules are isolated and easily testable
-- **Ubiquitous Language**: Code reflects the business domain language
-- **Bounded Contexts**: Different parts of the system have clear boundaries
-
-### Hexagonal Architecture
-
-- **Technology Independence**: Business logic doesn't depend on frameworks
-- **Testability**: Easy to test business logic in isolation
-- **Flexibility**: Easy to swap out infrastructure components
-
-### Dependency Injection with Uber FX
-
-- **Loose Coupling**: Components depend on interfaces, not concrete
-  implementations
-- **Lifecycle Management**: Automatic startup and shutdown of components
-- **Testing**: Easy to mock dependencies for unit testing
-
-## Contributing
-
-When contributing to this project, please follow these guidelines:
-
-1. **Code Organization**: Place new code in the appropriate architectural layer
-2. **Testing**: Write unit tests for new functionality
-3. **Documentation**: Update this README if you add new features or change the
-   architecture
-4. **Migrations**: Always create migrations for database schema changes
-5. **Code Generation**: Use the provided generators for consistency
-
-## Development Scripts
-
-The project includes several helpful scripts in the `scripts/` directory:
-
-- `ent-tools.sh`: Ent.go code generation utilities
-- `atlas-tool.sh`: Database migration management
-- `watch.sh`: File watching for development mode
-
-## Performance Considerations
-
-- **Connection Pooling**: PostgreSQL connections are pooled for optimal
-  performance
-- **Redis Caching**: Implement caching strategies for frequently accessed data
-- **Structured Logging**: Use structured logging for better observability
-- **Graceful Shutdown**: The application handles shutdown signals gracefully
-
-## Security Features
-
-- **JWT Authentication**: Secure token-based authentication
-- **Password Hashing**: Bcrypt for secure password storage
-- **CORS Configuration**: Proper cross-origin request handling
-- **Input Validation**: Request validation using Huma v2
-
-## Monitoring & Observability
-
-Consider integrating the following for production deployments:
-
-- **Structured Logging**: Already configured with appropriate log levels
-- **Metrics Collection**: Add Prometheus metrics for monitoring
-- **Distributed Tracing**: Consider adding OpenTelemetry for request tracing
-- **Health Checks**: Implement health check endpoints for load balancers
-
-This README provides a comprehensive guide to understanding and working with the
-Go-Service project. The architecture decisions made here prioritize
-maintainability, testability, and scalability while following established
-patterns in the Go community.
+[1]:
+  https://github.com/alfariiizi/vandor-backend
+  "GitHub - alfariiizi/vandor-backend: A production-ready Go service template implementing hexagonal architecture with Huma, Uber FX, Ent.go, and Cobra for building scalable, testable microservices."
