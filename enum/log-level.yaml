@@ -1,0 +1,10 @@
+type: LogLevel
+description: Description for LogLevel enum
+values:
+  debug: log level for debugging
+  info: log level for informational messages
+  warning: log level for warnings
+  warn: log level for warnings (alias for warning)
+  error: log level for errors
+  fatal: log level for critical errors
+  panic: log level for panic situations

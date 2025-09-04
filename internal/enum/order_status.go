@@ -106,7 +106,7 @@ func (e OrderStatus) Label() string {
 }
 
 func ParseOrderStatus(s string) (OrderStatus, error) {
-	switch strings.ToUpper(s) {
+	switch s {
 	case "CANCELLED":
 		return OrderStatusCancelled, nil
 	case "DELIVERED":

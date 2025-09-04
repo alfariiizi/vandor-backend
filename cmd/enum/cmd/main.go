@@ -98,7 +98,7 @@ func (e {{.Type}}) Label() string {
 }
 
 func Parse{{.Type}}(s string) ({{.Type}}, error) {
-	switch strings.ToUpper(s) {
+	switch s {
 {{- range .Values}}
 	case "{{.Name}}":
 		return {{.ConstName}}, nil
