@@ -6,8 +6,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// AdminAuditLog is the predicate function for adminauditlog builders.
-type AdminAuditLog func(*sql.Selector)
+// Notification is the predicate function for notification builders.
+type Notification func(*sql.Selector)
 
 // Product is the predicate function for product builders.
 type Product func(*sql.Selector)

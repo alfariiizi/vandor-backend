@@ -5,18 +5,11 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/hibiken/asynq"
 	"github.com/alfariiizi/vandor/internal/core/job"
+	"github.com/hibiken/asynq"
 )
 
 func registerJobHandlers(mux *asynq.ServeMux, jobs *job.Jobs) {
-	mux.HandleFunc("job:log_love", func(ctx context.Context, t *asynq.Task) error {
-		var payload job.LogLovePayload
-		if err := json.Unmarshal(t.Payload(), &payload); err != nil {
-			return err
-		}
-		return jobs.LogLove.Handle(ctx, payload)
-	})
 	mux.HandleFunc("job:log_system", func(ctx context.Context, t *asynq.Task) error {
 		var payload job.LogSystemPayload
 		if err := json.Unmarshal(t.Payload(), &payload); err != nil {

@@ -3,13 +3,12 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"time"
 
 	domain_entries "github.com/alfariiizi/vandor/internal/core/domain"
 	"github.com/alfariiizi/vandor/internal/core/model"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db"
+	"github.com/alfariiizi/vandor/internal/pkg/validator"
 	"github.com/alfariiizi/vandor/internal/utils"
-	"github.com/alfariiizi/vandor/pkg/validator"
 )
 
 type CreateAccessTokenInput struct {
@@ -18,7 +17,6 @@ type CreateAccessTokenInput struct {
 	Name      string `json:"name" validate:"required"`
 	Email     string `json:"email" validate:"required,email"`
 	Role      string `json:"role" validate:"required"`
-	Tenant    string `json:"tenant" validate:"required"` // Tenant ID or name
 }
 
 type CreateAccessTokenOutput struct {
@@ -57,21 +55,19 @@ func (uc *createAccessToken) Execute(ctx context.Context, input CreateAccessToke
 }
 
 func (uc *createAccessToken) Process(ctx context.Context, input CreateAccessTokenInput) (*CreateAccessTokenOutput, error) {
-	accessTokenExpiresAt := time.Now().Add(time.Minute * 17)
 	accessToken, err := utils.GenerateAccessToken(
 		input.UserID,
 		input.SessionID,
 		input.Name,
 		input.Email,
 		input.Role,
-		accessTokenExpiresAt,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate access token: %w", err)
 	}
 
 	return &CreateAccessTokenOutput{
-		Value:     accessToken,
-		ExpiresAt: accessTokenExpiresAt.Unix(),
+		Value:     accessToken.Token,
+		ExpiresAt: accessToken.ExpiresAt,
 	}, nil
 }

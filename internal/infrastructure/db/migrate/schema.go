@@ -3,41 +3,94 @@
 package migrate
 
 import (
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/dialect/sql/schema"
 	"entgo.io/ent/schema/field"
 )
 
 var (
-	// AdminAuditLogsColumns holds the columns for the "admin_audit_logs" table.
-	AdminAuditLogsColumns = []*schema.Column{
+	// NotificationsColumns holds the columns for the "notifications" table.
+	NotificationsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "user_email", Type: field.TypeString},
-		{Name: "operation", Type: field.TypeString},
-		{Name: "model", Type: field.TypeString},
-		{Name: "args", Type: field.TypeJSON},
-		{Name: "result", Type: field.TypeJSON, Nullable: true},
-		{Name: "query", Type: field.TypeString, Nullable: true, Size: 2147483647},
-		{Name: "params", Type: field.TypeString, Nullable: true, Size: 2147483647},
-		{Name: "source", Type: field.TypeString, Default: "admin-panel"},
-		{Name: "duration_ms", Type: field.TypeInt, Nullable: true},
 		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "title", Type: field.TypeString, Size: 200},
+		{Name: "message", Type: field.TypeString, SchemaType: map[string]string{"mysql": "TEXT", "postgres": "TEXT"}},
+		{Name: "type", Type: field.TypeEnum, Enums: []string{"info", "success", "warning", "error"}, Default: "info"},
+		{Name: "priority", Type: field.TypeEnum, Enums: []string{"low", "normal", "high", "urgent"}, Default: "normal"},
+		{Name: "channel", Type: field.TypeEnum, Enums: []string{"in_app", "email", "push", "sms", "webhook"}, Default: "in_app"},
+		{Name: "read", Type: field.TypeBool, Default: false},
+		{Name: "archived", Type: field.TypeBool, Default: false},
+		{Name: "sticky", Type: field.TypeBool, Default: false},
+		{Name: "link", Type: field.TypeString, Nullable: true, Size: 1000},
+		{Name: "action", Type: field.TypeString, Nullable: true, Size: 100},
+		{Name: "resource_type", Type: field.TypeString, Nullable: true, Size: 100},
+		{Name: "resource_id", Type: field.TypeString, Nullable: true, Size: 100},
+		{Name: "group_key", Type: field.TypeString, Nullable: true, Size: 100},
+		{Name: "dedupe_key", Type: field.TypeString, Unique: true, Nullable: true, Size: 200},
+		{Name: "delivered_at", Type: field.TypeTime, Nullable: true},
+		{Name: "read_at", Type: field.TypeTime, Nullable: true},
+		{Name: "expires_at", Type: field.TypeTime, Nullable: true},
+		{Name: "meta", Type: field.TypeJSON, Nullable: true},
+		{Name: "user_id", Type: field.TypeUUID},
 	}
-	// AdminAuditLogsTable holds the schema information for the "admin_audit_logs" table.
-	AdminAuditLogsTable = &schema.Table{
-		Name:       "admin_audit_logs",
-		Columns:    AdminAuditLogsColumns,
-		PrimaryKey: []*schema.Column{AdminAuditLogsColumns[0]},
+	// NotificationsTable holds the schema information for the "notifications" table.
+	NotificationsTable = &schema.Table{
+		Name:       "notifications",
+		Columns:    NotificationsColumns,
+		PrimaryKey: []*schema.Column{NotificationsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "notifications_users_notifications",
+				Columns:    []*schema.Column{NotificationsColumns[21]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "notification_user_id_read",
+				Unique:  false,
+				Columns: []*schema.Column{NotificationsColumns[21], NotificationsColumns[8]},
+			},
+			{
+				Name:    "notification_user_id_archived",
+				Unique:  false,
+				Columns: []*schema.Column{NotificationsColumns[21], NotificationsColumns[9]},
+			},
+			{
+				Name:    "notification_group_key",
+				Unique:  false,
+				Columns: []*schema.Column{NotificationsColumns[15]},
+			},
+			{
+				Name:    "notification_created_at",
+				Unique:  false,
+				Columns: []*schema.Column{NotificationsColumns[1]},
+			},
+			{
+				Name:    "notification_dedupe_key",
+				Unique:  true,
+				Columns: []*schema.Column{NotificationsColumns[16]},
+			},
+		},
 	}
 	// ProductsColumns holds the columns for the "products" table.
 	ProductsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "name", Type: field.TypeString},
-		{Name: "brand", Type: field.TypeString},
-		{Name: "category", Type: field.TypeString},
-		{Name: "price", Type: field.TypeFloat64},
-		{Name: "created_at", Type: field.TypeTime},
-		{Name: "updated_at", Type: field.TypeTime},
-		{Name: "creator_id", Type: field.TypeUUID},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "title", Type: field.TypeString, Nullable: true},
+		{Name: "short_description", Type: field.TypeString, Nullable: true},
+		{Name: "long_description", Type: field.TypeString, Nullable: true},
+		{Name: "price", Type: field.TypeInt64, Nullable: true},
+		{Name: "currency", Type: field.TypeString, Nullable: true},
+		{Name: "stock", Type: field.TypeInt, Nullable: true},
+		{Name: "weight_grams", Type: field.TypeInt, Nullable: true},
+		{Name: "package_length_mm", Type: field.TypeInt, Nullable: true},
+		{Name: "package_width_mm", Type: field.TypeInt, Nullable: true},
+		{Name: "package_height_mm", Type: field.TypeInt, Nullable: true},
+		{Name: "user_id", Type: field.TypeUUID},
 	}
 	// ProductsTable holds the schema information for the "products" table.
 	ProductsTable = &schema.Table{
@@ -47,7 +100,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "products_users_products",
-				Columns:    []*schema.Column{ProductsColumns[7]},
+				Columns:    []*schema.Column{ProductsColumns[13]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -100,7 +153,7 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		AdminAuditLogsTable,
+		NotificationsTable,
 		ProductsTable,
 		SessionsTable,
 		UsersTable,
@@ -108,6 +161,10 @@ var (
 )
 
 func init() {
+	NotificationsTable.ForeignKeys[0].RefTable = UsersTable
+	NotificationsTable.Annotation = &entsql.Annotation{
+		Table: "notifications",
+	}
 	ProductsTable.ForeignKeys[0].RefTable = UsersTable
 	SessionsTable.ForeignKeys[0].RefTable = UsersTable
 }

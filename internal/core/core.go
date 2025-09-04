@@ -6,7 +6,7 @@ import (
 	"github.com/alfariiizi/vandor/internal/core/job"
 	"github.com/alfariiizi/vandor/internal/core/service"
 	"github.com/alfariiizi/vandor/internal/core/usecase"
-	"github.com/alfariiizi/vandor/pkg/validator"
+	"github.com/alfariiizi/vandor/internal/pkg/validator"
 	"go.uber.org/fx"
 )
 

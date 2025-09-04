@@ -1,0 +1,7 @@
+type: Event
+description: Description for Event enum
+values:
+  NotificationCreated: notification.created
+  OpportunitySuccess: opportunity.success
+  OpportunityRunning: opportunity.running
+  OpportunityFailed: opportunity.failed

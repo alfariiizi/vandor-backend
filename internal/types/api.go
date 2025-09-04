@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/alfariiizi/vandor/config"
+	"github.com/alfariiizi/vandor/internal/config"
 )
 
 type Meta struct {

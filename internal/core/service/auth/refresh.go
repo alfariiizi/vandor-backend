@@ -9,16 +9,19 @@ import (
 	"github.com/alfariiizi/vandor/internal/core/usecase"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db/session"
-	"github.com/alfariiizi/vandor/pkg/validator"
+	"github.com/alfariiizi/vandor/internal/pkg/validator"
 )
 
 type RefreshInput struct {
 	RefreshToken string `json:"refresh_token" validate:"required"`
 }
-type (
-	RefreshOutput LoginOutput
-	Refresh       model.Service[RefreshInput, RefreshOutput]
-)
+
+type RefreshOutput struct {
+	AccessToken          string `json:"access_token"`
+	AccessTokenExpiresAt int64  `json:"access_token_expires_at"`
+}
+
+type Refresh model.Service[RefreshInput, RefreshOutput]
 
 type refresh struct {
 	domain    *domain_entries.Domain
@@ -55,6 +58,7 @@ func (s *refresh) Execute(ctx context.Context, input RefreshInput) (*RefreshOutp
 func (s *refresh) Process(ctx context.Context, input RefreshInput) (*RefreshOutput, error) {
 	sessionOne, err := s.domain.Session.One(
 		s.client.Session.Query().
+			WithUser().
 			Where(session.RefreshToken(input.RefreshToken)).
 			Only(ctx),
 	)
@@ -85,9 +89,7 @@ func (s *refresh) Process(ctx context.Context, input RefreshInput) (*RefreshOutp
 	}
 
 	return &RefreshOutput{
-		AccessToken:           accessToken.Value,
-		AccessTokenExpiresAt:  accessToken.ExpiresAt,
-		RefreshToken:          sessionOne.RefreshToken,
-		RefreshTokenExpiresAt: sessionOne.ExpiresAt.Unix(),
+		AccessToken:          accessToken.Value,
+		AccessTokenExpiresAt: accessToken.ExpiresAt,
 	}, nil
 }

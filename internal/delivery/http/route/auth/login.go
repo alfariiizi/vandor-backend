@@ -76,9 +76,9 @@ func (h *login) RegisterRoutes() {
 func (h *login) Handler(ctx context.Context, input *LoginInput) (*LoginOutput, error) {
 	payload := input.Body
 	res, err := h.service.Auth.Login.Execute(ctx, auth_service.LoginInput{
-		Email:    payload.Email,
-		Password: payload.Password,
-		// IsAdmin:  false,
+		Email:        payload.Email,
+		Password:     payload.Password,
+		IsBackoffice: false,
 	})
 	if err != nil {
 		return nil, err

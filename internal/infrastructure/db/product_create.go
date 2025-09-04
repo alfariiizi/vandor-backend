@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"time"
 
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db/product"
@@ -20,97 +22,216 @@ type ProductCreate struct {
 	config
 	mutation *ProductMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
-// SetName sets the "name" field.
-func (pc *ProductCreate) SetName(s string) *ProductCreate {
-	pc.mutation.SetName(s)
-	return pc
+// SetCreateTime sets the "create_time" field.
+func (_c *ProductCreate) SetCreateTime(v time.Time) *ProductCreate {
+	_c.mutation.SetCreateTime(v)
+	return _c
 }
 
-// SetBrand sets the "brand" field.
-func (pc *ProductCreate) SetBrand(s string) *ProductCreate {
-	pc.mutation.SetBrand(s)
-	return pc
+// SetNillableCreateTime sets the "create_time" field if the given value is not nil.
+func (_c *ProductCreate) SetNillableCreateTime(v *time.Time) *ProductCreate {
+	if v != nil {
+		_c.SetCreateTime(*v)
+	}
+	return _c
 }
 
-// SetCategory sets the "category" field.
-func (pc *ProductCreate) SetCategory(s string) *ProductCreate {
-	pc.mutation.SetCategory(s)
-	return pc
+// SetUpdateTime sets the "update_time" field.
+func (_c *ProductCreate) SetUpdateTime(v time.Time) *ProductCreate {
+	_c.mutation.SetUpdateTime(v)
+	return _c
+}
+
+// SetNillableUpdateTime sets the "update_time" field if the given value is not nil.
+func (_c *ProductCreate) SetNillableUpdateTime(v *time.Time) *ProductCreate {
+	if v != nil {
+		_c.SetUpdateTime(*v)
+	}
+	return _c
+}
+
+// SetTitle sets the "title" field.
+func (_c *ProductCreate) SetTitle(v string) *ProductCreate {
+	_c.mutation.SetTitle(v)
+	return _c
+}
+
+// SetNillableTitle sets the "title" field if the given value is not nil.
+func (_c *ProductCreate) SetNillableTitle(v *string) *ProductCreate {
+	if v != nil {
+		_c.SetTitle(*v)
+	}
+	return _c
+}
+
+// SetShortDescription sets the "short_description" field.
+func (_c *ProductCreate) SetShortDescription(v string) *ProductCreate {
+	_c.mutation.SetShortDescription(v)
+	return _c
+}
+
+// SetNillableShortDescription sets the "short_description" field if the given value is not nil.
+func (_c *ProductCreate) SetNillableShortDescription(v *string) *ProductCreate {
+	if v != nil {
+		_c.SetShortDescription(*v)
+	}
+	return _c
+}
+
+// SetLongDescription sets the "long_description" field.
+func (_c *ProductCreate) SetLongDescription(v string) *ProductCreate {
+	_c.mutation.SetLongDescription(v)
+	return _c
+}
+
+// SetNillableLongDescription sets the "long_description" field if the given value is not nil.
+func (_c *ProductCreate) SetNillableLongDescription(v *string) *ProductCreate {
+	if v != nil {
+		_c.SetLongDescription(*v)
+	}
+	return _c
 }
 
 // SetPrice sets the "price" field.
-func (pc *ProductCreate) SetPrice(f float64) *ProductCreate {
-	pc.mutation.SetPrice(f)
-	return pc
+func (_c *ProductCreate) SetPrice(v int64) *ProductCreate {
+	_c.mutation.SetPrice(v)
+	return _c
 }
 
-// SetCreatorID sets the "creator_id" field.
-func (pc *ProductCreate) SetCreatorID(u uuid.UUID) *ProductCreate {
-	pc.mutation.SetCreatorID(u)
-	return pc
-}
-
-// SetCreatedAt sets the "created_at" field.
-func (pc *ProductCreate) SetCreatedAt(t time.Time) *ProductCreate {
-	pc.mutation.SetCreatedAt(t)
-	return pc
-}
-
-// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (pc *ProductCreate) SetNillableCreatedAt(t *time.Time) *ProductCreate {
-	if t != nil {
-		pc.SetCreatedAt(*t)
+// SetNillablePrice sets the "price" field if the given value is not nil.
+func (_c *ProductCreate) SetNillablePrice(v *int64) *ProductCreate {
+	if v != nil {
+		_c.SetPrice(*v)
 	}
-	return pc
+	return _c
 }
 
-// SetUpdatedAt sets the "updated_at" field.
-func (pc *ProductCreate) SetUpdatedAt(t time.Time) *ProductCreate {
-	pc.mutation.SetUpdatedAt(t)
-	return pc
+// SetCurrency sets the "currency" field.
+func (_c *ProductCreate) SetCurrency(v string) *ProductCreate {
+	_c.mutation.SetCurrency(v)
+	return _c
+}
+
+// SetNillableCurrency sets the "currency" field if the given value is not nil.
+func (_c *ProductCreate) SetNillableCurrency(v *string) *ProductCreate {
+	if v != nil {
+		_c.SetCurrency(*v)
+	}
+	return _c
+}
+
+// SetStock sets the "stock" field.
+func (_c *ProductCreate) SetStock(v int) *ProductCreate {
+	_c.mutation.SetStock(v)
+	return _c
+}
+
+// SetNillableStock sets the "stock" field if the given value is not nil.
+func (_c *ProductCreate) SetNillableStock(v *int) *ProductCreate {
+	if v != nil {
+		_c.SetStock(*v)
+	}
+	return _c
+}
+
+// SetWeightGrams sets the "weight_grams" field.
+func (_c *ProductCreate) SetWeightGrams(v int) *ProductCreate {
+	_c.mutation.SetWeightGrams(v)
+	return _c
+}
+
+// SetNillableWeightGrams sets the "weight_grams" field if the given value is not nil.
+func (_c *ProductCreate) SetNillableWeightGrams(v *int) *ProductCreate {
+	if v != nil {
+		_c.SetWeightGrams(*v)
+	}
+	return _c
+}
+
+// SetPackageLengthMm sets the "package_length_mm" field.
+func (_c *ProductCreate) SetPackageLengthMm(v int) *ProductCreate {
+	_c.mutation.SetPackageLengthMm(v)
+	return _c
+}
+
+// SetNillablePackageLengthMm sets the "package_length_mm" field if the given value is not nil.
+func (_c *ProductCreate) SetNillablePackageLengthMm(v *int) *ProductCreate {
+	if v != nil {
+		_c.SetPackageLengthMm(*v)
+	}
+	return _c
+}
+
+// SetPackageWidthMm sets the "package_width_mm" field.
+func (_c *ProductCreate) SetPackageWidthMm(v int) *ProductCreate {
+	_c.mutation.SetPackageWidthMm(v)
+	return _c
+}
+
+// SetNillablePackageWidthMm sets the "package_width_mm" field if the given value is not nil.
+func (_c *ProductCreate) SetNillablePackageWidthMm(v *int) *ProductCreate {
+	if v != nil {
+		_c.SetPackageWidthMm(*v)
+	}
+	return _c
+}
+
+// SetPackageHeightMm sets the "package_height_mm" field.
+func (_c *ProductCreate) SetPackageHeightMm(v int) *ProductCreate {
+	_c.mutation.SetPackageHeightMm(v)
+	return _c
+}
+
+// SetNillablePackageHeightMm sets the "package_height_mm" field if the given value is not nil.
+func (_c *ProductCreate) SetNillablePackageHeightMm(v *int) *ProductCreate {
+	if v != nil {
+		_c.SetPackageHeightMm(*v)
+	}
+	return _c
+}
+
+// SetUserID sets the "user_id" field.
+func (_c *ProductCreate) SetUserID(v uuid.UUID) *ProductCreate {
+	_c.mutation.SetUserID(v)
+	return _c
 }
 
 // SetID sets the "id" field.
-func (pc *ProductCreate) SetID(u uuid.UUID) *ProductCreate {
-	pc.mutation.SetID(u)
-	return pc
+func (_c *ProductCreate) SetID(v uuid.UUID) *ProductCreate {
+	_c.mutation.SetID(v)
+	return _c
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (pc *ProductCreate) SetNillableID(u *uuid.UUID) *ProductCreate {
-	if u != nil {
-		pc.SetID(*u)
+func (_c *ProductCreate) SetNillableID(v *uuid.UUID) *ProductCreate {
+	if v != nil {
+		_c.SetID(*v)
 	}
-	return pc
-}
-
-// SetUserID sets the "user" edge to the User entity by ID.
-func (pc *ProductCreate) SetUserID(id uuid.UUID) *ProductCreate {
-	pc.mutation.SetUserID(id)
-	return pc
+	return _c
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (pc *ProductCreate) SetUser(u *User) *ProductCreate {
-	return pc.SetUserID(u.ID)
+func (_c *ProductCreate) SetUser(v *User) *ProductCreate {
+	return _c.SetUserID(v.ID)
 }
 
 // Mutation returns the ProductMutation object of the builder.
-func (pc *ProductCreate) Mutation() *ProductMutation {
-	return pc.mutation
+func (_c *ProductCreate) Mutation() *ProductMutation {
+	return _c.mutation
 }
 
 // Save creates the Product in the database.
-func (pc *ProductCreate) Save(ctx context.Context) (*Product, error) {
-	pc.defaults()
-	return withHooks(ctx, pc.sqlSave, pc.mutation, pc.hooks)
+func (_c *ProductCreate) Save(ctx context.Context) (*Product, error) {
+	_c.defaults()
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (pc *ProductCreate) SaveX(ctx context.Context) *Product {
-	v, err := pc.Save(ctx)
+func (_c *ProductCreate) SaveX(ctx context.Context) *Product {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -118,70 +239,57 @@ func (pc *ProductCreate) SaveX(ctx context.Context) *Product {
 }
 
 // Exec executes the query.
-func (pc *ProductCreate) Exec(ctx context.Context) error {
-	_, err := pc.Save(ctx)
+func (_c *ProductCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (pc *ProductCreate) ExecX(ctx context.Context) {
-	if err := pc.Exec(ctx); err != nil {
+func (_c *ProductCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (pc *ProductCreate) defaults() {
-	if _, ok := pc.mutation.CreatedAt(); !ok {
-		v := product.DefaultCreatedAt()
-		pc.mutation.SetCreatedAt(v)
+func (_c *ProductCreate) defaults() {
+	if _, ok := _c.mutation.CreateTime(); !ok {
+		v := product.DefaultCreateTime()
+		_c.mutation.SetCreateTime(v)
 	}
-	if _, ok := pc.mutation.ID(); !ok {
+	if _, ok := _c.mutation.UpdateTime(); !ok {
+		v := product.DefaultUpdateTime()
+		_c.mutation.SetUpdateTime(v)
+	}
+	if _, ok := _c.mutation.ID(); !ok {
 		v := product.DefaultID()
-		pc.mutation.SetID(v)
+		_c.mutation.SetID(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (pc *ProductCreate) check() error {
-	if _, ok := pc.mutation.Name(); !ok {
-		return &ValidationError{Name: "name", err: errors.New(`db: missing required field "Product.name"`)}
+func (_c *ProductCreate) check() error {
+	if _, ok := _c.mutation.CreateTime(); !ok {
+		return &ValidationError{Name: "create_time", err: errors.New(`db: missing required field "Product.create_time"`)}
 	}
-	if v, ok := pc.mutation.Name(); ok {
-		if err := product.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`db: validator failed for field "Product.name": %w`, err)}
-		}
+	if _, ok := _c.mutation.UpdateTime(); !ok {
+		return &ValidationError{Name: "update_time", err: errors.New(`db: missing required field "Product.update_time"`)}
 	}
-	if _, ok := pc.mutation.Brand(); !ok {
-		return &ValidationError{Name: "brand", err: errors.New(`db: missing required field "Product.brand"`)}
+	if _, ok := _c.mutation.UserID(); !ok {
+		return &ValidationError{Name: "user_id", err: errors.New(`db: missing required field "Product.user_id"`)}
 	}
-	if _, ok := pc.mutation.Category(); !ok {
-		return &ValidationError{Name: "category", err: errors.New(`db: missing required field "Product.category"`)}
-	}
-	if _, ok := pc.mutation.Price(); !ok {
-		return &ValidationError{Name: "price", err: errors.New(`db: missing required field "Product.price"`)}
-	}
-	if _, ok := pc.mutation.CreatorID(); !ok {
-		return &ValidationError{Name: "creator_id", err: errors.New(`db: missing required field "Product.creator_id"`)}
-	}
-	if _, ok := pc.mutation.CreatedAt(); !ok {
-		return &ValidationError{Name: "created_at", err: errors.New(`db: missing required field "Product.created_at"`)}
-	}
-	if _, ok := pc.mutation.UpdatedAt(); !ok {
-		return &ValidationError{Name: "updated_at", err: errors.New(`db: missing required field "Product.updated_at"`)}
-	}
-	if len(pc.mutation.UserIDs()) == 0 {
+	if len(_c.mutation.UserIDs()) == 0 {
 		return &ValidationError{Name: "user", err: errors.New(`db: missing required edge "Product.user"`)}
 	}
 	return nil
 }
 
-func (pc *ProductCreate) sqlSave(ctx context.Context) (*Product, error) {
-	if err := pc.check(); err != nil {
+func (_c *ProductCreate) sqlSave(ctx context.Context) (*Product, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := pc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, pc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -194,45 +302,70 @@ func (pc *ProductCreate) sqlSave(ctx context.Context) (*Product, error) {
 			return nil, err
 		}
 	}
-	pc.mutation.id = &_node.ID
-	pc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (pc *ProductCreate) createSpec() (*Product, *sqlgraph.CreateSpec) {
+func (_c *ProductCreate) createSpec() (*Product, *sqlgraph.CreateSpec) {
 	var (
-		_node = &Product{config: pc.config}
+		_node = &Product{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(product.Table, sqlgraph.NewFieldSpec(product.FieldID, field.TypeUUID))
 	)
-	if id, ok := pc.mutation.ID(); ok {
+	_spec.OnConflict = _c.conflict
+	if id, ok := _c.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
 	}
-	if value, ok := pc.mutation.Name(); ok {
-		_spec.SetField(product.FieldName, field.TypeString, value)
-		_node.Name = value
+	if value, ok := _c.mutation.CreateTime(); ok {
+		_spec.SetField(product.FieldCreateTime, field.TypeTime, value)
+		_node.CreateTime = value
 	}
-	if value, ok := pc.mutation.Brand(); ok {
-		_spec.SetField(product.FieldBrand, field.TypeString, value)
-		_node.Brand = value
+	if value, ok := _c.mutation.UpdateTime(); ok {
+		_spec.SetField(product.FieldUpdateTime, field.TypeTime, value)
+		_node.UpdateTime = value
 	}
-	if value, ok := pc.mutation.Category(); ok {
-		_spec.SetField(product.FieldCategory, field.TypeString, value)
-		_node.Category = value
+	if value, ok := _c.mutation.Title(); ok {
+		_spec.SetField(product.FieldTitle, field.TypeString, value)
+		_node.Title = value
 	}
-	if value, ok := pc.mutation.Price(); ok {
-		_spec.SetField(product.FieldPrice, field.TypeFloat64, value)
+	if value, ok := _c.mutation.ShortDescription(); ok {
+		_spec.SetField(product.FieldShortDescription, field.TypeString, value)
+		_node.ShortDescription = value
+	}
+	if value, ok := _c.mutation.LongDescription(); ok {
+		_spec.SetField(product.FieldLongDescription, field.TypeString, value)
+		_node.LongDescription = value
+	}
+	if value, ok := _c.mutation.Price(); ok {
+		_spec.SetField(product.FieldPrice, field.TypeInt64, value)
 		_node.Price = value
 	}
-	if value, ok := pc.mutation.CreatedAt(); ok {
-		_spec.SetField(product.FieldCreatedAt, field.TypeTime, value)
-		_node.CreatedAt = value
+	if value, ok := _c.mutation.Currency(); ok {
+		_spec.SetField(product.FieldCurrency, field.TypeString, value)
+		_node.Currency = value
 	}
-	if value, ok := pc.mutation.UpdatedAt(); ok {
-		_spec.SetField(product.FieldUpdatedAt, field.TypeTime, value)
-		_node.UpdatedAt = value
+	if value, ok := _c.mutation.Stock(); ok {
+		_spec.SetField(product.FieldStock, field.TypeInt, value)
+		_node.Stock = value
 	}
-	if nodes := pc.mutation.UserIDs(); len(nodes) > 0 {
+	if value, ok := _c.mutation.WeightGrams(); ok {
+		_spec.SetField(product.FieldWeightGrams, field.TypeInt, value)
+		_node.WeightGrams = value
+	}
+	if value, ok := _c.mutation.PackageLengthMm(); ok {
+		_spec.SetField(product.FieldPackageLengthMm, field.TypeInt, value)
+		_node.PackageLengthMm = value
+	}
+	if value, ok := _c.mutation.PackageWidthMm(); ok {
+		_spec.SetField(product.FieldPackageWidthMm, field.TypeInt, value)
+		_node.PackageWidthMm = value
+	}
+	if value, ok := _c.mutation.PackageHeightMm(); ok {
+		_spec.SetField(product.FieldPackageHeightMm, field.TypeInt, value)
+		_node.PackageHeightMm = value
+	}
+	if nodes := _c.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -246,10 +379,668 @@ func (pc *ProductCreate) createSpec() (*Product, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.CreatorID = nodes[0]
+		_node.UserID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Product.Create().
+//		SetCreateTime(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.ProductUpsert) {
+//			SetCreateTime(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *ProductCreate) OnConflict(opts ...sql.ConflictOption) *ProductUpsertOne {
+	_c.conflict = opts
+	return &ProductUpsertOne{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Product.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *ProductCreate) OnConflictColumns(columns ...string) *ProductUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &ProductUpsertOne{
+		create: _c,
+	}
+}
+
+type (
+	// ProductUpsertOne is the builder for "upsert"-ing
+	//  one Product node.
+	ProductUpsertOne struct {
+		create *ProductCreate
+	}
+
+	// ProductUpsert is the "OnConflict" setter.
+	ProductUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetUpdateTime sets the "update_time" field.
+func (u *ProductUpsert) SetUpdateTime(v time.Time) *ProductUpsert {
+	u.Set(product.FieldUpdateTime, v)
+	return u
+}
+
+// UpdateUpdateTime sets the "update_time" field to the value that was provided on create.
+func (u *ProductUpsert) UpdateUpdateTime() *ProductUpsert {
+	u.SetExcluded(product.FieldUpdateTime)
+	return u
+}
+
+// SetTitle sets the "title" field.
+func (u *ProductUpsert) SetTitle(v string) *ProductUpsert {
+	u.Set(product.FieldTitle, v)
+	return u
+}
+
+// UpdateTitle sets the "title" field to the value that was provided on create.
+func (u *ProductUpsert) UpdateTitle() *ProductUpsert {
+	u.SetExcluded(product.FieldTitle)
+	return u
+}
+
+// ClearTitle clears the value of the "title" field.
+func (u *ProductUpsert) ClearTitle() *ProductUpsert {
+	u.SetNull(product.FieldTitle)
+	return u
+}
+
+// SetShortDescription sets the "short_description" field.
+func (u *ProductUpsert) SetShortDescription(v string) *ProductUpsert {
+	u.Set(product.FieldShortDescription, v)
+	return u
+}
+
+// UpdateShortDescription sets the "short_description" field to the value that was provided on create.
+func (u *ProductUpsert) UpdateShortDescription() *ProductUpsert {
+	u.SetExcluded(product.FieldShortDescription)
+	return u
+}
+
+// ClearShortDescription clears the value of the "short_description" field.
+func (u *ProductUpsert) ClearShortDescription() *ProductUpsert {
+	u.SetNull(product.FieldShortDescription)
+	return u
+}
+
+// SetLongDescription sets the "long_description" field.
+func (u *ProductUpsert) SetLongDescription(v string) *ProductUpsert {
+	u.Set(product.FieldLongDescription, v)
+	return u
+}
+
+// UpdateLongDescription sets the "long_description" field to the value that was provided on create.
+func (u *ProductUpsert) UpdateLongDescription() *ProductUpsert {
+	u.SetExcluded(product.FieldLongDescription)
+	return u
+}
+
+// ClearLongDescription clears the value of the "long_description" field.
+func (u *ProductUpsert) ClearLongDescription() *ProductUpsert {
+	u.SetNull(product.FieldLongDescription)
+	return u
+}
+
+// SetPrice sets the "price" field.
+func (u *ProductUpsert) SetPrice(v int64) *ProductUpsert {
+	u.Set(product.FieldPrice, v)
+	return u
+}
+
+// UpdatePrice sets the "price" field to the value that was provided on create.
+func (u *ProductUpsert) UpdatePrice() *ProductUpsert {
+	u.SetExcluded(product.FieldPrice)
+	return u
+}
+
+// AddPrice adds v to the "price" field.
+func (u *ProductUpsert) AddPrice(v int64) *ProductUpsert {
+	u.Add(product.FieldPrice, v)
+	return u
+}
+
+// ClearPrice clears the value of the "price" field.
+func (u *ProductUpsert) ClearPrice() *ProductUpsert {
+	u.SetNull(product.FieldPrice)
+	return u
+}
+
+// SetCurrency sets the "currency" field.
+func (u *ProductUpsert) SetCurrency(v string) *ProductUpsert {
+	u.Set(product.FieldCurrency, v)
+	return u
+}
+
+// UpdateCurrency sets the "currency" field to the value that was provided on create.
+func (u *ProductUpsert) UpdateCurrency() *ProductUpsert {
+	u.SetExcluded(product.FieldCurrency)
+	return u
+}
+
+// ClearCurrency clears the value of the "currency" field.
+func (u *ProductUpsert) ClearCurrency() *ProductUpsert {
+	u.SetNull(product.FieldCurrency)
+	return u
+}
+
+// SetStock sets the "stock" field.
+func (u *ProductUpsert) SetStock(v int) *ProductUpsert {
+	u.Set(product.FieldStock, v)
+	return u
+}
+
+// UpdateStock sets the "stock" field to the value that was provided on create.
+func (u *ProductUpsert) UpdateStock() *ProductUpsert {
+	u.SetExcluded(product.FieldStock)
+	return u
+}
+
+// AddStock adds v to the "stock" field.
+func (u *ProductUpsert) AddStock(v int) *ProductUpsert {
+	u.Add(product.FieldStock, v)
+	return u
+}
+
+// ClearStock clears the value of the "stock" field.
+func (u *ProductUpsert) ClearStock() *ProductUpsert {
+	u.SetNull(product.FieldStock)
+	return u
+}
+
+// SetWeightGrams sets the "weight_grams" field.
+func (u *ProductUpsert) SetWeightGrams(v int) *ProductUpsert {
+	u.Set(product.FieldWeightGrams, v)
+	return u
+}
+
+// UpdateWeightGrams sets the "weight_grams" field to the value that was provided on create.
+func (u *ProductUpsert) UpdateWeightGrams() *ProductUpsert {
+	u.SetExcluded(product.FieldWeightGrams)
+	return u
+}
+
+// AddWeightGrams adds v to the "weight_grams" field.
+func (u *ProductUpsert) AddWeightGrams(v int) *ProductUpsert {
+	u.Add(product.FieldWeightGrams, v)
+	return u
+}
+
+// ClearWeightGrams clears the value of the "weight_grams" field.
+func (u *ProductUpsert) ClearWeightGrams() *ProductUpsert {
+	u.SetNull(product.FieldWeightGrams)
+	return u
+}
+
+// SetPackageLengthMm sets the "package_length_mm" field.
+func (u *ProductUpsert) SetPackageLengthMm(v int) *ProductUpsert {
+	u.Set(product.FieldPackageLengthMm, v)
+	return u
+}
+
+// UpdatePackageLengthMm sets the "package_length_mm" field to the value that was provided on create.
+func (u *ProductUpsert) UpdatePackageLengthMm() *ProductUpsert {
+	u.SetExcluded(product.FieldPackageLengthMm)
+	return u
+}
+
+// AddPackageLengthMm adds v to the "package_length_mm" field.
+func (u *ProductUpsert) AddPackageLengthMm(v int) *ProductUpsert {
+	u.Add(product.FieldPackageLengthMm, v)
+	return u
+}
+
+// ClearPackageLengthMm clears the value of the "package_length_mm" field.
+func (u *ProductUpsert) ClearPackageLengthMm() *ProductUpsert {
+	u.SetNull(product.FieldPackageLengthMm)
+	return u
+}
+
+// SetPackageWidthMm sets the "package_width_mm" field.
+func (u *ProductUpsert) SetPackageWidthMm(v int) *ProductUpsert {
+	u.Set(product.FieldPackageWidthMm, v)
+	return u
+}
+
+// UpdatePackageWidthMm sets the "package_width_mm" field to the value that was provided on create.
+func (u *ProductUpsert) UpdatePackageWidthMm() *ProductUpsert {
+	u.SetExcluded(product.FieldPackageWidthMm)
+	return u
+}
+
+// AddPackageWidthMm adds v to the "package_width_mm" field.
+func (u *ProductUpsert) AddPackageWidthMm(v int) *ProductUpsert {
+	u.Add(product.FieldPackageWidthMm, v)
+	return u
+}
+
+// ClearPackageWidthMm clears the value of the "package_width_mm" field.
+func (u *ProductUpsert) ClearPackageWidthMm() *ProductUpsert {
+	u.SetNull(product.FieldPackageWidthMm)
+	return u
+}
+
+// SetPackageHeightMm sets the "package_height_mm" field.
+func (u *ProductUpsert) SetPackageHeightMm(v int) *ProductUpsert {
+	u.Set(product.FieldPackageHeightMm, v)
+	return u
+}
+
+// UpdatePackageHeightMm sets the "package_height_mm" field to the value that was provided on create.
+func (u *ProductUpsert) UpdatePackageHeightMm() *ProductUpsert {
+	u.SetExcluded(product.FieldPackageHeightMm)
+	return u
+}
+
+// AddPackageHeightMm adds v to the "package_height_mm" field.
+func (u *ProductUpsert) AddPackageHeightMm(v int) *ProductUpsert {
+	u.Add(product.FieldPackageHeightMm, v)
+	return u
+}
+
+// ClearPackageHeightMm clears the value of the "package_height_mm" field.
+func (u *ProductUpsert) ClearPackageHeightMm() *ProductUpsert {
+	u.SetNull(product.FieldPackageHeightMm)
+	return u
+}
+
+// SetUserID sets the "user_id" field.
+func (u *ProductUpsert) SetUserID(v uuid.UUID) *ProductUpsert {
+	u.Set(product.FieldUserID, v)
+	return u
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *ProductUpsert) UpdateUserID() *ProductUpsert {
+	u.SetExcluded(product.FieldUserID)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
+// Using this option is equivalent to using:
+//
+//	client.Product.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(product.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *ProductUpsertOne) UpdateNewValues() *ProductUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.ID(); exists {
+			s.SetIgnore(product.FieldID)
+		}
+		if _, exists := u.create.mutation.CreateTime(); exists {
+			s.SetIgnore(product.FieldCreateTime)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Product.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *ProductUpsertOne) Ignore() *ProductUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *ProductUpsertOne) DoNothing() *ProductUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the ProductCreate.OnConflict
+// documentation for more info.
+func (u *ProductUpsertOne) Update(set func(*ProductUpsert)) *ProductUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&ProductUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetUpdateTime sets the "update_time" field.
+func (u *ProductUpsertOne) SetUpdateTime(v time.Time) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetUpdateTime(v)
+	})
+}
+
+// UpdateUpdateTime sets the "update_time" field to the value that was provided on create.
+func (u *ProductUpsertOne) UpdateUpdateTime() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdateUpdateTime()
+	})
+}
+
+// SetTitle sets the "title" field.
+func (u *ProductUpsertOne) SetTitle(v string) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetTitle(v)
+	})
+}
+
+// UpdateTitle sets the "title" field to the value that was provided on create.
+func (u *ProductUpsertOne) UpdateTitle() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdateTitle()
+	})
+}
+
+// ClearTitle clears the value of the "title" field.
+func (u *ProductUpsertOne) ClearTitle() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearTitle()
+	})
+}
+
+// SetShortDescription sets the "short_description" field.
+func (u *ProductUpsertOne) SetShortDescription(v string) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetShortDescription(v)
+	})
+}
+
+// UpdateShortDescription sets the "short_description" field to the value that was provided on create.
+func (u *ProductUpsertOne) UpdateShortDescription() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdateShortDescription()
+	})
+}
+
+// ClearShortDescription clears the value of the "short_description" field.
+func (u *ProductUpsertOne) ClearShortDescription() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearShortDescription()
+	})
+}
+
+// SetLongDescription sets the "long_description" field.
+func (u *ProductUpsertOne) SetLongDescription(v string) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetLongDescription(v)
+	})
+}
+
+// UpdateLongDescription sets the "long_description" field to the value that was provided on create.
+func (u *ProductUpsertOne) UpdateLongDescription() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdateLongDescription()
+	})
+}
+
+// ClearLongDescription clears the value of the "long_description" field.
+func (u *ProductUpsertOne) ClearLongDescription() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearLongDescription()
+	})
+}
+
+// SetPrice sets the "price" field.
+func (u *ProductUpsertOne) SetPrice(v int64) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetPrice(v)
+	})
+}
+
+// AddPrice adds v to the "price" field.
+func (u *ProductUpsertOne) AddPrice(v int64) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.AddPrice(v)
+	})
+}
+
+// UpdatePrice sets the "price" field to the value that was provided on create.
+func (u *ProductUpsertOne) UpdatePrice() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdatePrice()
+	})
+}
+
+// ClearPrice clears the value of the "price" field.
+func (u *ProductUpsertOne) ClearPrice() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearPrice()
+	})
+}
+
+// SetCurrency sets the "currency" field.
+func (u *ProductUpsertOne) SetCurrency(v string) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetCurrency(v)
+	})
+}
+
+// UpdateCurrency sets the "currency" field to the value that was provided on create.
+func (u *ProductUpsertOne) UpdateCurrency() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdateCurrency()
+	})
+}
+
+// ClearCurrency clears the value of the "currency" field.
+func (u *ProductUpsertOne) ClearCurrency() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearCurrency()
+	})
+}
+
+// SetStock sets the "stock" field.
+func (u *ProductUpsertOne) SetStock(v int) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetStock(v)
+	})
+}
+
+// AddStock adds v to the "stock" field.
+func (u *ProductUpsertOne) AddStock(v int) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.AddStock(v)
+	})
+}
+
+// UpdateStock sets the "stock" field to the value that was provided on create.
+func (u *ProductUpsertOne) UpdateStock() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdateStock()
+	})
+}
+
+// ClearStock clears the value of the "stock" field.
+func (u *ProductUpsertOne) ClearStock() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearStock()
+	})
+}
+
+// SetWeightGrams sets the "weight_grams" field.
+func (u *ProductUpsertOne) SetWeightGrams(v int) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetWeightGrams(v)
+	})
+}
+
+// AddWeightGrams adds v to the "weight_grams" field.
+func (u *ProductUpsertOne) AddWeightGrams(v int) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.AddWeightGrams(v)
+	})
+}
+
+// UpdateWeightGrams sets the "weight_grams" field to the value that was provided on create.
+func (u *ProductUpsertOne) UpdateWeightGrams() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdateWeightGrams()
+	})
+}
+
+// ClearWeightGrams clears the value of the "weight_grams" field.
+func (u *ProductUpsertOne) ClearWeightGrams() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearWeightGrams()
+	})
+}
+
+// SetPackageLengthMm sets the "package_length_mm" field.
+func (u *ProductUpsertOne) SetPackageLengthMm(v int) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetPackageLengthMm(v)
+	})
+}
+
+// AddPackageLengthMm adds v to the "package_length_mm" field.
+func (u *ProductUpsertOne) AddPackageLengthMm(v int) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.AddPackageLengthMm(v)
+	})
+}
+
+// UpdatePackageLengthMm sets the "package_length_mm" field to the value that was provided on create.
+func (u *ProductUpsertOne) UpdatePackageLengthMm() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdatePackageLengthMm()
+	})
+}
+
+// ClearPackageLengthMm clears the value of the "package_length_mm" field.
+func (u *ProductUpsertOne) ClearPackageLengthMm() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearPackageLengthMm()
+	})
+}
+
+// SetPackageWidthMm sets the "package_width_mm" field.
+func (u *ProductUpsertOne) SetPackageWidthMm(v int) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetPackageWidthMm(v)
+	})
+}
+
+// AddPackageWidthMm adds v to the "package_width_mm" field.
+func (u *ProductUpsertOne) AddPackageWidthMm(v int) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.AddPackageWidthMm(v)
+	})
+}
+
+// UpdatePackageWidthMm sets the "package_width_mm" field to the value that was provided on create.
+func (u *ProductUpsertOne) UpdatePackageWidthMm() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdatePackageWidthMm()
+	})
+}
+
+// ClearPackageWidthMm clears the value of the "package_width_mm" field.
+func (u *ProductUpsertOne) ClearPackageWidthMm() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearPackageWidthMm()
+	})
+}
+
+// SetPackageHeightMm sets the "package_height_mm" field.
+func (u *ProductUpsertOne) SetPackageHeightMm(v int) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetPackageHeightMm(v)
+	})
+}
+
+// AddPackageHeightMm adds v to the "package_height_mm" field.
+func (u *ProductUpsertOne) AddPackageHeightMm(v int) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.AddPackageHeightMm(v)
+	})
+}
+
+// UpdatePackageHeightMm sets the "package_height_mm" field to the value that was provided on create.
+func (u *ProductUpsertOne) UpdatePackageHeightMm() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdatePackageHeightMm()
+	})
+}
+
+// ClearPackageHeightMm clears the value of the "package_height_mm" field.
+func (u *ProductUpsertOne) ClearPackageHeightMm() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearPackageHeightMm()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *ProductUpsertOne) SetUserID(v uuid.UUID) *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *ProductUpsertOne) UpdateUserID() *ProductUpsertOne {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdateUserID()
+	})
+}
+
+// Exec executes the query.
+func (u *ProductUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("db: missing options for ProductCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *ProductUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *ProductUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
+	if u.create.driver.Dialect() == dialect.MySQL {
+		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
+		// fields from the database since MySQL does not support the RETURNING clause.
+		return id, errors.New("db: ProductUpsertOne.ID is not supported by MySQL driver. Use ProductUpsertOne.Exec instead")
+	}
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *ProductUpsertOne) IDX(ctx context.Context) uuid.UUID {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
 }
 
 // ProductCreateBulk is the builder for creating many Product entities in bulk.
@@ -257,19 +1048,20 @@ type ProductCreateBulk struct {
 	config
 	err      error
 	builders []*ProductCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the Product entities in the database.
-func (pcb *ProductCreateBulk) Save(ctx context.Context) ([]*Product, error) {
-	if pcb.err != nil {
-		return nil, pcb.err
+func (_c *ProductCreateBulk) Save(ctx context.Context) ([]*Product, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(pcb.builders))
-	nodes := make([]*Product, len(pcb.builders))
-	mutators := make([]Mutator, len(pcb.builders))
-	for i := range pcb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*Product, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := pcb.builders[i]
+			builder := _c.builders[i]
 			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*ProductMutation)
@@ -283,11 +1075,12 @@ func (pcb *ProductCreateBulk) Save(ctx context.Context) ([]*Product, error) {
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, pcb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, pcb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -307,7 +1100,7 @@ func (pcb *ProductCreateBulk) Save(ctx context.Context) ([]*Product, error) {
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, pcb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -315,8 +1108,8 @@ func (pcb *ProductCreateBulk) Save(ctx context.Context) ([]*Product, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (pcb *ProductCreateBulk) SaveX(ctx context.Context) []*Product {
-	v, err := pcb.Save(ctx)
+func (_c *ProductCreateBulk) SaveX(ctx context.Context) []*Product {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -324,14 +1117,411 @@ func (pcb *ProductCreateBulk) SaveX(ctx context.Context) []*Product {
 }
 
 // Exec executes the query.
-func (pcb *ProductCreateBulk) Exec(ctx context.Context) error {
-	_, err := pcb.Save(ctx)
+func (_c *ProductCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (pcb *ProductCreateBulk) ExecX(ctx context.Context) {
-	if err := pcb.Exec(ctx); err != nil {
+func (_c *ProductCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Product.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.ProductUpsert) {
+//			SetCreateTime(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *ProductCreateBulk) OnConflict(opts ...sql.ConflictOption) *ProductUpsertBulk {
+	_c.conflict = opts
+	return &ProductUpsertBulk{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Product.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *ProductCreateBulk) OnConflictColumns(columns ...string) *ProductUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &ProductUpsertBulk{
+		create: _c,
+	}
+}
+
+// ProductUpsertBulk is the builder for "upsert"-ing
+// a bulk of Product nodes.
+type ProductUpsertBulk struct {
+	create *ProductCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.Product.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(product.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *ProductUpsertBulk) UpdateNewValues() *ProductUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.ID(); exists {
+				s.SetIgnore(product.FieldID)
+			}
+			if _, exists := b.mutation.CreateTime(); exists {
+				s.SetIgnore(product.FieldCreateTime)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Product.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *ProductUpsertBulk) Ignore() *ProductUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *ProductUpsertBulk) DoNothing() *ProductUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the ProductCreateBulk.OnConflict
+// documentation for more info.
+func (u *ProductUpsertBulk) Update(set func(*ProductUpsert)) *ProductUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&ProductUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetUpdateTime sets the "update_time" field.
+func (u *ProductUpsertBulk) SetUpdateTime(v time.Time) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetUpdateTime(v)
+	})
+}
+
+// UpdateUpdateTime sets the "update_time" field to the value that was provided on create.
+func (u *ProductUpsertBulk) UpdateUpdateTime() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdateUpdateTime()
+	})
+}
+
+// SetTitle sets the "title" field.
+func (u *ProductUpsertBulk) SetTitle(v string) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetTitle(v)
+	})
+}
+
+// UpdateTitle sets the "title" field to the value that was provided on create.
+func (u *ProductUpsertBulk) UpdateTitle() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdateTitle()
+	})
+}
+
+// ClearTitle clears the value of the "title" field.
+func (u *ProductUpsertBulk) ClearTitle() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearTitle()
+	})
+}
+
+// SetShortDescription sets the "short_description" field.
+func (u *ProductUpsertBulk) SetShortDescription(v string) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetShortDescription(v)
+	})
+}
+
+// UpdateShortDescription sets the "short_description" field to the value that was provided on create.
+func (u *ProductUpsertBulk) UpdateShortDescription() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdateShortDescription()
+	})
+}
+
+// ClearShortDescription clears the value of the "short_description" field.
+func (u *ProductUpsertBulk) ClearShortDescription() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearShortDescription()
+	})
+}
+
+// SetLongDescription sets the "long_description" field.
+func (u *ProductUpsertBulk) SetLongDescription(v string) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetLongDescription(v)
+	})
+}
+
+// UpdateLongDescription sets the "long_description" field to the value that was provided on create.
+func (u *ProductUpsertBulk) UpdateLongDescription() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdateLongDescription()
+	})
+}
+
+// ClearLongDescription clears the value of the "long_description" field.
+func (u *ProductUpsertBulk) ClearLongDescription() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearLongDescription()
+	})
+}
+
+// SetPrice sets the "price" field.
+func (u *ProductUpsertBulk) SetPrice(v int64) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetPrice(v)
+	})
+}
+
+// AddPrice adds v to the "price" field.
+func (u *ProductUpsertBulk) AddPrice(v int64) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.AddPrice(v)
+	})
+}
+
+// UpdatePrice sets the "price" field to the value that was provided on create.
+func (u *ProductUpsertBulk) UpdatePrice() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdatePrice()
+	})
+}
+
+// ClearPrice clears the value of the "price" field.
+func (u *ProductUpsertBulk) ClearPrice() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearPrice()
+	})
+}
+
+// SetCurrency sets the "currency" field.
+func (u *ProductUpsertBulk) SetCurrency(v string) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetCurrency(v)
+	})
+}
+
+// UpdateCurrency sets the "currency" field to the value that was provided on create.
+func (u *ProductUpsertBulk) UpdateCurrency() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdateCurrency()
+	})
+}
+
+// ClearCurrency clears the value of the "currency" field.
+func (u *ProductUpsertBulk) ClearCurrency() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearCurrency()
+	})
+}
+
+// SetStock sets the "stock" field.
+func (u *ProductUpsertBulk) SetStock(v int) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetStock(v)
+	})
+}
+
+// AddStock adds v to the "stock" field.
+func (u *ProductUpsertBulk) AddStock(v int) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.AddStock(v)
+	})
+}
+
+// UpdateStock sets the "stock" field to the value that was provided on create.
+func (u *ProductUpsertBulk) UpdateStock() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdateStock()
+	})
+}
+
+// ClearStock clears the value of the "stock" field.
+func (u *ProductUpsertBulk) ClearStock() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearStock()
+	})
+}
+
+// SetWeightGrams sets the "weight_grams" field.
+func (u *ProductUpsertBulk) SetWeightGrams(v int) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetWeightGrams(v)
+	})
+}
+
+// AddWeightGrams adds v to the "weight_grams" field.
+func (u *ProductUpsertBulk) AddWeightGrams(v int) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.AddWeightGrams(v)
+	})
+}
+
+// UpdateWeightGrams sets the "weight_grams" field to the value that was provided on create.
+func (u *ProductUpsertBulk) UpdateWeightGrams() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdateWeightGrams()
+	})
+}
+
+// ClearWeightGrams clears the value of the "weight_grams" field.
+func (u *ProductUpsertBulk) ClearWeightGrams() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearWeightGrams()
+	})
+}
+
+// SetPackageLengthMm sets the "package_length_mm" field.
+func (u *ProductUpsertBulk) SetPackageLengthMm(v int) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetPackageLengthMm(v)
+	})
+}
+
+// AddPackageLengthMm adds v to the "package_length_mm" field.
+func (u *ProductUpsertBulk) AddPackageLengthMm(v int) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.AddPackageLengthMm(v)
+	})
+}
+
+// UpdatePackageLengthMm sets the "package_length_mm" field to the value that was provided on create.
+func (u *ProductUpsertBulk) UpdatePackageLengthMm() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdatePackageLengthMm()
+	})
+}
+
+// ClearPackageLengthMm clears the value of the "package_length_mm" field.
+func (u *ProductUpsertBulk) ClearPackageLengthMm() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearPackageLengthMm()
+	})
+}
+
+// SetPackageWidthMm sets the "package_width_mm" field.
+func (u *ProductUpsertBulk) SetPackageWidthMm(v int) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetPackageWidthMm(v)
+	})
+}
+
+// AddPackageWidthMm adds v to the "package_width_mm" field.
+func (u *ProductUpsertBulk) AddPackageWidthMm(v int) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.AddPackageWidthMm(v)
+	})
+}
+
+// UpdatePackageWidthMm sets the "package_width_mm" field to the value that was provided on create.
+func (u *ProductUpsertBulk) UpdatePackageWidthMm() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdatePackageWidthMm()
+	})
+}
+
+// ClearPackageWidthMm clears the value of the "package_width_mm" field.
+func (u *ProductUpsertBulk) ClearPackageWidthMm() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearPackageWidthMm()
+	})
+}
+
+// SetPackageHeightMm sets the "package_height_mm" field.
+func (u *ProductUpsertBulk) SetPackageHeightMm(v int) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetPackageHeightMm(v)
+	})
+}
+
+// AddPackageHeightMm adds v to the "package_height_mm" field.
+func (u *ProductUpsertBulk) AddPackageHeightMm(v int) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.AddPackageHeightMm(v)
+	})
+}
+
+// UpdatePackageHeightMm sets the "package_height_mm" field to the value that was provided on create.
+func (u *ProductUpsertBulk) UpdatePackageHeightMm() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdatePackageHeightMm()
+	})
+}
+
+// ClearPackageHeightMm clears the value of the "package_height_mm" field.
+func (u *ProductUpsertBulk) ClearPackageHeightMm() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.ClearPackageHeightMm()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *ProductUpsertBulk) SetUserID(v uuid.UUID) *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *ProductUpsertBulk) UpdateUserID() *ProductUpsertBulk {
+	return u.Update(func(s *ProductUpsert) {
+		s.UpdateUserID()
+	})
+}
+
+// Exec executes the query.
+func (u *ProductUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("db: OnConflict was set for builder %d. Set it on the ProductCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("db: missing options for ProductCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *ProductUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

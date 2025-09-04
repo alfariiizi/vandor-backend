@@ -19,19 +19,19 @@ type User struct {
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
 	// Email holds the value of the "email" field.
-	Email string `json:"email,omitempty"`
+	Email string `json:"email"`
 	// FirstName holds the value of the "first_name" field.
-	FirstName string `json:"first_name,omitempty"`
+	FirstName string `json:"first_name"`
 	// LastName holds the value of the "last_name" field.
-	LastName string `json:"last_name,omitempty"`
+	LastName string `json:"last_name"`
 	// PasswordHash holds the value of the "password_hash" field.
 	PasswordHash string `json:"-"`
 	// Role holds the value of the "role" field.
-	Role user.Role `json:"role,omitempty"`
+	Role user.Role `json:"role"`
 	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt time.Time `json:"created_at,omitempty"`
+	CreatedAt time.Time `json:"created_at"`
 	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
 	Edges        UserEdges `json:"edges"`
@@ -44,9 +44,11 @@ type UserEdges struct {
 	Products []*Product `json:"products,omitempty"`
 	// Sessions holds the value of the sessions edge.
 	Sessions []*Session `json:"sessions,omitempty"`
+	// Notifications holds the value of the notifications edge.
+	Notifications []*Notification `json:"notifications,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
 // ProductsOrErr returns the Products value or an error if the edge
@@ -65,6 +67,15 @@ func (e UserEdges) SessionsOrErr() ([]*Session, error) {
 		return e.Sessions, nil
 	}
 	return nil, &NotLoadedError{edge: "sessions"}
+}
+
+// NotificationsOrErr returns the Notifications value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) NotificationsOrErr() ([]*Notification, error) {
+	if e.loadedTypes[2] {
+		return e.Notifications, nil
+	}
+	return nil, &NotLoadedError{edge: "notifications"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -87,7 +98,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the User fields.
-func (u *User) assignValues(columns []string, values []any) error {
+func (_m *User) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -97,52 +108,52 @@ func (u *User) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value != nil {
-				u.ID = *value
+				_m.ID = *value
 			}
 		case user.FieldEmail:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field email", values[i])
 			} else if value.Valid {
-				u.Email = value.String
+				_m.Email = value.String
 			}
 		case user.FieldFirstName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field first_name", values[i])
 			} else if value.Valid {
-				u.FirstName = value.String
+				_m.FirstName = value.String
 			}
 		case user.FieldLastName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field last_name", values[i])
 			} else if value.Valid {
-				u.LastName = value.String
+				_m.LastName = value.String
 			}
 		case user.FieldPasswordHash:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field password_hash", values[i])
 			} else if value.Valid {
-				u.PasswordHash = value.String
+				_m.PasswordHash = value.String
 			}
 		case user.FieldRole:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field role", values[i])
 			} else if value.Valid {
-				u.Role = user.Role(value.String)
+				_m.Role = user.Role(value.String)
 			}
 		case user.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				u.CreatedAt = value.Time
+				_m.CreatedAt = value.Time
 			}
 		case user.FieldUpdatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
-				u.UpdatedAt = value.Time
+				_m.UpdatedAt = value.Time
 			}
 		default:
-			u.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -150,62 +161,67 @@ func (u *User) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the User.
 // This includes values selected through modifiers, order, etc.
-func (u *User) Value(name string) (ent.Value, error) {
-	return u.selectValues.Get(name)
+func (_m *User) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryProducts queries the "products" edge of the User entity.
-func (u *User) QueryProducts() *ProductQuery {
-	return NewUserClient(u.config).QueryProducts(u)
+func (_m *User) QueryProducts() *ProductQuery {
+	return NewUserClient(_m.config).QueryProducts(_m)
 }
 
 // QuerySessions queries the "sessions" edge of the User entity.
-func (u *User) QuerySessions() *SessionQuery {
-	return NewUserClient(u.config).QuerySessions(u)
+func (_m *User) QuerySessions() *SessionQuery {
+	return NewUserClient(_m.config).QuerySessions(_m)
+}
+
+// QueryNotifications queries the "notifications" edge of the User entity.
+func (_m *User) QueryNotifications() *NotificationQuery {
+	return NewUserClient(_m.config).QueryNotifications(_m)
 }
 
 // Update returns a builder for updating this User.
 // Note that you need to call User.Unwrap() before calling this method if this User
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (u *User) Update() *UserUpdateOne {
-	return NewUserClient(u.config).UpdateOne(u)
+func (_m *User) Update() *UserUpdateOne {
+	return NewUserClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the User entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (u *User) Unwrap() *User {
-	_tx, ok := u.config.driver.(*txDriver)
+func (_m *User) Unwrap() *User {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("db: User is not a transactional entity")
 	}
-	u.config.driver = _tx.drv
-	return u
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (u *User) String() string {
+func (_m *User) String() string {
 	var builder strings.Builder
 	builder.WriteString("User(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", u.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("email=")
-	builder.WriteString(u.Email)
+	builder.WriteString(_m.Email)
 	builder.WriteString(", ")
 	builder.WriteString("first_name=")
-	builder.WriteString(u.FirstName)
+	builder.WriteString(_m.FirstName)
 	builder.WriteString(", ")
 	builder.WriteString("last_name=")
-	builder.WriteString(u.LastName)
+	builder.WriteString(_m.LastName)
 	builder.WriteString(", ")
 	builder.WriteString("password_hash=<sensitive>")
 	builder.WriteString(", ")
 	builder.WriteString("role=")
-	builder.WriteString(fmt.Sprintf("%v", u.Role))
+	builder.WriteString(fmt.Sprintf("%v", _m.Role))
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
-	builder.WriteString(u.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
-	builder.WriteString(u.UpdatedAt.Format(time.ANSIC))
+	builder.WriteString(_m.UpdatedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

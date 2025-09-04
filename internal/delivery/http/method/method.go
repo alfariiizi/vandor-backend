@@ -6,8 +6,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/alfariiizi/vandor/config"
+	"github.com/alfariiizi/vandor/internal/config"
 	"github.com/alfariiizi/vandor/internal/delivery/http/api/middleware"
+	"github.com/alfariiizi/vandor/internal/enum"
 	"github.com/danielgtaylor/huma/v2"
 )
 
@@ -17,6 +18,8 @@ type Operation struct {
 	Tags        []string
 	BearerAuth  bool
 	Tenant      bool
+	Job         bool
+	RoleAllowed []enum.UserRole
 	Extensions  map[string]any
 }
 
@@ -39,6 +42,14 @@ func generateBaseAPI[I, O any](api huma.API, path string, method string, operati
 
 	if operation.Tenant {
 		route.UseMiddleware(middleware.NewTenantMiddleware(route))
+	}
+
+	if operation.Job {
+		route.UseMiddleware(middleware.NewJobMiddleware(route))
+	}
+
+	if len(operation.RoleAllowed) > 0 {
+		route.UseMiddleware(middleware.UserRoleMiddleware(route, operation.RoleAllowed))
 	}
 
 	huma.Register(route, huma.Operation{

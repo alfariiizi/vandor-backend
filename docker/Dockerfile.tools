@@ -1,0 +1,56 @@
+# docker/Dockerfile.tools
+# Tools image: smaller, but still has project binaries for seeding/debugging
+
+# Stage 1: Build binaries
+FROM golang:1.24 AS builder
+
+WORKDIR /app
+
+# Cache dependencies
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy project
+COPY . .
+
+# Build all cmd/* binaries (best-effort)
+RUN mkdir -p /out \
+	&& for d in cmd/*; do \
+	if [ -d "$d" ]; then \
+	name=$(basename "$d"); \
+	echo "building $d -> /out/$name"; \
+	CGO_ENABLED=0 GOOS=linux go build -o /out/$name ./"$d" || echo "skip $d"; \
+	fi; \
+	done
+
+# Stage 2: Final slim image
+FROM golang:1.24-alpine
+
+LABEL maintainer="rizal.alfariiiziii@gmail.com"
+
+# Use /app as working dir
+WORKDIR /app
+
+# Minimal system deps (adjust as needed)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	ca-certificates \
+	curl \
+	jq \
+	&& rm -rf /var/lib/apt/lists/*
+
+# Copy prebuilt binaries
+COPY --from=builder /out /usr/local/bin
+
+# Optional: copy source if you need to run Go scripts inside
+# COPY --from=builder /app /app
+
+# Install go-task
+ENV GOBIN=/usr/local/bin
+RUN go install github.com/go-task/task/v3/cmd/task@latest
+
+# PATH
+ENV PATH="/usr/local/bin:${PATH}"
+
+# Default shell
+ENTRYPOINT ["/bin/bash"]
+CMD ["-l"]

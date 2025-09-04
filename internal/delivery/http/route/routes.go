@@ -5,6 +5,9 @@ package route
 
 import (
 	auth_handler "github.com/alfariiizi/vandor/internal/delivery/http/route/auth"
+	notification_handler "github.com/alfariiizi/vandor/internal/delivery/http/route/notification"
+	product_handler "github.com/alfariiizi/vandor/internal/delivery/http/route/product"
+	user_handler "github.com/alfariiizi/vandor/internal/delivery/http/route/user"
 	"go.uber.org/fx"
 )
 
@@ -13,6 +16,16 @@ var Module = fx.Module(
 	fx.Invoke(
 		auth_handler.NewLogin,
 		auth_handler.NewLoginAdmin,
+		auth_handler.Newme,
 		auth_handler.NewRefresh,
+		auth_handler.Newregister,
+		notification_handler.NewdeleteOne,
+		notification_handler.NewListNotification,
+		notification_handler.NewmarkAsRead,
+		notification_handler.NewmarkAsReadAll,
+		notification_handler.NewunreadCount,
+		product_handler.NewListProduct,
+		user_handler.NewchangeUserPassword,
+		user_handler.NewuserInformation,
 	),
 )

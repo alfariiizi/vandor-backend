@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -12,10 +13,10 @@ import (
 type ExtractJWTOutput struct {
 	UserID    uuid.UUID `json:"user_id"`
 	SessionID string    `json:"session_id"`
-	TenantID  uuid.UUID `json:"tenant_id"`
-	Role      string    `json:"role"`
-	Expiry    time.Time `json:"expiry"`
-	IssuedAt  time.Time `json:"issued_at"`
+	// TenantID  uuid.UUID `json:"tenant_id"`
+	Role     string    `json:"role"`
+	Expiry   time.Time `json:"expiry"`
+	IssuedAt time.Time `json:"issued_at"`
 }
 
 func ExtractJWT(ctx context.Context) (*ExtractJWTOutput, error) {
@@ -23,7 +24,14 @@ func ExtractJWT(ctx context.Context) (*ExtractJWTOutput, error) {
 	if !found {
 		return nil, fmt.Errorf("token is not valid")
 	}
-	fmt.Println("Token", token)
+
+	return ExtractJWTFromToken(token)
+}
+
+func ExtractJWTFromToken(token jwt.Token) (*ExtractJWTOutput, error) {
+	if token == nil {
+		return nil, errors.New("token is nil")
+	}
 
 	userID, ok := getTokenIndex[string](token, "sub")
 	if !ok {
@@ -39,14 +47,14 @@ func ExtractJWT(ctx context.Context) (*ExtractJWTOutput, error) {
 		return nil, fmt.Errorf("failed to extract session ID from token")
 	}
 
-	tenantID, ok := getTokenIndex[string](token, "tid")
-	if !ok {
-		return nil, fmt.Errorf("failed to extract tenant ID from token")
-	}
-	tenantUUID, err := IDParser(tenantID)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse tenant ID: %v", err)
-	}
+	// tenantID, ok := getTokenIndex[string](token, "tid")
+	// if !ok {
+	// 	return nil, fmt.Errorf("failed to extract tenant ID from token")
+	// }
+	// tenantUUID, err := IDParser(tenantID)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to parse tenant ID: %v", err)
+	// }
 
 	role, ok := getTokenIndex[string](token, "role")
 	if !ok {
@@ -66,10 +74,10 @@ func ExtractJWT(ctx context.Context) (*ExtractJWTOutput, error) {
 	return &ExtractJWTOutput{
 		UserID:    *userUUID,
 		SessionID: sessionID,
-		TenantID:  *tenantUUID,
-		Role:      role,
-		Expiry:    expiry,
-		IssuedAt:  issuedAt,
+		// TenantID:  *tenantUUID,
+		Role:     role,
+		Expiry:   expiry,
+		IssuedAt: issuedAt,
 	}, nil
 }
 

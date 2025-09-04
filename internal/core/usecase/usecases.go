@@ -8,14 +8,20 @@ import (
 )
 
 type Usecases struct {
-	CreateAccessToken CreateAccessToken
+	CreateAccessToken      CreateAccessToken
+	CreateNotification     CreateNotification
+	MarkAsReadNotification MarkAsReadNotification
 }
 
 func NewUsecases(
 	createAccessToken CreateAccessToken,
+	createNotification CreateNotification,
+	markAsReadNotification MarkAsReadNotification,
 ) *Usecases {
 	return &Usecases{
-		CreateAccessToken: createAccessToken,
+		CreateAccessToken:      createAccessToken,
+		CreateNotification:     createNotification,
+		MarkAsReadNotification: markAsReadNotification,
 	}
 }
 
@@ -23,6 +29,8 @@ var Module = fx.Module(
 	"usecase",
 	fx.Provide(
 		NewCreateAccessToken,
+		NewCreateNotification,
+		NewMarkAsReadNotification,
 		NewUsecases,
 	),
 )

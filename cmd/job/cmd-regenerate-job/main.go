@@ -113,6 +113,13 @@ var Module = fx.Module(
 {{- end }}
         NewJobs,
     ),
+    fx.Invoke(
+	{{- range . }}
+	func (j {{.BaseName}}) {
+		j.HTTPRegisterRoute()
+	},
+	{{- end }}
+    ),
 )
 `
 	writeTemplate("internal/core/job/jobs.go", tmpl, jobs)

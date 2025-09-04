@@ -1,60 +1,100 @@
 package job
 
 import (
-        "context"
-        "encoding/json"
+	"context"
+	"encoding/json"
+	"log"
+	"strings"
 
-	domain_entries "github.com/alfariiizi/vandor/internal/core/domain"
-	"github.com/alfariiizi/vandor/internal/core/model"
-	"github.com/alfariiizi/vandor/internal/delivery/worker"
-	"github.com/alfariiizi/vandor/internal/infrastructure/db"
-	"github.com/alfariiizi/vandor/pkg/validator"
+	domain_entries "{{.ModuleName}}/internal/core/domain"
+	"{{.ModuleName}}/internal/core/model"
+	"{{.ModuleName}}/internal/delivery/http/api"
+	"{{.ModuleName}}/internal/delivery/http/method"
+	"{{.ModuleName}}/internal/delivery/worker"
+	"{{.ModuleName}}/internal/infrastructure/db"
+	"{{.ModuleName}}/internal/types"
+	"{{.ModuleName}}/pkg/validator"
 	"github.com/hibiken/asynq"
+	"github.com/danielgtaylor/huma/v2"
 )
 
+// Payload definition
 type {{.StructName}}Payload struct {
-        // TODO: add fields for payload
+	// TODO: add fields for payload
 }
 
+// Job type alias
 type {{.StructName}} model.Job[{{.StructName}}Payload]
 
+// HTTP input for job enqueue endpoint
+type {{.StructName}}HTTPInput struct {
+	JobSecret string              `header:"X-Job-Secret" required:"true"`
+	Body      {{.StructName}}Payload `json:"body" contentType:"application/json"`
+}
+
+// Job implementation
 type {{.VarName}} struct {
-        client    *db.Client
-        domain    *domain_entries.Domain
-        validator validator.Validator
-        worker     *worker.Client
+	api       huma.API
+	client    *db.Client
+	domain    *domain_entries.Domain
+	validator validator.Validator
+	worker    *worker.Client
 }
 
 func New{{.StructName}}(
-        client *db.Client,
-        domain *domain_entries.Domain,
-        validator validator.Validator,
-        worker *worker.Client,
+	client *db.Client,
+	domain *domain_entries.Domain,
+	validator validator.Validator,
+	worker *worker.Client,
+	api *api.HttpApi,
 ) {{.StructName}} {
-    return &{{.VarName}}{
-        client:    client,
-        domain:    domain,
-        validator: validator,
-        worker:     worker,
-    }
+	return &{{.VarName}}{
+		client:    client,
+		domain:    domain,
+		validator: validator,
+		worker:    worker,
+		api:       api.JobAPI,
+	}
 }
 
 func (j *{{.VarName}}) Key() string {
-        return "{{.JobKey}}"
+	return "{{.JobKey}}"
 }
 
+// Enqueue method will be called by clients to enqueue a new job
 func (j *{{.VarName}}) Enqueue(ctx context.Context, payload {{.StructName}}Payload) (*asynq.TaskInfo, error) {
-        if err := j.validator.Validate(payload); err != nil {
-            return nil, err
-        }
+	if err := j.validator.Validate(payload); err != nil {
+		return nil, err
+	}
 
-        data, _ := json.Marshal(payload)
-        task := asynq.NewTask(j.Key(), data)
-        return j.worker.EnqueueContext(ctx, task, asynq.Queue("default"))
+	data, _ := json.Marshal(payload)
+	task := asynq.NewTask(j.Key(), data)
+	return j.worker.EnqueueContext(ctx, task, asynq.Queue("default"))
 }
 
-func (j *{{.VarName}}) Handle(ctx context.Context, payload {{.StructName}}Payload) error {
-        // TODO: implement job here
+// HTTPInputToPayload converts HTTP input to job payload
+func (j *{{.VarName}}) HTTPRegisterRoute() {
+	path := "/" + strings.Split(j.Key(), ":")[1]
 
-        return nil
+	method.POST(j.api, path, method.Operation{
+		Summary:     "{{.StructName}} Job",
+		Description: "Enqueue a new {{.StructName}} job",
+		Tags:        []string{"Job"},
+		Job:         true,
+	}, func(ctx context.Context, input *{{.StructName}}HTTPInput) (*model.JobHTTPHandlerResponse, error) {
+		taskInfo, err := j.Enqueue(ctx, input.Body)
+		if err != nil {
+			return nil, err
+		}
+		return (*model.JobHTTPHandlerResponse)(types.GenerateOutputResponseData(model.JobHTTPHandlerData{
+			TaskID: taskInfo.ID,
+		})), nil
+	})
+}
+
+// Handle method processes the job when it is executed by the worker (server worker)
+func (j *{{.VarName}}) Handle(ctx context.Context, payload {{.StructName}}Payload) error {
+	// TODO: implement job logic
+	log.Println("Handling {{.StructName}} job", "payload", payload)
+	return nil
 }

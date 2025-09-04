@@ -77,9 +77,9 @@ func (h *loginAdmin) GenerateResponse(data LoginAdminData) *LoginAdminOutput {
 func (h *loginAdmin) Handler(ctx context.Context, input *LoginAdminInput) (*LoginAdminOutput, error) {
 	payload := input.Body
 	res, err := h.service.Auth.Login.Execute(ctx, auth_service.LoginInput{
-		Email:    payload.Email,
-		Password: payload.Password,
-		// IsAdmin:  false,
+		Email:        payload.Email,
+		Password:     payload.Password,
+		IsBackoffice: true,
 	})
 	if err != nil {
 		return nil, err

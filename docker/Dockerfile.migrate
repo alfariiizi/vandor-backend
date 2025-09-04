@@ -1,11 +1,27 @@
+# Stage 1: Build
+FROM golang:1.24-alpine AS builder
+
+WORKDIR /app
+
+# Optional: install git for private modules
+RUN apk add --no-cache git
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o migration ./cmd/atlas/main.go
+
 FROM alpine:latest
 
 WORKDIR /app
 
 RUN apk add --no-cache ca-certificates bash curl
 
-COPY ./database/migrate ./database/migrate
-COPY ./scripts ./scripts
+COPY --from=builder /app/database/migrate ./database/migrate
+COPY --from=builder /app/scripts ./scripts
+COPY --from=builder /app/migration .
 
 RUN curl -sSf https://atlasgo.sh | sh
 

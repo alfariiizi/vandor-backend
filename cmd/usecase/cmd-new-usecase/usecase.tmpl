@@ -7,7 +7,8 @@ import (
 	domain_entries "{{.ModuleName}}/internal/core/domain"
 	"{{.ModuleName}}/internal/core/model"
 	"{{.ModuleName}}/internal/infrastructure/db"
-	"{{.ModuleName}}/pkg/validator"
+	"{{.ModuleName}}/internal/pkg/validator"
+	"{{.ModuleName}}/internal/infrastructure/sse"
 )
 
 type {{.Name}}Input struct {
@@ -22,17 +23,20 @@ type {{.Receiver}} struct {
 	client *db.Client
 	domain  *domain_entries.Domain
 	validator validator.Validator
+	sse *sse.Manager,
 }
 
 func New{{.Name}}(
 	client *db.Client,
 	domain *domain_entries.Domain,
 	validator validator.Validator,
+	sse *sse.Manager,
 ) {{.Name}} {	
 	return &{{.Receiver}}{
 		client: client,
 		domain:  domain,
 		validator: validator,
+		sse *sse.Manager,
 	}
 }
 
@@ -41,17 +45,37 @@ func (uc *{{.Receiver}}) Validate(input {{.Name}}Input) error {
 }
 
 func (uc *{{.Receiver}}) Execute(ctx context.Context, input {{.Name}}Input) (*{{.Name}}Output, error) {
+	log := logger.Get()
+
 	if err := uc.Validate(input); err != nil {
 		return nil, err
 	}
+
+	res, err := uc.Process(ctx, input)
+	if err != nil {
+		log.Error().
+			Str("usecase", "{{.Name}}").
+			Str("error", err.Error()).
+			Msg("Failed to process {{.Name}}")
+		return nil, err
+	}
+
 	if err := uc.Observer(ctx, input); err != nil {
 		log.Printf("Observer usecase '{{.Name}}' error: %s", err.Error())
 	}
-	return uc.Process(ctx, input)
+
+	return res, nil
 }
 
 func (uc *{{.Receiver}}) Observer(ctx context.Context, input {{.Name}}Input) error {
         // TODO: Implement observer logic
+	// This is optional. You can leave this blank if not needed.
+
+	return nil
+}
+
+func (uc *{{.Receiver}}) SendEvent(ctx context.Context, input {{.Name}}Input, output {{.Name}}Output) error {
+	// TODO: Implement event sending logic
 	// This is optional. You can leave this blank if not needed.
 
 	return nil

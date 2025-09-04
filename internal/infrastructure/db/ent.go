@@ -12,7 +12,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/alfariiizi/vandor/internal/infrastructure/db/adminauditlog"
+	"github.com/alfariiizi/vandor/internal/infrastructure/db/notification"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db/product"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db/session"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db/user"
@@ -73,16 +73,16 @@ var (
 )
 
 // checkColumn checks if the column exists in the given table.
-func checkColumn(table, column string) error {
+func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			adminauditlog.Table: adminauditlog.ValidColumn,
-			product.Table:       product.ValidColumn,
-			session.Table:       session.ValidColumn,
-			user.Table:          user.ValidColumn,
+			notification.Table: notification.ValidColumn,
+			product.Table:      product.ValidColumn,
+			session.Table:      session.ValidColumn,
+			user.Table:         user.ValidColumn,
 		})
 	})
-	return columnCheck(table, column)
+	return columnCheck(t, c)
 }
 
 // Asc applies the given fields in ASC order.

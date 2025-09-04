@@ -17,3 +17,6 @@ main
 routes.json
 
 .env
+
+config/config.yaml
+config/secret.yaml

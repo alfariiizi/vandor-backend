@@ -2,13 +2,13 @@ package {{.ServiceName}}_service
 
 import (
 	"context"
-	"log"
 
 	domain_entries "{{.ModuleName}}/internal/core/domain"
 	"{{.ModuleName}}/internal/core/model"
 	"{{.ModuleName}}/internal/core/usecase"
 	"{{.ModuleName}}/internal/infrastructure/db"
-	"{{.ModuleName}}/pkg/validator"
+	"{{.ModuleName}}/internal/pkg/logger"
+	"{{.ModuleName}}/internal/pkg/validator"
 )
 
 type {{.Name}}Input struct {
@@ -48,13 +48,29 @@ func (s *{{.Receiver}}) Execute(ctx context.Context, input {{.Name}}Input) (*{{.
 	if err := s.Validate(input); err != nil {
 		return nil, err
 	}
-	if err := s.Observer(ctx, input); err != nil {
-		log.Printf("Observer service '{{.Name}}' error: %s", err.Error())
+
+	res, err := s.Process(ctx, input)
+	if err != nil {
+		logger.Get().Error().
+			Str("service", "{{.Name}}").
+			Str("method", "Process").
+			Err(err).
+			Msg("failed to execute service")
+		return nil, err
 	}
-	return s.Process(ctx, input)
+
+	if err := s.Observer(ctx, input, res); err != nil {
+		logger.Get().Error().
+			Str("service", "{{.Name}}").
+			Str("method", "Observer").
+			Err(err).
+			Msg("failed to execute observer")
+	}
+
+	return res, nil
 }
 
-func (s *{{.Receiver}}) Observer(ctx context.Context, input {{.Name}}Input) error {
+func (s *{{.Receiver}}) Observer(ctx context.Context, input {{.Name}}Input, output *{{.Name}}Output) error {
         // TODO: Implement observer logic
 	// This is optional. You can leave this blank if not needed.
 

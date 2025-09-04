@@ -3,6 +3,7 @@ package domain
 import (
 	domain_builder "github.com/alfariiizi/vandor/internal/core/domain/builder"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db"
+	"github.com/alfariiizi/vandor/internal/infrastructure/db/user"
 	"github.com/alfariiizi/vandor/internal/utils"
 )
 
@@ -40,4 +41,8 @@ func (u *User) CanLogin() bool {
 
 func (u *User) IsPasswordMatches(password string) bool {
 	return utils.VerifyPassword(password, u.PasswordHash)
+}
+
+func (u *User) IsAllowedToLoginBackoffice() bool {
+	return u.Role == user.RoleADMIN || u.Role == user.RoleSUPERADMIN
 }

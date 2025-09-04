@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/alfariiizi/vandor/internal/config"
 	"github.com/redis/go-redis/v9"
-	"github.com/alfariiizi/vandor/config"
 )
 
 type Redis struct {
@@ -15,7 +15,12 @@ type Redis struct {
 func NewRedis() *Redis {
 	// Setup the client
 	cfg := config.GetConfig()
-	rdb := redis.NewClient(&cfg.Redis)
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     cfg.Redis.Addr,
+		Username: cfg.Redis.Username,
+		Password: cfg.Redis.Password,
+		DB:       cfg.Redis.DB,
+	})
 
 	// Test the connection
 	pong, err := rdb.Ping(context.Background()).Result()

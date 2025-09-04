@@ -15,20 +15,32 @@ const (
 	Label = "product"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldName holds the string denoting the name field in the database.
-	FieldName = "name"
-	// FieldBrand holds the string denoting the brand field in the database.
-	FieldBrand = "brand"
-	// FieldCategory holds the string denoting the category field in the database.
-	FieldCategory = "category"
+	// FieldCreateTime holds the string denoting the create_time field in the database.
+	FieldCreateTime = "create_time"
+	// FieldUpdateTime holds the string denoting the update_time field in the database.
+	FieldUpdateTime = "update_time"
+	// FieldTitle holds the string denoting the title field in the database.
+	FieldTitle = "title"
+	// FieldShortDescription holds the string denoting the short_description field in the database.
+	FieldShortDescription = "short_description"
+	// FieldLongDescription holds the string denoting the long_description field in the database.
+	FieldLongDescription = "long_description"
 	// FieldPrice holds the string denoting the price field in the database.
 	FieldPrice = "price"
-	// FieldCreatorID holds the string denoting the creator_id field in the database.
-	FieldCreatorID = "creator_id"
-	// FieldCreatedAt holds the string denoting the created_at field in the database.
-	FieldCreatedAt = "created_at"
-	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
-	FieldUpdatedAt = "updated_at"
+	// FieldCurrency holds the string denoting the currency field in the database.
+	FieldCurrency = "currency"
+	// FieldStock holds the string denoting the stock field in the database.
+	FieldStock = "stock"
+	// FieldWeightGrams holds the string denoting the weight_grams field in the database.
+	FieldWeightGrams = "weight_grams"
+	// FieldPackageLengthMm holds the string denoting the package_length_mm field in the database.
+	FieldPackageLengthMm = "package_length_mm"
+	// FieldPackageWidthMm holds the string denoting the package_width_mm field in the database.
+	FieldPackageWidthMm = "package_width_mm"
+	// FieldPackageHeightMm holds the string denoting the package_height_mm field in the database.
+	FieldPackageHeightMm = "package_height_mm"
+	// FieldUserID holds the string denoting the user_id field in the database.
+	FieldUserID = "user_id"
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
 	// Table holds the table name of the product in the database.
@@ -39,19 +51,25 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	UserInverseTable = "users"
 	// UserColumn is the table column denoting the user relation/edge.
-	UserColumn = "creator_id"
+	UserColumn = "user_id"
 )
 
 // Columns holds all SQL columns for product fields.
 var Columns = []string{
 	FieldID,
-	FieldName,
-	FieldBrand,
-	FieldCategory,
+	FieldCreateTime,
+	FieldUpdateTime,
+	FieldTitle,
+	FieldShortDescription,
+	FieldLongDescription,
 	FieldPrice,
-	FieldCreatorID,
-	FieldCreatedAt,
-	FieldUpdatedAt,
+	FieldCurrency,
+	FieldStock,
+	FieldWeightGrams,
+	FieldPackageLengthMm,
+	FieldPackageWidthMm,
+	FieldPackageHeightMm,
+	FieldUserID,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -65,12 +83,12 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// NameValidator is a validator for the "name" field. It is called by the builders before save.
-	NameValidator func(string) error
-	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
-	DefaultCreatedAt func() time.Time
-	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
-	UpdateDefaultUpdatedAt func() time.Time
+	// DefaultCreateTime holds the default value on creation for the "create_time" field.
+	DefaultCreateTime func() time.Time
+	// DefaultUpdateTime holds the default value on creation for the "update_time" field.
+	DefaultUpdateTime func() time.Time
+	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
+	UpdateDefaultUpdateTime func() time.Time
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
@@ -83,19 +101,29 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
 }
 
-// ByName orders the results by the name field.
-func ByName(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldName, opts...).ToFunc()
+// ByCreateTime orders the results by the create_time field.
+func ByCreateTime(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreateTime, opts...).ToFunc()
 }
 
-// ByBrand orders the results by the brand field.
-func ByBrand(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldBrand, opts...).ToFunc()
+// ByUpdateTime orders the results by the update_time field.
+func ByUpdateTime(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUpdateTime, opts...).ToFunc()
 }
 
-// ByCategory orders the results by the category field.
-func ByCategory(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCategory, opts...).ToFunc()
+// ByTitle orders the results by the title field.
+func ByTitle(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTitle, opts...).ToFunc()
+}
+
+// ByShortDescription orders the results by the short_description field.
+func ByShortDescription(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldShortDescription, opts...).ToFunc()
+}
+
+// ByLongDescription orders the results by the long_description field.
+func ByLongDescription(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLongDescription, opts...).ToFunc()
 }
 
 // ByPrice orders the results by the price field.
@@ -103,19 +131,39 @@ func ByPrice(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPrice, opts...).ToFunc()
 }
 
-// ByCreatorID orders the results by the creator_id field.
-func ByCreatorID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCreatorID, opts...).ToFunc()
+// ByCurrency orders the results by the currency field.
+func ByCurrency(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCurrency, opts...).ToFunc()
 }
 
-// ByCreatedAt orders the results by the created_at field.
-func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
+// ByStock orders the results by the stock field.
+func ByStock(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStock, opts...).ToFunc()
 }
 
-// ByUpdatedAt orders the results by the updated_at field.
-func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
+// ByWeightGrams orders the results by the weight_grams field.
+func ByWeightGrams(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldWeightGrams, opts...).ToFunc()
+}
+
+// ByPackageLengthMm orders the results by the package_length_mm field.
+func ByPackageLengthMm(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPackageLengthMm, opts...).ToFunc()
+}
+
+// ByPackageWidthMm orders the results by the package_width_mm field.
+func ByPackageWidthMm(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPackageWidthMm, opts...).ToFunc()
+}
+
+// ByPackageHeightMm orders the results by the package_height_mm field.
+func ByPackageHeightMm(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPackageHeightMm, opts...).ToFunc()
+}
+
+// ByUserID orders the results by the user_id field.
+func ByUserID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUserID, opts...).ToFunc()
 }
 
 // ByUserField orders the results by user field.

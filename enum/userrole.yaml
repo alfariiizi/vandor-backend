@@ -1,0 +1,6 @@
+type: UserRole
+description: Description for UserRole enum
+values:
+  User: USER
+  Admin: ADMIN
+  SuperAdmin: SUPERADMIN

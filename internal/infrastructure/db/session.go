@@ -20,25 +20,25 @@ type Session struct {
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
 	// RefreshToken holds the value of the "refresh_token" field.
-	RefreshToken string `json:"refresh_token,omitempty"`
+	RefreshToken string `json:"refresh_token"`
 	// IPAddress holds the value of the "ip_address" field.
-	IPAddress string `json:"ip_address,omitempty"`
+	IPAddress string `json:"ip_address"`
 	// UserAgent holds the value of the "user_agent" field.
-	UserAgent string `json:"user_agent,omitempty"`
+	UserAgent string `json:"user_agent"`
 	// DeviceID holds the value of the "device_id" field.
-	DeviceID string `json:"device_id,omitempty"`
+	DeviceID string `json:"device_id"`
 	// NumberOfUses holds the value of the "number_of_uses" field.
-	NumberOfUses uint64 `json:"number_of_uses,omitempty"`
+	NumberOfUses uint64 `json:"number_of_uses"`
 	// ExpiresAt holds the value of the "expires_at" field.
-	ExpiresAt time.Time `json:"expires_at,omitempty"`
+	ExpiresAt time.Time `json:"expires_at"`
 	// LastUsedAt holds the value of the "last_used_at" field.
-	LastUsedAt time.Time `json:"last_used_at,omitempty"`
+	LastUsedAt time.Time `json:"last_used_at"`
 	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt time.Time `json:"created_at,omitempty"`
+	CreatedAt time.Time `json:"created_at"`
 	// RevokedAt holds the value of the "revoked_at" field.
-	RevokedAt *time.Time `json:"revoked_at,omitempty"`
+	RevokedAt *time.Time `json:"revoked_at"`
 	// UserID holds the value of the "user_id" field.
-	UserID uuid.UUID `json:"user_id,omitempty"`
+	UserID uuid.UUID `json:"user_id"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the SessionQuery when eager-loading is set.
 	Edges        SessionEdges `json:"edges"`
@@ -87,7 +87,7 @@ func (*Session) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Session fields.
-func (s *Session) assignValues(columns []string, values []any) error {
+func (_m *Session) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -97,71 +97,71 @@ func (s *Session) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value != nil {
-				s.ID = *value
+				_m.ID = *value
 			}
 		case session.FieldRefreshToken:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field refresh_token", values[i])
 			} else if value.Valid {
-				s.RefreshToken = value.String
+				_m.RefreshToken = value.String
 			}
 		case session.FieldIPAddress:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field ip_address", values[i])
 			} else if value.Valid {
-				s.IPAddress = value.String
+				_m.IPAddress = value.String
 			}
 		case session.FieldUserAgent:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field user_agent", values[i])
 			} else if value.Valid {
-				s.UserAgent = value.String
+				_m.UserAgent = value.String
 			}
 		case session.FieldDeviceID:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field device_id", values[i])
 			} else if value.Valid {
-				s.DeviceID = value.String
+				_m.DeviceID = value.String
 			}
 		case session.FieldNumberOfUses:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field number_of_uses", values[i])
 			} else if value.Valid {
-				s.NumberOfUses = uint64(value.Int64)
+				_m.NumberOfUses = uint64(value.Int64)
 			}
 		case session.FieldExpiresAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field expires_at", values[i])
 			} else if value.Valid {
-				s.ExpiresAt = value.Time
+				_m.ExpiresAt = value.Time
 			}
 		case session.FieldLastUsedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field last_used_at", values[i])
 			} else if value.Valid {
-				s.LastUsedAt = value.Time
+				_m.LastUsedAt = value.Time
 			}
 		case session.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				s.CreatedAt = value.Time
+				_m.CreatedAt = value.Time
 			}
 		case session.FieldRevokedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field revoked_at", values[i])
 			} else if value.Valid {
-				s.RevokedAt = new(time.Time)
-				*s.RevokedAt = value.Time
+				_m.RevokedAt = new(time.Time)
+				*_m.RevokedAt = value.Time
 			}
 		case session.FieldUserID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value != nil {
-				s.UserID = *value
+				_m.UserID = *value
 			}
 		default:
-			s.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -169,69 +169,69 @@ func (s *Session) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the Session.
 // This includes values selected through modifiers, order, etc.
-func (s *Session) Value(name string) (ent.Value, error) {
-	return s.selectValues.Get(name)
+func (_m *Session) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryUser queries the "user" edge of the Session entity.
-func (s *Session) QueryUser() *UserQuery {
-	return NewSessionClient(s.config).QueryUser(s)
+func (_m *Session) QueryUser() *UserQuery {
+	return NewSessionClient(_m.config).QueryUser(_m)
 }
 
 // Update returns a builder for updating this Session.
 // Note that you need to call Session.Unwrap() before calling this method if this Session
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (s *Session) Update() *SessionUpdateOne {
-	return NewSessionClient(s.config).UpdateOne(s)
+func (_m *Session) Update() *SessionUpdateOne {
+	return NewSessionClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the Session entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (s *Session) Unwrap() *Session {
-	_tx, ok := s.config.driver.(*txDriver)
+func (_m *Session) Unwrap() *Session {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("db: Session is not a transactional entity")
 	}
-	s.config.driver = _tx.drv
-	return s
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (s *Session) String() string {
+func (_m *Session) String() string {
 	var builder strings.Builder
 	builder.WriteString("Session(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", s.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("refresh_token=")
-	builder.WriteString(s.RefreshToken)
+	builder.WriteString(_m.RefreshToken)
 	builder.WriteString(", ")
 	builder.WriteString("ip_address=")
-	builder.WriteString(s.IPAddress)
+	builder.WriteString(_m.IPAddress)
 	builder.WriteString(", ")
 	builder.WriteString("user_agent=")
-	builder.WriteString(s.UserAgent)
+	builder.WriteString(_m.UserAgent)
 	builder.WriteString(", ")
 	builder.WriteString("device_id=")
-	builder.WriteString(s.DeviceID)
+	builder.WriteString(_m.DeviceID)
 	builder.WriteString(", ")
 	builder.WriteString("number_of_uses=")
-	builder.WriteString(fmt.Sprintf("%v", s.NumberOfUses))
+	builder.WriteString(fmt.Sprintf("%v", _m.NumberOfUses))
 	builder.WriteString(", ")
 	builder.WriteString("expires_at=")
-	builder.WriteString(s.ExpiresAt.Format(time.ANSIC))
+	builder.WriteString(_m.ExpiresAt.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("last_used_at=")
-	builder.WriteString(s.LastUsedAt.Format(time.ANSIC))
+	builder.WriteString(_m.LastUsedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
-	builder.WriteString(s.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
-	if v := s.RevokedAt; v != nil {
+	if v := _m.RevokedAt; v != nil {
 		builder.WriteString("revoked_at=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
-	builder.WriteString(fmt.Sprintf("%v", s.UserID))
+	builder.WriteString(fmt.Sprintf("%v", _m.UserID))
 	builder.WriteByte(')')
 	return builder.String()
 }

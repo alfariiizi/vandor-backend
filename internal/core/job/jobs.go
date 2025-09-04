@@ -4,25 +4,26 @@ package job
 import "go.uber.org/fx"
 
 type Jobs struct {
-    LogLove LogLove
-    LogSystem LogSystem
+	LogSystem LogSystem
 }
 
 func NewJobs(
-    LogLove LogLove,
-    LogSystem LogSystem,
+	LogSystem LogSystem,
 ) *Jobs {
-    return &Jobs{
-        LogLove: LogLove,
-        LogSystem: LogSystem,
-    }
+	return &Jobs{
+		LogSystem: LogSystem,
+	}
 }
 
 var Module = fx.Module(
-    "job",
-    fx.Provide(
-        NewLogLove,
-        NewLogSystem,
-        NewJobs,
-    ),
+	"job",
+	fx.Provide(
+		NewLogSystem,
+		NewJobs,
+	),
+	fx.Invoke(
+		func(j LogSystem) {
+			j.HTTPRegisterRoute()
+		},
+	),
 )

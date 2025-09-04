@@ -7,7 +7,7 @@ import "go.uber.org/fx"
 
 type SystemService struct {
 	Health Health
-	Ping Ping
+	Ping   Ping
 }
 
 func NewSystemService(
@@ -16,7 +16,7 @@ func NewSystemService(
 ) SystemService {
 	return SystemService{
 		Health: health,
-		Ping: ping,
+		Ping:   ping,
 	}
 }
 

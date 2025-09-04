@@ -5,7 +5,6 @@ package enum
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 )
 
 // Description for LogLevel enum
@@ -39,31 +38,31 @@ var AllLogLevels = []LogLevel{
 }
 
 var LogLevelEnum = struct {
-	Debug    LogLevel
-	Error    LogLevel
-	Fatal    LogLevel
+	Debug   LogLevel
+	Error   LogLevel
+	Fatal   LogLevel
 	Info    LogLevel
-	Panic    LogLevel
+	Panic   LogLevel
 	Warn    LogLevel
-	Warning    LogLevel
+	Warning LogLevel
 }{
-	Debug:    LogLevelDebug,
-	Error:    LogLevelError,
-	Fatal:    LogLevelFatal,
+	Debug:   LogLevelDebug,
+	Error:   LogLevelError,
+	Fatal:   LogLevelFatal,
 	Info:    LogLevelInfo,
-	Panic:    LogLevelPanic,
+	Panic:   LogLevelPanic,
 	Warn:    LogLevelWarn,
-	Warning:    LogLevelWarning,
+	Warning: LogLevelWarning,
 }
 
 var logLevelLabels = map[LogLevel]string{
-	LogLevelDebug:    "log level for debugging",
-	LogLevelError:    "log level for errors",
-	LogLevelFatal:    "log level for critical errors",
+	LogLevelDebug:   "log level for debugging",
+	LogLevelError:   "log level for errors",
+	LogLevelFatal:   "log level for critical errors",
 	LogLevelInfo:    "log level for informational messages",
-	LogLevelPanic:    "log level for panic situations",
+	LogLevelPanic:   "log level for panic situations",
 	LogLevelWarn:    "log level for warnings (alias for warning)",
-	LogLevelWarning:    "log level for warnings",
+	LogLevelWarning: "log level for warnings",
 }
 
 func (e LogLevel) IsValid() bool {

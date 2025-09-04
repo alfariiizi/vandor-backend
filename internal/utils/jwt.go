@@ -5,17 +5,23 @@ import (
 	"encoding/hex"
 	"time"
 
-	"github.com/alfariiizi/vandor/config"
+	"github.com/alfariiizi/vandor/internal/config"
 	"github.com/lestrrat-go/jwx/v2/jwa"
 	"github.com/lestrrat-go/jwx/v2/jwt"
 )
 
-func GenerateAccessToken(userID string, sessionID string, name string, email string, role string, expire time.Time) (string, error) {
+type AccessToken struct {
+	Token     string `json:"token"`
+	ExpiresAt int64  `json:"expires_at"`
+}
+
+func GenerateAccessToken(userID string, sessionID string, name string, email string, role string) (AccessToken, error) {
 	cfg := config.GetConfig()
+	duration := time.Now().Add(time.Duration(cfg.Auth.TokenDurationInMinutes) * time.Minute).Unix()
 	token := jwt.New()
 	token.Set("sub", userID)
 	token.Set("sid", sessionID)
-	token.Set("exp", expire)
+	token.Set("exp", duration)
 	token.Set("name", name)
 	token.Set("email", email)
 	token.Set("role", role)
@@ -23,9 +29,12 @@ func GenerateAccessToken(userID string, sessionID string, name string, email str
 
 	signed, err := jwt.Sign(token, jwt.WithKey(jwa.HS256, []byte(cfg.Auth.SecretKey)))
 	if err != nil {
-		return "", err
+		return AccessToken{}, err
 	}
-	return string(signed), nil
+	return AccessToken{
+		Token:     string(signed),
+		ExpiresAt: duration,
+	}, nil
 }
 
 // func VerifyAccessToken(tokenString string) (*jwt.Token, error) {

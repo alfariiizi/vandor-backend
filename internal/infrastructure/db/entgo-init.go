@@ -1,7 +1,7 @@
 package db
 
 import (
-	vandorConfig "github.com/alfariiizi/vandor/config"
+	vandorConfig "github.com/alfariiizi/vandor/internal/config"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/lib/pq"
 )

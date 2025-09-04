@@ -4,13 +4,13 @@
 package service
 
 import (
-	"go.uber.org/fx"
 	auth_service "github.com/alfariiizi/vandor/internal/core/service/auth"
 	system_service "github.com/alfariiizi/vandor/internal/core/service/system"
+	"go.uber.org/fx"
 )
 
 type Services struct {
-	Auth auth_service.AuthService
+	Auth   auth_service.AuthService
 	System system_service.SystemService
 }
 
@@ -19,7 +19,7 @@ func NewServices(
 	system system_service.SystemService,
 ) *Services {
 	return &Services{
-		Auth: auth,
+		Auth:   auth,
 		System: system,
 	}
 }

@@ -1,0 +1,7 @@
+type: Queue
+description: Description for Queue enum
+values:
+  Critical: critical:10
+  Default: default:3
+  Low: low:1
+  WebResearch: web_research:5

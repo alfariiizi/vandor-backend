@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strings"
 	"text/template"
+	"unicode"
 
 	"gopkg.in/yaml.v3"
 )
@@ -42,7 +43,6 @@ package enum
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 )
 
 {{if .Description}}// {{.Description}}{{end}}
@@ -191,6 +191,13 @@ func generateEnums() {
 		os.Exit(1)
 	}
 
+	// Clear old files inside internal/enum
+	err := clearDir("internal/enum")
+	if err != nil {
+		fmt.Printf("Error clearing enum directory: %v\n", err)
+		os.Exit(1)
+	}
+
 	// Find all YAML files in enum directory
 	yamlFiles, err := findYAMLFiles("enum")
 	if err != nil {
@@ -311,11 +318,17 @@ func processEnumFile(yamlFile string, tmpl *template.Template) error {
 // Utility functions for string conversion
 func toPascalCase(s string) string {
 	words := strings.FieldsFunc(s, func(c rune) bool {
-		return c == '_' || c == '-' || c == ' '
+		// treat underscore, dash, space, and dot as separators
+		return c == '_' || c == '-' || c == ' ' || c == '.'
 	})
 
 	for i, word := range words {
-		words[i] = strings.Title(strings.ToLower(word))
+		if len(word) == 0 {
+			continue
+		}
+		runes := []rune(word)
+		runes[0] = unicode.ToUpper(runes[0]) // only uppercase the first letter
+		words[i] = string(runes)
 	}
 
 	return strings.Join(words, "")
@@ -337,4 +350,18 @@ func lcFirst(s string) string {
 		return s
 	}
 	return strings.ToLower(s[:1]) + s[1:]
+}
+
+func clearDir(dir string) error {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return err
+	}
+	for _, entry := range entries {
+		err = os.RemoveAll(filepath.Join(dir, entry.Name()))
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

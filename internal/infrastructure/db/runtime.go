@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/alfariiizi/vandor/database/schema"
-	"github.com/alfariiizi/vandor/internal/infrastructure/db/adminauditlog"
+	"github.com/alfariiizi/vandor/internal/infrastructure/db/notification"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db/product"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db/session"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db/user"
@@ -17,34 +17,98 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
-	adminauditlogFields := schema.AdminAuditLog{}.Fields()
-	_ = adminauditlogFields
-	// adminauditlogDescSource is the schema descriptor for source field.
-	adminauditlogDescSource := adminauditlogFields[8].Descriptor()
-	// adminauditlog.DefaultSource holds the default value on creation for the source field.
-	adminauditlog.DefaultSource = adminauditlogDescSource.Default.(string)
-	// adminauditlogDescCreatedAt is the schema descriptor for created_at field.
-	adminauditlogDescCreatedAt := adminauditlogFields[10].Descriptor()
-	// adminauditlog.DefaultCreatedAt holds the default value on creation for the created_at field.
-	adminauditlog.DefaultCreatedAt = adminauditlogDescCreatedAt.Default.(func() time.Time)
-	// adminauditlogDescID is the schema descriptor for id field.
-	adminauditlogDescID := adminauditlogFields[0].Descriptor()
-	// adminauditlog.DefaultID holds the default value on creation for the id field.
-	adminauditlog.DefaultID = adminauditlogDescID.Default.(func() uuid.UUID)
+	notificationMixin := schema.Notification{}.Mixin()
+	notificationMixinFields0 := notificationMixin[0].Fields()
+	_ = notificationMixinFields0
+	notificationFields := schema.Notification{}.Fields()
+	_ = notificationFields
+	// notificationDescCreatedAt is the schema descriptor for created_at field.
+	notificationDescCreatedAt := notificationMixinFields0[0].Descriptor()
+	// notification.DefaultCreatedAt holds the default value on creation for the created_at field.
+	notification.DefaultCreatedAt = notificationDescCreatedAt.Default.(func() time.Time)
+	// notificationDescUpdatedAt is the schema descriptor for updated_at field.
+	notificationDescUpdatedAt := notificationMixinFields0[1].Descriptor()
+	// notification.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	notification.DefaultUpdatedAt = notificationDescUpdatedAt.Default.(func() time.Time)
+	// notification.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	notification.UpdateDefaultUpdatedAt = notificationDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// notificationDescTitle is the schema descriptor for title field.
+	notificationDescTitle := notificationFields[2].Descriptor()
+	// notification.TitleValidator is a validator for the "title" field. It is called by the builders before save.
+	notification.TitleValidator = func() func(string) error {
+		validators := notificationDescTitle.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(title string) error {
+			for _, fn := range fns {
+				if err := fn(title); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// notificationDescMessage is the schema descriptor for message field.
+	notificationDescMessage := notificationFields[3].Descriptor()
+	// notification.MessageValidator is a validator for the "message" field. It is called by the builders before save.
+	notification.MessageValidator = notificationDescMessage.Validators[0].(func(string) error)
+	// notificationDescRead is the schema descriptor for read field.
+	notificationDescRead := notificationFields[7].Descriptor()
+	// notification.DefaultRead holds the default value on creation for the read field.
+	notification.DefaultRead = notificationDescRead.Default.(bool)
+	// notificationDescArchived is the schema descriptor for archived field.
+	notificationDescArchived := notificationFields[8].Descriptor()
+	// notification.DefaultArchived holds the default value on creation for the archived field.
+	notification.DefaultArchived = notificationDescArchived.Default.(bool)
+	// notificationDescSticky is the schema descriptor for sticky field.
+	notificationDescSticky := notificationFields[9].Descriptor()
+	// notification.DefaultSticky holds the default value on creation for the sticky field.
+	notification.DefaultSticky = notificationDescSticky.Default.(bool)
+	// notificationDescLink is the schema descriptor for link field.
+	notificationDescLink := notificationFields[10].Descriptor()
+	// notification.LinkValidator is a validator for the "link" field. It is called by the builders before save.
+	notification.LinkValidator = notificationDescLink.Validators[0].(func(string) error)
+	// notificationDescAction is the schema descriptor for action field.
+	notificationDescAction := notificationFields[11].Descriptor()
+	// notification.ActionValidator is a validator for the "action" field. It is called by the builders before save.
+	notification.ActionValidator = notificationDescAction.Validators[0].(func(string) error)
+	// notificationDescResourceType is the schema descriptor for resource_type field.
+	notificationDescResourceType := notificationFields[12].Descriptor()
+	// notification.ResourceTypeValidator is a validator for the "resource_type" field. It is called by the builders before save.
+	notification.ResourceTypeValidator = notificationDescResourceType.Validators[0].(func(string) error)
+	// notificationDescResourceID is the schema descriptor for resource_id field.
+	notificationDescResourceID := notificationFields[13].Descriptor()
+	// notification.ResourceIDValidator is a validator for the "resource_id" field. It is called by the builders before save.
+	notification.ResourceIDValidator = notificationDescResourceID.Validators[0].(func(string) error)
+	// notificationDescGroupKey is the schema descriptor for group_key field.
+	notificationDescGroupKey := notificationFields[14].Descriptor()
+	// notification.GroupKeyValidator is a validator for the "group_key" field. It is called by the builders before save.
+	notification.GroupKeyValidator = notificationDescGroupKey.Validators[0].(func(string) error)
+	// notificationDescDedupeKey is the schema descriptor for dedupe_key field.
+	notificationDescDedupeKey := notificationFields[15].Descriptor()
+	// notification.DedupeKeyValidator is a validator for the "dedupe_key" field. It is called by the builders before save.
+	notification.DedupeKeyValidator = notificationDescDedupeKey.Validators[0].(func(string) error)
+	// notificationDescID is the schema descriptor for id field.
+	notificationDescID := notificationFields[0].Descriptor()
+	// notification.DefaultID holds the default value on creation for the id field.
+	notification.DefaultID = notificationDescID.Default.(func() uuid.UUID)
+	productMixin := schema.Product{}.Mixin()
+	productMixinFields0 := productMixin[0].Fields()
+	_ = productMixinFields0
 	productFields := schema.Product{}.Fields()
 	_ = productFields
-	// productDescName is the schema descriptor for name field.
-	productDescName := productFields[1].Descriptor()
-	// product.NameValidator is a validator for the "name" field. It is called by the builders before save.
-	product.NameValidator = productDescName.Validators[0].(func(string) error)
-	// productDescCreatedAt is the schema descriptor for created_at field.
-	productDescCreatedAt := productFields[6].Descriptor()
-	// product.DefaultCreatedAt holds the default value on creation for the created_at field.
-	product.DefaultCreatedAt = productDescCreatedAt.Default.(func() time.Time)
-	// productDescUpdatedAt is the schema descriptor for updated_at field.
-	productDescUpdatedAt := productFields[7].Descriptor()
-	// product.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
-	product.UpdateDefaultUpdatedAt = productDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// productDescCreateTime is the schema descriptor for create_time field.
+	productDescCreateTime := productMixinFields0[0].Descriptor()
+	// product.DefaultCreateTime holds the default value on creation for the create_time field.
+	product.DefaultCreateTime = productDescCreateTime.Default.(func() time.Time)
+	// productDescUpdateTime is the schema descriptor for update_time field.
+	productDescUpdateTime := productMixinFields0[1].Descriptor()
+	// product.DefaultUpdateTime holds the default value on creation for the update_time field.
+	product.DefaultUpdateTime = productDescUpdateTime.Default.(func() time.Time)
+	// product.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	product.UpdateDefaultUpdateTime = productDescUpdateTime.UpdateDefault.(func() time.Time)
 	// productDescID is the schema descriptor for id field.
 	productDescID := productFields[0].Descriptor()
 	// product.DefaultID holds the default value on creation for the id field.

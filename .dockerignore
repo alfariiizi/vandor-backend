@@ -9,3 +9,13 @@ scripts/**/*.sh~  # temp script files
 .DS_Store
 *.swp
 tmp/
+
+.gitignore
+docker-compose*
+**/node_modules
+bin
+dist
+.vscode
+.env
+*.log
+*.tmp

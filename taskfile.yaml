@@ -5,14 +5,28 @@ tasks:
     desc: Build the project
     cmds:
       - echo "Building..."
+      - goimports -w .
       - go build -o bin/main cmd/app/main.go
+
+  build:seed:
+    desc: Build the seed data generator
+    cmds:
+      - echo "Building seed data generator..."
+      - go build -o bin/seed cmd/seed/main.go
+
+  build:migration:
+    desc: Build the migration tool
+    cmds:
+      - echo "Building migration tool..."
+      - go build -o bin/atlas cmd/atlas/main.go
 
   run:dev:
     desc: Run the application in development mode
     cmds:
       - echo "Running in development mode..."
       - echo "Generating repositories..."
-      - ./scripts/ent-tools.sh generate
+      - go run ./cmd/entgo/main.go
+      - goimports -w ./internal/infrastructure/db/rest/.
       - echo "Starting the application..."
       - ./scripts/watch.sh all
 
@@ -20,13 +34,13 @@ tasks:
     desc: Generate seed data
     cmds:
       - echo "Running seeder..."
-      - go run ./cmd/app/main.go seed
+      - go run ./cmd/seed/main.go {{.name}}
 
   migrate:status:
     desc: Check the status of database migrations
     cmds:
       - echo "Checking migration status..."
-      - ./scripts/atlas-tool.sh status
+      - go run ./cmd/atlas/main.go status
 
   migrate:diff:
     desc: Generate a migration diff
@@ -34,7 +48,7 @@ tasks:
       - |
         name_sanitized={{ .name | lower | replace " " "_" }}
         echo "Generating migration diff for ${name_sanitized}..."
-        ./scripts/atlas-tool.sh diff ${name_sanitized}
+        go run ./cmd/atlas/main.go diff ${name_sanitized}
     requires:
       vars: [name]
 
@@ -42,7 +56,7 @@ tasks:
     desc: Apply database migrations
     cmds:
       - echo "Applying migrations..."
-      - ./scripts/atlas-tool.sh apply
+      - go run ./cmd/atlas/main.go apply
 
   create:schema:
     desc: Create a new schema
@@ -103,6 +117,15 @@ tasks:
     requires:
       vars: [name]
 
+  create:seed:
+    desc: Create a new seed
+    cmds:
+      - echo "Creating new seed..."
+      - go run ./cmd/seed/cmd-new-seed/main.go {{.name}}
+      - go run ./cmd/seed/cmd-generate/main.go
+    requires:
+      vars: [name]
+
   create:http-handler:
     desc: Create a new HTTP handler
     cmds:
@@ -141,7 +164,10 @@ tasks:
       - go run ./cmd/http/cmd-regenerate-handler/main.go
       - go run ./cmd/job/cmd-regenerate-job/main.go
       - go run ./cmd/scheduler/cmd-regenerate-scheduler/main.go
-      - ./scripts/ent-tools.sh generate
+      - go run ./cmd/seed/cmd-generate/main.go
+      - go run ./cmd/entgo/main.go
+      - goimports -w .
+    silent: false
 
   gen:core:
     desc: Generate core code
@@ -187,6 +213,12 @@ tasks:
       - echo "Regenerate enums..."
       - go run ./cmd/enum/cmd/main.go generate
 
+  gen:seed:
+    desc: Generate seed code
+    cmds:
+      - echo "Regenerate seeds..."
+      - go run ./cmd/seed/cmd-generate/main.go
+
   gen:http-handler:
     desc: Generate HTTP handler code
     cmds:
@@ -197,7 +229,9 @@ tasks:
     desc: Generate DB Model code
     cmds:
       - echo "Generating DB Model..."
-      - ./scripts/ent-tools.sh generate
+      - go run ./cmd/entgo/main.go
+      - goimports -w ./internal/infrastructure/db/rest/.
+    silent: false
 
   test:
     desc: Run tests

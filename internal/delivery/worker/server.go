@@ -1,7 +1,8 @@
 package worker
 
 import (
-	"github.com/alfariiizi/vandor/config"
+	"github.com/alfariiizi/vandor/internal/config"
+	"github.com/alfariiizi/vandor/internal/utils"
 	"github.com/hibiken/asynq"
 )
 
@@ -11,6 +12,7 @@ type Server struct {
 
 func NewWorkerServer() *Server {
 	cfg := config.GetConfig()
+
 	srv := asynq.NewServer(
 		asynq.RedisClientOpt{
 			Addr:     cfg.Redis.Addr,
@@ -20,13 +22,9 @@ func NewWorkerServer() *Server {
 		},
 		asynq.Config{
 			// Specify how many concurrent workers to use
-			Concurrency: cfg.Worker.Concurrency,
+			Concurrency: cfg.Jobs.Concurrency,
 			// Optionally specify multiple queues with different priority.
-			Queues: map[string]int{
-				"critical": 6,
-				"default":  3,
-				"low":      1,
-			},
+			Queues: utils.GetAllQueueConfig(),
 			// See the godoc for other configuration options
 		},
 	)

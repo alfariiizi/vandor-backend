@@ -34,6 +34,8 @@ const (
 	EdgeProducts = "products"
 	// EdgeSessions holds the string denoting the sessions edge name in mutations.
 	EdgeSessions = "sessions"
+	// EdgeNotifications holds the string denoting the notifications edge name in mutations.
+	EdgeNotifications = "notifications"
 	// Table holds the table name of the user in the database.
 	Table = "users"
 	// ProductsTable is the table that holds the products relation/edge.
@@ -42,7 +44,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "product" package.
 	ProductsInverseTable = "products"
 	// ProductsColumn is the table column denoting the products relation/edge.
-	ProductsColumn = "creator_id"
+	ProductsColumn = "user_id"
 	// SessionsTable is the table that holds the sessions relation/edge.
 	SessionsTable = "sessions"
 	// SessionsInverseTable is the table name for the Session entity.
@@ -50,6 +52,13 @@ const (
 	SessionsInverseTable = "sessions"
 	// SessionsColumn is the table column denoting the sessions relation/edge.
 	SessionsColumn = "user_id"
+	// NotificationsTable is the table that holds the notifications relation/edge.
+	NotificationsTable = "notifications"
+	// NotificationsInverseTable is the table name for the Notification entity.
+	// It exists in this package in order to avoid circular dependency with the "notification" package.
+	NotificationsInverseTable = "notifications"
+	// NotificationsColumn is the table column denoting the notifications relation/edge.
+	NotificationsColumn = "user_id"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -183,6 +192,20 @@ func BySessions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newSessionsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByNotificationsCount orders the results by notifications count.
+func ByNotificationsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newNotificationsStep(), opts...)
+	}
+}
+
+// ByNotifications orders the results by notifications terms.
+func ByNotifications(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newNotificationsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newProductsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -195,5 +218,12 @@ func newSessionsStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(SessionsInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, false, SessionsTable, SessionsColumn),
+	)
+}
+func newNotificationsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(NotificationsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, NotificationsTable, NotificationsColumn),
 	)
 }

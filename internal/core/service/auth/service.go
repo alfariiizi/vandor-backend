@@ -6,7 +6,7 @@ package auth_service
 import "go.uber.org/fx"
 
 type AuthService struct {
-	Login Login
+	Login   Login
 	Refresh Refresh
 }
 
@@ -15,7 +15,7 @@ func NewAuthService(
 	refresh Refresh,
 ) AuthService {
 	return AuthService{
-		Login: login,
+		Login:   login,
 		Refresh: refresh,
 	}
 }

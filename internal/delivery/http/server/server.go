@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/alfariiizi/vandor/config"
+	"github.com/alfariiizi/vandor/internal/config"
 	"github.com/alfariiizi/vandor/internal/delivery/http/api"
 	"go.uber.org/fx"
 
@@ -30,7 +30,7 @@ func NewHttpServer(
 	// api.RegisterHandler()
 
 	server := http.Server{
-		Addr:    fmt.Sprintf("0.0.0.0:%d", cfg.Http.Port),
+		Addr:    fmt.Sprintf("0.0.0.0:%d", cfg.HTTP.Port),
 		Handler: router,
 	}
 

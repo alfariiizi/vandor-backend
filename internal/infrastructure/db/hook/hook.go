@@ -9,16 +9,16 @@ import (
 	"github.com/alfariiizi/vandor/internal/infrastructure/db"
 )
 
-// The AdminAuditLogFunc type is an adapter to allow the use of ordinary
-// function as AdminAuditLog mutator.
-type AdminAuditLogFunc func(context.Context, *db.AdminAuditLogMutation) (db.Value, error)
+// The NotificationFunc type is an adapter to allow the use of ordinary
+// function as Notification mutator.
+type NotificationFunc func(context.Context, *db.NotificationMutation) (db.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f AdminAuditLogFunc) Mutate(ctx context.Context, m db.Mutation) (db.Value, error) {
-	if mv, ok := m.(*db.AdminAuditLogMutation); ok {
+func (f NotificationFunc) Mutate(ctx context.Context, m db.Mutation) (db.Value, error) {
+	if mv, ok := m.(*db.NotificationMutation); ok {
 		return f(ctx, mv)
 	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *db.AdminAuditLogMutation", m)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *db.NotificationMutation", m)
 }
 
 // The ProductFunc type is an adapter to allow the use of ordinary

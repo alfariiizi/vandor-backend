@@ -5,19 +5,20 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/alfariiizi/vandor/internal/config"
 	domain_entries "github.com/alfariiizi/vandor/internal/core/domain"
 	"github.com/alfariiizi/vandor/internal/core/model"
 	"github.com/alfariiizi/vandor/internal/core/usecase"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db/user"
+	"github.com/alfariiizi/vandor/internal/pkg/validator"
 	"github.com/alfariiizi/vandor/internal/utils"
-	"github.com/alfariiizi/vandor/pkg/validator"
 )
 
 type LoginInput struct {
-	Email    string `json:"email" validate:"required,email" doc:"Email address of the user"`
-	Password string `json:"password" validate:"required,min=6" doc:"Password of the user, minimum length is 8 characters"`
-	// IsAdmin  bool   `json:"is_admin" validate:"required" doc:"Is the user an admin? Set to true if the user is an admin"`
+	Email        string `json:"email" validate:"required,email" doc:"Email address of the user"`
+	Password     string `json:"password" validate:"required,min=6" doc:"Password of the user, minimum length is 8 characters"`
+	IsBackoffice bool   `json:"is_backoffice" doc:"Is the user logging in from backoffice? Set to true if the user is logging in from backoffice"`
 }
 type LoginOutput struct {
 	AccessToken           string `json:"access_token"`
@@ -78,6 +79,9 @@ func (s *login) Process(ctx context.Context, input LoginInput) (*LoginOutput, er
 	if userOne == nil {
 		return nil, fmt.Errorf("user not found with email: %s", input.Email)
 	}
+	if input.IsBackoffice && !userOne.IsAllowedToLoginBackoffice() {
+		return nil, fmt.Errorf("user with email %s is not allowed to login to backoffice", input.Email)
+	}
 	if !userOne.IsPasswordMatches(input.Password) {
 		return nil, fmt.Errorf("invalid credentials for user: %s", input.Email)
 	}
@@ -91,29 +95,28 @@ func (s *login) Process(ctx context.Context, input LoginInput) (*LoginOutput, er
 		s.client.Session.Create().
 			SetRefreshToken(refreshToken).
 			SetUserID(userOne.ID).
+			SetExpiresAt(time.Now().Add(time.Duration(config.GetConfig().Auth.SessionDurationInDays) * time.Hour * 24)).
 			Save(ctx),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create session: %w", err)
 	}
 
-	accessTokenExpiresAt := time.Now().Add(time.Minute * 17)
 	accessToken, err := utils.GenerateAccessToken(
 		userOne.ID.String(),
 		session.ID.String(),
 		userOne.FullName(),
 		userOne.Email,
 		userOne.Role.String(),
-		accessTokenExpiresAt,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate access token: %w", err)
 	}
 
 	return &LoginOutput{
-		AccessToken:           accessToken,
+		AccessToken:           accessToken.Token,
 		RefreshToken:          session.RefreshToken,
-		AccessTokenExpiresAt:  accessTokenExpiresAt.Unix(),
+		AccessTokenExpiresAt:  accessToken.ExpiresAt,
 		RefreshTokenExpiresAt: session.ExpiresAt.Unix(),
 	}, nil
 }

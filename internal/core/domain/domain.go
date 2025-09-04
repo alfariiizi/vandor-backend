@@ -12,13 +12,13 @@ import (
 
 type Domain struct {
 	Session domain_builder.Domain[*db.Session, *domain.Session]
-	User domain_builder.Domain[*db.User, *domain.User]
+	User    domain_builder.Domain[*db.User, *domain.User]
 }
 
 func NewDomain(client *db.Client) *Domain {
 	return &Domain{
 		Session: domain.NewSessionDomain(client),
-		User: domain.NewUserDomain(client),
+		User:    domain.NewUserDomain(client),
 	}
 }
 

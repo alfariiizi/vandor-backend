@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"time"
 
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db/session"
@@ -20,165 +22,166 @@ type SessionCreate struct {
 	config
 	mutation *SessionMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetRefreshToken sets the "refresh_token" field.
-func (sc *SessionCreate) SetRefreshToken(s string) *SessionCreate {
-	sc.mutation.SetRefreshToken(s)
-	return sc
+func (_c *SessionCreate) SetRefreshToken(v string) *SessionCreate {
+	_c.mutation.SetRefreshToken(v)
+	return _c
 }
 
 // SetIPAddress sets the "ip_address" field.
-func (sc *SessionCreate) SetIPAddress(s string) *SessionCreate {
-	sc.mutation.SetIPAddress(s)
-	return sc
+func (_c *SessionCreate) SetIPAddress(v string) *SessionCreate {
+	_c.mutation.SetIPAddress(v)
+	return _c
 }
 
 // SetNillableIPAddress sets the "ip_address" field if the given value is not nil.
-func (sc *SessionCreate) SetNillableIPAddress(s *string) *SessionCreate {
-	if s != nil {
-		sc.SetIPAddress(*s)
+func (_c *SessionCreate) SetNillableIPAddress(v *string) *SessionCreate {
+	if v != nil {
+		_c.SetIPAddress(*v)
 	}
-	return sc
+	return _c
 }
 
 // SetUserAgent sets the "user_agent" field.
-func (sc *SessionCreate) SetUserAgent(s string) *SessionCreate {
-	sc.mutation.SetUserAgent(s)
-	return sc
+func (_c *SessionCreate) SetUserAgent(v string) *SessionCreate {
+	_c.mutation.SetUserAgent(v)
+	return _c
 }
 
 // SetNillableUserAgent sets the "user_agent" field if the given value is not nil.
-func (sc *SessionCreate) SetNillableUserAgent(s *string) *SessionCreate {
-	if s != nil {
-		sc.SetUserAgent(*s)
+func (_c *SessionCreate) SetNillableUserAgent(v *string) *SessionCreate {
+	if v != nil {
+		_c.SetUserAgent(*v)
 	}
-	return sc
+	return _c
 }
 
 // SetDeviceID sets the "device_id" field.
-func (sc *SessionCreate) SetDeviceID(s string) *SessionCreate {
-	sc.mutation.SetDeviceID(s)
-	return sc
+func (_c *SessionCreate) SetDeviceID(v string) *SessionCreate {
+	_c.mutation.SetDeviceID(v)
+	return _c
 }
 
 // SetNillableDeviceID sets the "device_id" field if the given value is not nil.
-func (sc *SessionCreate) SetNillableDeviceID(s *string) *SessionCreate {
-	if s != nil {
-		sc.SetDeviceID(*s)
+func (_c *SessionCreate) SetNillableDeviceID(v *string) *SessionCreate {
+	if v != nil {
+		_c.SetDeviceID(*v)
 	}
-	return sc
+	return _c
 }
 
 // SetNumberOfUses sets the "number_of_uses" field.
-func (sc *SessionCreate) SetNumberOfUses(u uint64) *SessionCreate {
-	sc.mutation.SetNumberOfUses(u)
-	return sc
+func (_c *SessionCreate) SetNumberOfUses(v uint64) *SessionCreate {
+	_c.mutation.SetNumberOfUses(v)
+	return _c
 }
 
 // SetNillableNumberOfUses sets the "number_of_uses" field if the given value is not nil.
-func (sc *SessionCreate) SetNillableNumberOfUses(u *uint64) *SessionCreate {
-	if u != nil {
-		sc.SetNumberOfUses(*u)
+func (_c *SessionCreate) SetNillableNumberOfUses(v *uint64) *SessionCreate {
+	if v != nil {
+		_c.SetNumberOfUses(*v)
 	}
-	return sc
+	return _c
 }
 
 // SetExpiresAt sets the "expires_at" field.
-func (sc *SessionCreate) SetExpiresAt(t time.Time) *SessionCreate {
-	sc.mutation.SetExpiresAt(t)
-	return sc
+func (_c *SessionCreate) SetExpiresAt(v time.Time) *SessionCreate {
+	_c.mutation.SetExpiresAt(v)
+	return _c
 }
 
 // SetNillableExpiresAt sets the "expires_at" field if the given value is not nil.
-func (sc *SessionCreate) SetNillableExpiresAt(t *time.Time) *SessionCreate {
-	if t != nil {
-		sc.SetExpiresAt(*t)
+func (_c *SessionCreate) SetNillableExpiresAt(v *time.Time) *SessionCreate {
+	if v != nil {
+		_c.SetExpiresAt(*v)
 	}
-	return sc
+	return _c
 }
 
 // SetLastUsedAt sets the "last_used_at" field.
-func (sc *SessionCreate) SetLastUsedAt(t time.Time) *SessionCreate {
-	sc.mutation.SetLastUsedAt(t)
-	return sc
+func (_c *SessionCreate) SetLastUsedAt(v time.Time) *SessionCreate {
+	_c.mutation.SetLastUsedAt(v)
+	return _c
 }
 
 // SetNillableLastUsedAt sets the "last_used_at" field if the given value is not nil.
-func (sc *SessionCreate) SetNillableLastUsedAt(t *time.Time) *SessionCreate {
-	if t != nil {
-		sc.SetLastUsedAt(*t)
+func (_c *SessionCreate) SetNillableLastUsedAt(v *time.Time) *SessionCreate {
+	if v != nil {
+		_c.SetLastUsedAt(*v)
 	}
-	return sc
+	return _c
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (sc *SessionCreate) SetCreatedAt(t time.Time) *SessionCreate {
-	sc.mutation.SetCreatedAt(t)
-	return sc
+func (_c *SessionCreate) SetCreatedAt(v time.Time) *SessionCreate {
+	_c.mutation.SetCreatedAt(v)
+	return _c
 }
 
 // SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (sc *SessionCreate) SetNillableCreatedAt(t *time.Time) *SessionCreate {
-	if t != nil {
-		sc.SetCreatedAt(*t)
+func (_c *SessionCreate) SetNillableCreatedAt(v *time.Time) *SessionCreate {
+	if v != nil {
+		_c.SetCreatedAt(*v)
 	}
-	return sc
+	return _c
 }
 
 // SetRevokedAt sets the "revoked_at" field.
-func (sc *SessionCreate) SetRevokedAt(t time.Time) *SessionCreate {
-	sc.mutation.SetRevokedAt(t)
-	return sc
+func (_c *SessionCreate) SetRevokedAt(v time.Time) *SessionCreate {
+	_c.mutation.SetRevokedAt(v)
+	return _c
 }
 
 // SetNillableRevokedAt sets the "revoked_at" field if the given value is not nil.
-func (sc *SessionCreate) SetNillableRevokedAt(t *time.Time) *SessionCreate {
-	if t != nil {
-		sc.SetRevokedAt(*t)
+func (_c *SessionCreate) SetNillableRevokedAt(v *time.Time) *SessionCreate {
+	if v != nil {
+		_c.SetRevokedAt(*v)
 	}
-	return sc
+	return _c
 }
 
 // SetUserID sets the "user_id" field.
-func (sc *SessionCreate) SetUserID(u uuid.UUID) *SessionCreate {
-	sc.mutation.SetUserID(u)
-	return sc
+func (_c *SessionCreate) SetUserID(v uuid.UUID) *SessionCreate {
+	_c.mutation.SetUserID(v)
+	return _c
 }
 
 // SetID sets the "id" field.
-func (sc *SessionCreate) SetID(u uuid.UUID) *SessionCreate {
-	sc.mutation.SetID(u)
-	return sc
+func (_c *SessionCreate) SetID(v uuid.UUID) *SessionCreate {
+	_c.mutation.SetID(v)
+	return _c
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (sc *SessionCreate) SetNillableID(u *uuid.UUID) *SessionCreate {
-	if u != nil {
-		sc.SetID(*u)
+func (_c *SessionCreate) SetNillableID(v *uuid.UUID) *SessionCreate {
+	if v != nil {
+		_c.SetID(*v)
 	}
-	return sc
+	return _c
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (sc *SessionCreate) SetUser(u *User) *SessionCreate {
-	return sc.SetUserID(u.ID)
+func (_c *SessionCreate) SetUser(v *User) *SessionCreate {
+	return _c.SetUserID(v.ID)
 }
 
 // Mutation returns the SessionMutation object of the builder.
-func (sc *SessionCreate) Mutation() *SessionMutation {
-	return sc.mutation
+func (_c *SessionCreate) Mutation() *SessionMutation {
+	return _c.mutation
 }
 
 // Save creates the Session in the database.
-func (sc *SessionCreate) Save(ctx context.Context) (*Session, error) {
-	sc.defaults()
-	return withHooks(ctx, sc.sqlSave, sc.mutation, sc.hooks)
+func (_c *SessionCreate) Save(ctx context.Context) (*Session, error) {
+	_c.defaults()
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (sc *SessionCreate) SaveX(ctx context.Context) *Session {
-	v, err := sc.Save(ctx)
+func (_c *SessionCreate) SaveX(ctx context.Context) *Session {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -186,84 +189,84 @@ func (sc *SessionCreate) SaveX(ctx context.Context) *Session {
 }
 
 // Exec executes the query.
-func (sc *SessionCreate) Exec(ctx context.Context) error {
-	_, err := sc.Save(ctx)
+func (_c *SessionCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (sc *SessionCreate) ExecX(ctx context.Context) {
-	if err := sc.Exec(ctx); err != nil {
+func (_c *SessionCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (sc *SessionCreate) defaults() {
-	if _, ok := sc.mutation.NumberOfUses(); !ok {
+func (_c *SessionCreate) defaults() {
+	if _, ok := _c.mutation.NumberOfUses(); !ok {
 		v := session.DefaultNumberOfUses
-		sc.mutation.SetNumberOfUses(v)
+		_c.mutation.SetNumberOfUses(v)
 	}
-	if _, ok := sc.mutation.ExpiresAt(); !ok {
+	if _, ok := _c.mutation.ExpiresAt(); !ok {
 		v := session.DefaultExpiresAt()
-		sc.mutation.SetExpiresAt(v)
+		_c.mutation.SetExpiresAt(v)
 	}
-	if _, ok := sc.mutation.LastUsedAt(); !ok {
+	if _, ok := _c.mutation.LastUsedAt(); !ok {
 		v := session.DefaultLastUsedAt()
-		sc.mutation.SetLastUsedAt(v)
+		_c.mutation.SetLastUsedAt(v)
 	}
-	if _, ok := sc.mutation.CreatedAt(); !ok {
+	if _, ok := _c.mutation.CreatedAt(); !ok {
 		v := session.DefaultCreatedAt()
-		sc.mutation.SetCreatedAt(v)
+		_c.mutation.SetCreatedAt(v)
 	}
-	if _, ok := sc.mutation.ID(); !ok {
+	if _, ok := _c.mutation.ID(); !ok {
 		v := session.DefaultID()
-		sc.mutation.SetID(v)
+		_c.mutation.SetID(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (sc *SessionCreate) check() error {
-	if _, ok := sc.mutation.RefreshToken(); !ok {
+func (_c *SessionCreate) check() error {
+	if _, ok := _c.mutation.RefreshToken(); !ok {
 		return &ValidationError{Name: "refresh_token", err: errors.New(`db: missing required field "Session.refresh_token"`)}
 	}
-	if v, ok := sc.mutation.RefreshToken(); ok {
+	if v, ok := _c.mutation.RefreshToken(); ok {
 		if err := session.RefreshTokenValidator(v); err != nil {
 			return &ValidationError{Name: "refresh_token", err: fmt.Errorf(`db: validator failed for field "Session.refresh_token": %w`, err)}
 		}
 	}
-	if _, ok := sc.mutation.NumberOfUses(); !ok {
+	if _, ok := _c.mutation.NumberOfUses(); !ok {
 		return &ValidationError{Name: "number_of_uses", err: errors.New(`db: missing required field "Session.number_of_uses"`)}
 	}
-	if v, ok := sc.mutation.NumberOfUses(); ok {
+	if v, ok := _c.mutation.NumberOfUses(); ok {
 		if err := session.NumberOfUsesValidator(v); err != nil {
 			return &ValidationError{Name: "number_of_uses", err: fmt.Errorf(`db: validator failed for field "Session.number_of_uses": %w`, err)}
 		}
 	}
-	if _, ok := sc.mutation.ExpiresAt(); !ok {
+	if _, ok := _c.mutation.ExpiresAt(); !ok {
 		return &ValidationError{Name: "expires_at", err: errors.New(`db: missing required field "Session.expires_at"`)}
 	}
-	if _, ok := sc.mutation.LastUsedAt(); !ok {
+	if _, ok := _c.mutation.LastUsedAt(); !ok {
 		return &ValidationError{Name: "last_used_at", err: errors.New(`db: missing required field "Session.last_used_at"`)}
 	}
-	if _, ok := sc.mutation.CreatedAt(); !ok {
+	if _, ok := _c.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`db: missing required field "Session.created_at"`)}
 	}
-	if _, ok := sc.mutation.UserID(); !ok {
+	if _, ok := _c.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`db: missing required field "Session.user_id"`)}
 	}
-	if len(sc.mutation.UserIDs()) == 0 {
+	if len(_c.mutation.UserIDs()) == 0 {
 		return &ValidationError{Name: "user", err: errors.New(`db: missing required edge "Session.user"`)}
 	}
 	return nil
 }
 
-func (sc *SessionCreate) sqlSave(ctx context.Context) (*Session, error) {
-	if err := sc.check(); err != nil {
+func (_c *SessionCreate) sqlSave(ctx context.Context) (*Session, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := sc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, sc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -276,57 +279,58 @@ func (sc *SessionCreate) sqlSave(ctx context.Context) (*Session, error) {
 			return nil, err
 		}
 	}
-	sc.mutation.id = &_node.ID
-	sc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (sc *SessionCreate) createSpec() (*Session, *sqlgraph.CreateSpec) {
+func (_c *SessionCreate) createSpec() (*Session, *sqlgraph.CreateSpec) {
 	var (
-		_node = &Session{config: sc.config}
+		_node = &Session{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(session.Table, sqlgraph.NewFieldSpec(session.FieldID, field.TypeUUID))
 	)
-	if id, ok := sc.mutation.ID(); ok {
+	_spec.OnConflict = _c.conflict
+	if id, ok := _c.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
 	}
-	if value, ok := sc.mutation.RefreshToken(); ok {
+	if value, ok := _c.mutation.RefreshToken(); ok {
 		_spec.SetField(session.FieldRefreshToken, field.TypeString, value)
 		_node.RefreshToken = value
 	}
-	if value, ok := sc.mutation.IPAddress(); ok {
+	if value, ok := _c.mutation.IPAddress(); ok {
 		_spec.SetField(session.FieldIPAddress, field.TypeString, value)
 		_node.IPAddress = value
 	}
-	if value, ok := sc.mutation.UserAgent(); ok {
+	if value, ok := _c.mutation.UserAgent(); ok {
 		_spec.SetField(session.FieldUserAgent, field.TypeString, value)
 		_node.UserAgent = value
 	}
-	if value, ok := sc.mutation.DeviceID(); ok {
+	if value, ok := _c.mutation.DeviceID(); ok {
 		_spec.SetField(session.FieldDeviceID, field.TypeString, value)
 		_node.DeviceID = value
 	}
-	if value, ok := sc.mutation.NumberOfUses(); ok {
+	if value, ok := _c.mutation.NumberOfUses(); ok {
 		_spec.SetField(session.FieldNumberOfUses, field.TypeUint64, value)
 		_node.NumberOfUses = value
 	}
-	if value, ok := sc.mutation.ExpiresAt(); ok {
+	if value, ok := _c.mutation.ExpiresAt(); ok {
 		_spec.SetField(session.FieldExpiresAt, field.TypeTime, value)
 		_node.ExpiresAt = value
 	}
-	if value, ok := sc.mutation.LastUsedAt(); ok {
+	if value, ok := _c.mutation.LastUsedAt(); ok {
 		_spec.SetField(session.FieldLastUsedAt, field.TypeTime, value)
 		_node.LastUsedAt = value
 	}
-	if value, ok := sc.mutation.CreatedAt(); ok {
+	if value, ok := _c.mutation.CreatedAt(); ok {
 		_spec.SetField(session.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
 	}
-	if value, ok := sc.mutation.RevokedAt(); ok {
+	if value, ok := _c.mutation.RevokedAt(); ok {
 		_spec.SetField(session.FieldRevokedAt, field.TypeTime, value)
 		_node.RevokedAt = &value
 	}
-	if nodes := sc.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -346,24 +350,439 @@ func (sc *SessionCreate) createSpec() (*Session, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Session.Create().
+//		SetRefreshToken(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.SessionUpsert) {
+//			SetRefreshToken(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *SessionCreate) OnConflict(opts ...sql.ConflictOption) *SessionUpsertOne {
+	_c.conflict = opts
+	return &SessionUpsertOne{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Session.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *SessionCreate) OnConflictColumns(columns ...string) *SessionUpsertOne {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &SessionUpsertOne{
+		create: _c,
+	}
+}
+
+type (
+	// SessionUpsertOne is the builder for "upsert"-ing
+	//  one Session node.
+	SessionUpsertOne struct {
+		create *SessionCreate
+	}
+
+	// SessionUpsert is the "OnConflict" setter.
+	SessionUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetIPAddress sets the "ip_address" field.
+func (u *SessionUpsert) SetIPAddress(v string) *SessionUpsert {
+	u.Set(session.FieldIPAddress, v)
+	return u
+}
+
+// UpdateIPAddress sets the "ip_address" field to the value that was provided on create.
+func (u *SessionUpsert) UpdateIPAddress() *SessionUpsert {
+	u.SetExcluded(session.FieldIPAddress)
+	return u
+}
+
+// ClearIPAddress clears the value of the "ip_address" field.
+func (u *SessionUpsert) ClearIPAddress() *SessionUpsert {
+	u.SetNull(session.FieldIPAddress)
+	return u
+}
+
+// SetUserAgent sets the "user_agent" field.
+func (u *SessionUpsert) SetUserAgent(v string) *SessionUpsert {
+	u.Set(session.FieldUserAgent, v)
+	return u
+}
+
+// UpdateUserAgent sets the "user_agent" field to the value that was provided on create.
+func (u *SessionUpsert) UpdateUserAgent() *SessionUpsert {
+	u.SetExcluded(session.FieldUserAgent)
+	return u
+}
+
+// ClearUserAgent clears the value of the "user_agent" field.
+func (u *SessionUpsert) ClearUserAgent() *SessionUpsert {
+	u.SetNull(session.FieldUserAgent)
+	return u
+}
+
+// SetDeviceID sets the "device_id" field.
+func (u *SessionUpsert) SetDeviceID(v string) *SessionUpsert {
+	u.Set(session.FieldDeviceID, v)
+	return u
+}
+
+// UpdateDeviceID sets the "device_id" field to the value that was provided on create.
+func (u *SessionUpsert) UpdateDeviceID() *SessionUpsert {
+	u.SetExcluded(session.FieldDeviceID)
+	return u
+}
+
+// ClearDeviceID clears the value of the "device_id" field.
+func (u *SessionUpsert) ClearDeviceID() *SessionUpsert {
+	u.SetNull(session.FieldDeviceID)
+	return u
+}
+
+// SetNumberOfUses sets the "number_of_uses" field.
+func (u *SessionUpsert) SetNumberOfUses(v uint64) *SessionUpsert {
+	u.Set(session.FieldNumberOfUses, v)
+	return u
+}
+
+// UpdateNumberOfUses sets the "number_of_uses" field to the value that was provided on create.
+func (u *SessionUpsert) UpdateNumberOfUses() *SessionUpsert {
+	u.SetExcluded(session.FieldNumberOfUses)
+	return u
+}
+
+// AddNumberOfUses adds v to the "number_of_uses" field.
+func (u *SessionUpsert) AddNumberOfUses(v uint64) *SessionUpsert {
+	u.Add(session.FieldNumberOfUses, v)
+	return u
+}
+
+// SetLastUsedAt sets the "last_used_at" field.
+func (u *SessionUpsert) SetLastUsedAt(v time.Time) *SessionUpsert {
+	u.Set(session.FieldLastUsedAt, v)
+	return u
+}
+
+// UpdateLastUsedAt sets the "last_used_at" field to the value that was provided on create.
+func (u *SessionUpsert) UpdateLastUsedAt() *SessionUpsert {
+	u.SetExcluded(session.FieldLastUsedAt)
+	return u
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *SessionUpsert) SetCreatedAt(v time.Time) *SessionUpsert {
+	u.Set(session.FieldCreatedAt, v)
+	return u
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *SessionUpsert) UpdateCreatedAt() *SessionUpsert {
+	u.SetExcluded(session.FieldCreatedAt)
+	return u
+}
+
+// SetRevokedAt sets the "revoked_at" field.
+func (u *SessionUpsert) SetRevokedAt(v time.Time) *SessionUpsert {
+	u.Set(session.FieldRevokedAt, v)
+	return u
+}
+
+// UpdateRevokedAt sets the "revoked_at" field to the value that was provided on create.
+func (u *SessionUpsert) UpdateRevokedAt() *SessionUpsert {
+	u.SetExcluded(session.FieldRevokedAt)
+	return u
+}
+
+// ClearRevokedAt clears the value of the "revoked_at" field.
+func (u *SessionUpsert) ClearRevokedAt() *SessionUpsert {
+	u.SetNull(session.FieldRevokedAt)
+	return u
+}
+
+// SetUserID sets the "user_id" field.
+func (u *SessionUpsert) SetUserID(v uuid.UUID) *SessionUpsert {
+	u.Set(session.FieldUserID, v)
+	return u
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *SessionUpsert) UpdateUserID() *SessionUpsert {
+	u.SetExcluded(session.FieldUserID)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
+// Using this option is equivalent to using:
+//
+//	client.Session.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(session.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *SessionUpsertOne) UpdateNewValues() *SessionUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.ID(); exists {
+			s.SetIgnore(session.FieldID)
+		}
+		if _, exists := u.create.mutation.RefreshToken(); exists {
+			s.SetIgnore(session.FieldRefreshToken)
+		}
+		if _, exists := u.create.mutation.ExpiresAt(); exists {
+			s.SetIgnore(session.FieldExpiresAt)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Session.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *SessionUpsertOne) Ignore() *SessionUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *SessionUpsertOne) DoNothing() *SessionUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the SessionCreate.OnConflict
+// documentation for more info.
+func (u *SessionUpsertOne) Update(set func(*SessionUpsert)) *SessionUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&SessionUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetIPAddress sets the "ip_address" field.
+func (u *SessionUpsertOne) SetIPAddress(v string) *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.SetIPAddress(v)
+	})
+}
+
+// UpdateIPAddress sets the "ip_address" field to the value that was provided on create.
+func (u *SessionUpsertOne) UpdateIPAddress() *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.UpdateIPAddress()
+	})
+}
+
+// ClearIPAddress clears the value of the "ip_address" field.
+func (u *SessionUpsertOne) ClearIPAddress() *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.ClearIPAddress()
+	})
+}
+
+// SetUserAgent sets the "user_agent" field.
+func (u *SessionUpsertOne) SetUserAgent(v string) *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.SetUserAgent(v)
+	})
+}
+
+// UpdateUserAgent sets the "user_agent" field to the value that was provided on create.
+func (u *SessionUpsertOne) UpdateUserAgent() *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.UpdateUserAgent()
+	})
+}
+
+// ClearUserAgent clears the value of the "user_agent" field.
+func (u *SessionUpsertOne) ClearUserAgent() *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.ClearUserAgent()
+	})
+}
+
+// SetDeviceID sets the "device_id" field.
+func (u *SessionUpsertOne) SetDeviceID(v string) *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.SetDeviceID(v)
+	})
+}
+
+// UpdateDeviceID sets the "device_id" field to the value that was provided on create.
+func (u *SessionUpsertOne) UpdateDeviceID() *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.UpdateDeviceID()
+	})
+}
+
+// ClearDeviceID clears the value of the "device_id" field.
+func (u *SessionUpsertOne) ClearDeviceID() *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.ClearDeviceID()
+	})
+}
+
+// SetNumberOfUses sets the "number_of_uses" field.
+func (u *SessionUpsertOne) SetNumberOfUses(v uint64) *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.SetNumberOfUses(v)
+	})
+}
+
+// AddNumberOfUses adds v to the "number_of_uses" field.
+func (u *SessionUpsertOne) AddNumberOfUses(v uint64) *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.AddNumberOfUses(v)
+	})
+}
+
+// UpdateNumberOfUses sets the "number_of_uses" field to the value that was provided on create.
+func (u *SessionUpsertOne) UpdateNumberOfUses() *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.UpdateNumberOfUses()
+	})
+}
+
+// SetLastUsedAt sets the "last_used_at" field.
+func (u *SessionUpsertOne) SetLastUsedAt(v time.Time) *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.SetLastUsedAt(v)
+	})
+}
+
+// UpdateLastUsedAt sets the "last_used_at" field to the value that was provided on create.
+func (u *SessionUpsertOne) UpdateLastUsedAt() *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.UpdateLastUsedAt()
+	})
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *SessionUpsertOne) SetCreatedAt(v time.Time) *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *SessionUpsertOne) UpdateCreatedAt() *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetRevokedAt sets the "revoked_at" field.
+func (u *SessionUpsertOne) SetRevokedAt(v time.Time) *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.SetRevokedAt(v)
+	})
+}
+
+// UpdateRevokedAt sets the "revoked_at" field to the value that was provided on create.
+func (u *SessionUpsertOne) UpdateRevokedAt() *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.UpdateRevokedAt()
+	})
+}
+
+// ClearRevokedAt clears the value of the "revoked_at" field.
+func (u *SessionUpsertOne) ClearRevokedAt() *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.ClearRevokedAt()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *SessionUpsertOne) SetUserID(v uuid.UUID) *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *SessionUpsertOne) UpdateUserID() *SessionUpsertOne {
+	return u.Update(func(s *SessionUpsert) {
+		s.UpdateUserID()
+	})
+}
+
+// Exec executes the query.
+func (u *SessionUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("db: missing options for SessionCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *SessionUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *SessionUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
+	if u.create.driver.Dialect() == dialect.MySQL {
+		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
+		// fields from the database since MySQL does not support the RETURNING clause.
+		return id, errors.New("db: SessionUpsertOne.ID is not supported by MySQL driver. Use SessionUpsertOne.Exec instead")
+	}
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *SessionUpsertOne) IDX(ctx context.Context) uuid.UUID {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // SessionCreateBulk is the builder for creating many Session entities in bulk.
 type SessionCreateBulk struct {
 	config
 	err      error
 	builders []*SessionCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the Session entities in the database.
-func (scb *SessionCreateBulk) Save(ctx context.Context) ([]*Session, error) {
-	if scb.err != nil {
-		return nil, scb.err
+func (_c *SessionCreateBulk) Save(ctx context.Context) ([]*Session, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(scb.builders))
-	nodes := make([]*Session, len(scb.builders))
-	mutators := make([]Mutator, len(scb.builders))
-	for i := range scb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*Session, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := scb.builders[i]
+			builder := _c.builders[i]
 			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*SessionMutation)
@@ -377,11 +796,12 @@ func (scb *SessionCreateBulk) Save(ctx context.Context) ([]*Session, error) {
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, scb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = _c.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, scb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -401,7 +821,7 @@ func (scb *SessionCreateBulk) Save(ctx context.Context) ([]*Session, error) {
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, scb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -409,8 +829,8 @@ func (scb *SessionCreateBulk) Save(ctx context.Context) ([]*Session, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (scb *SessionCreateBulk) SaveX(ctx context.Context) []*Session {
-	v, err := scb.Save(ctx)
+func (_c *SessionCreateBulk) SaveX(ctx context.Context) []*Session {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -418,14 +838,281 @@ func (scb *SessionCreateBulk) SaveX(ctx context.Context) []*Session {
 }
 
 // Exec executes the query.
-func (scb *SessionCreateBulk) Exec(ctx context.Context) error {
-	_, err := scb.Save(ctx)
+func (_c *SessionCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (scb *SessionCreateBulk) ExecX(ctx context.Context) {
-	if err := scb.Exec(ctx); err != nil {
+func (_c *SessionCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Session.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.SessionUpsert) {
+//			SetRefreshToken(v+v).
+//		}).
+//		Exec(ctx)
+func (_c *SessionCreateBulk) OnConflict(opts ...sql.ConflictOption) *SessionUpsertBulk {
+	_c.conflict = opts
+	return &SessionUpsertBulk{
+		create: _c,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Session.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (_c *SessionCreateBulk) OnConflictColumns(columns ...string) *SessionUpsertBulk {
+	_c.conflict = append(_c.conflict, sql.ConflictColumns(columns...))
+	return &SessionUpsertBulk{
+		create: _c,
+	}
+}
+
+// SessionUpsertBulk is the builder for "upsert"-ing
+// a bulk of Session nodes.
+type SessionUpsertBulk struct {
+	create *SessionCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.Session.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(session.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *SessionUpsertBulk) UpdateNewValues() *SessionUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.ID(); exists {
+				s.SetIgnore(session.FieldID)
+			}
+			if _, exists := b.mutation.RefreshToken(); exists {
+				s.SetIgnore(session.FieldRefreshToken)
+			}
+			if _, exists := b.mutation.ExpiresAt(); exists {
+				s.SetIgnore(session.FieldExpiresAt)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Session.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *SessionUpsertBulk) Ignore() *SessionUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *SessionUpsertBulk) DoNothing() *SessionUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the SessionCreateBulk.OnConflict
+// documentation for more info.
+func (u *SessionUpsertBulk) Update(set func(*SessionUpsert)) *SessionUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&SessionUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetIPAddress sets the "ip_address" field.
+func (u *SessionUpsertBulk) SetIPAddress(v string) *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.SetIPAddress(v)
+	})
+}
+
+// UpdateIPAddress sets the "ip_address" field to the value that was provided on create.
+func (u *SessionUpsertBulk) UpdateIPAddress() *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.UpdateIPAddress()
+	})
+}
+
+// ClearIPAddress clears the value of the "ip_address" field.
+func (u *SessionUpsertBulk) ClearIPAddress() *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.ClearIPAddress()
+	})
+}
+
+// SetUserAgent sets the "user_agent" field.
+func (u *SessionUpsertBulk) SetUserAgent(v string) *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.SetUserAgent(v)
+	})
+}
+
+// UpdateUserAgent sets the "user_agent" field to the value that was provided on create.
+func (u *SessionUpsertBulk) UpdateUserAgent() *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.UpdateUserAgent()
+	})
+}
+
+// ClearUserAgent clears the value of the "user_agent" field.
+func (u *SessionUpsertBulk) ClearUserAgent() *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.ClearUserAgent()
+	})
+}
+
+// SetDeviceID sets the "device_id" field.
+func (u *SessionUpsertBulk) SetDeviceID(v string) *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.SetDeviceID(v)
+	})
+}
+
+// UpdateDeviceID sets the "device_id" field to the value that was provided on create.
+func (u *SessionUpsertBulk) UpdateDeviceID() *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.UpdateDeviceID()
+	})
+}
+
+// ClearDeviceID clears the value of the "device_id" field.
+func (u *SessionUpsertBulk) ClearDeviceID() *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.ClearDeviceID()
+	})
+}
+
+// SetNumberOfUses sets the "number_of_uses" field.
+func (u *SessionUpsertBulk) SetNumberOfUses(v uint64) *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.SetNumberOfUses(v)
+	})
+}
+
+// AddNumberOfUses adds v to the "number_of_uses" field.
+func (u *SessionUpsertBulk) AddNumberOfUses(v uint64) *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.AddNumberOfUses(v)
+	})
+}
+
+// UpdateNumberOfUses sets the "number_of_uses" field to the value that was provided on create.
+func (u *SessionUpsertBulk) UpdateNumberOfUses() *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.UpdateNumberOfUses()
+	})
+}
+
+// SetLastUsedAt sets the "last_used_at" field.
+func (u *SessionUpsertBulk) SetLastUsedAt(v time.Time) *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.SetLastUsedAt(v)
+	})
+}
+
+// UpdateLastUsedAt sets the "last_used_at" field to the value that was provided on create.
+func (u *SessionUpsertBulk) UpdateLastUsedAt() *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.UpdateLastUsedAt()
+	})
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *SessionUpsertBulk) SetCreatedAt(v time.Time) *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *SessionUpsertBulk) UpdateCreatedAt() *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetRevokedAt sets the "revoked_at" field.
+func (u *SessionUpsertBulk) SetRevokedAt(v time.Time) *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.SetRevokedAt(v)
+	})
+}
+
+// UpdateRevokedAt sets the "revoked_at" field to the value that was provided on create.
+func (u *SessionUpsertBulk) UpdateRevokedAt() *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.UpdateRevokedAt()
+	})
+}
+
+// ClearRevokedAt clears the value of the "revoked_at" field.
+func (u *SessionUpsertBulk) ClearRevokedAt() *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.ClearRevokedAt()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *SessionUpsertBulk) SetUserID(v uuid.UUID) *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *SessionUpsertBulk) UpdateUserID() *SessionUpsertBulk {
+	return u.Update(func(s *SessionUpsert) {
+		s.UpdateUserID()
+	})
+}
+
+// Exec executes the query.
+func (u *SessionUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("db: OnConflict was set for builder %d. Set it on the SessionCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("db: missing options for SessionCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *SessionUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

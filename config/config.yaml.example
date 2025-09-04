@@ -1,0 +1,44 @@
+# HTTP server configuration
+app:
+  name: "Vandor App"
+  signature_response: Vandor
+  version: 1.0.0
+
+log:
+  level: debug
+  enable_console: true
+
+# Auth configuration
+auth:
+  secret_key: 
+  token_duration_in_minutes: 60
+  session_duration_in_days: 30
+
+# HTTP server configuration
+http:
+  url: http://localhost:8000
+  port: 8000
+
+# Redis configuration
+redis:
+  host: localhost
+  port: 6379
+  db: 0
+  username: ""
+  password: ""
+
+# Docs configuration
+docs:
+  username: vandor
+  password: vandor123
+
+# Database configuration
+database:
+  driver: postgres
+  url: "postgres://postgres:root@localhost:5432/vandor_data?search_path=public&sslmode=disable"
+
+jobs:
+  queue_prefix: "vandor"
+  concurrency: 10
+  http_header_secret: piU3+hAMm6lBI7vTVGggUvNqp6dxGKFx
+

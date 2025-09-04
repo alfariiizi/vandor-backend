@@ -16,7 +16,7 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/alfariiizi/vandor/internal/infrastructure/db/adminauditlog"
+	"github.com/alfariiizi/vandor/internal/infrastructure/db/notification"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db/product"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db/session"
 	"github.com/alfariiizi/vandor/internal/infrastructure/db/user"
@@ -27,8 +27,8 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
-	// AdminAuditLog is the client for interacting with the AdminAuditLog builders.
-	AdminAuditLog *AdminAuditLogClient
+	// Notification is the client for interacting with the Notification builders.
+	Notification *NotificationClient
 	// Product is the client for interacting with the Product builders.
 	Product *ProductClient
 	// Session is the client for interacting with the Session builders.
@@ -46,7 +46,7 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
-	c.AdminAuditLog = NewAdminAuditLogClient(c.config)
+	c.Notification = NewNotificationClient(c.config)
 	c.Product = NewProductClient(c.config)
 	c.Session = NewSessionClient(c.config)
 	c.User = NewUserClient(c.config)
@@ -140,12 +140,12 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:           ctx,
-		config:        cfg,
-		AdminAuditLog: NewAdminAuditLogClient(cfg),
-		Product:       NewProductClient(cfg),
-		Session:       NewSessionClient(cfg),
-		User:          NewUserClient(cfg),
+		ctx:          ctx,
+		config:       cfg,
+		Notification: NewNotificationClient(cfg),
+		Product:      NewProductClient(cfg),
+		Session:      NewSessionClient(cfg),
+		User:         NewUserClient(cfg),
 	}, nil
 }
 
@@ -163,19 +163,19 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:           ctx,
-		config:        cfg,
-		AdminAuditLog: NewAdminAuditLogClient(cfg),
-		Product:       NewProductClient(cfg),
-		Session:       NewSessionClient(cfg),
-		User:          NewUserClient(cfg),
+		ctx:          ctx,
+		config:       cfg,
+		Notification: NewNotificationClient(cfg),
+		Product:      NewProductClient(cfg),
+		Session:      NewSessionClient(cfg),
+		User:         NewUserClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		AdminAuditLog.
+//		Notification.
 //		Query().
 //		Count(ctx)
 func (c *Client) Debug() *Client {
@@ -197,7 +197,7 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.AdminAuditLog.Use(hooks...)
+	c.Notification.Use(hooks...)
 	c.Product.Use(hooks...)
 	c.Session.Use(hooks...)
 	c.User.Use(hooks...)
@@ -206,7 +206,7 @@ func (c *Client) Use(hooks ...Hook) {
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
-	c.AdminAuditLog.Intercept(interceptors...)
+	c.Notification.Intercept(interceptors...)
 	c.Product.Intercept(interceptors...)
 	c.Session.Intercept(interceptors...)
 	c.User.Intercept(interceptors...)
@@ -215,8 +215,8 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 // Mutate implements the ent.Mutator interface.
 func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
-	case *AdminAuditLogMutation:
-		return c.AdminAuditLog.mutate(ctx, m)
+	case *NotificationMutation:
+		return c.Notification.mutate(ctx, m)
 	case *ProductMutation:
 		return c.Product.mutate(ctx, m)
 	case *SessionMutation:
@@ -228,107 +228,107 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	}
 }
 
-// AdminAuditLogClient is a client for the AdminAuditLog schema.
-type AdminAuditLogClient struct {
+// NotificationClient is a client for the Notification schema.
+type NotificationClient struct {
 	config
 }
 
-// NewAdminAuditLogClient returns a client for the AdminAuditLog from the given config.
-func NewAdminAuditLogClient(c config) *AdminAuditLogClient {
-	return &AdminAuditLogClient{config: c}
+// NewNotificationClient returns a client for the Notification from the given config.
+func NewNotificationClient(c config) *NotificationClient {
+	return &NotificationClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `adminauditlog.Hooks(f(g(h())))`.
-func (c *AdminAuditLogClient) Use(hooks ...Hook) {
-	c.hooks.AdminAuditLog = append(c.hooks.AdminAuditLog, hooks...)
+// A call to `Use(f, g, h)` equals to `notification.Hooks(f(g(h())))`.
+func (c *NotificationClient) Use(hooks ...Hook) {
+	c.hooks.Notification = append(c.hooks.Notification, hooks...)
 }
 
 // Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `adminauditlog.Intercept(f(g(h())))`.
-func (c *AdminAuditLogClient) Intercept(interceptors ...Interceptor) {
-	c.inters.AdminAuditLog = append(c.inters.AdminAuditLog, interceptors...)
+// A call to `Intercept(f, g, h)` equals to `notification.Intercept(f(g(h())))`.
+func (c *NotificationClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Notification = append(c.inters.Notification, interceptors...)
 }
 
-// Create returns a builder for creating a AdminAuditLog entity.
-func (c *AdminAuditLogClient) Create() *AdminAuditLogCreate {
-	mutation := newAdminAuditLogMutation(c.config, OpCreate)
-	return &AdminAuditLogCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a builder for creating a Notification entity.
+func (c *NotificationClient) Create() *NotificationCreate {
+	mutation := newNotificationMutation(c.config, OpCreate)
+	return &NotificationCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// CreateBulk returns a builder for creating a bulk of AdminAuditLog entities.
-func (c *AdminAuditLogClient) CreateBulk(builders ...*AdminAuditLogCreate) *AdminAuditLogCreateBulk {
-	return &AdminAuditLogCreateBulk{config: c.config, builders: builders}
+// CreateBulk returns a builder for creating a bulk of Notification entities.
+func (c *NotificationClient) CreateBulk(builders ...*NotificationCreate) *NotificationCreateBulk {
+	return &NotificationCreateBulk{config: c.config, builders: builders}
 }
 
 // MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
 // a builder and applies setFunc on it.
-func (c *AdminAuditLogClient) MapCreateBulk(slice any, setFunc func(*AdminAuditLogCreate, int)) *AdminAuditLogCreateBulk {
+func (c *NotificationClient) MapCreateBulk(slice any, setFunc func(*NotificationCreate, int)) *NotificationCreateBulk {
 	rv := reflect.ValueOf(slice)
 	if rv.Kind() != reflect.Slice {
-		return &AdminAuditLogCreateBulk{err: fmt.Errorf("calling to AdminAuditLogClient.MapCreateBulk with wrong type %T, need slice", slice)}
+		return &NotificationCreateBulk{err: fmt.Errorf("calling to NotificationClient.MapCreateBulk with wrong type %T, need slice", slice)}
 	}
-	builders := make([]*AdminAuditLogCreate, rv.Len())
+	builders := make([]*NotificationCreate, rv.Len())
 	for i := 0; i < rv.Len(); i++ {
 		builders[i] = c.Create()
 		setFunc(builders[i], i)
 	}
-	return &AdminAuditLogCreateBulk{config: c.config, builders: builders}
+	return &NotificationCreateBulk{config: c.config, builders: builders}
 }
 
-// Update returns an update builder for AdminAuditLog.
-func (c *AdminAuditLogClient) Update() *AdminAuditLogUpdate {
-	mutation := newAdminAuditLogMutation(c.config, OpUpdate)
-	return &AdminAuditLogUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Notification.
+func (c *NotificationClient) Update() *NotificationUpdate {
+	mutation := newNotificationMutation(c.config, OpUpdate)
+	return &NotificationUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *AdminAuditLogClient) UpdateOne(aal *AdminAuditLog) *AdminAuditLogUpdateOne {
-	mutation := newAdminAuditLogMutation(c.config, OpUpdateOne, withAdminAuditLog(aal))
-	return &AdminAuditLogUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *NotificationClient) UpdateOne(_m *Notification) *NotificationUpdateOne {
+	mutation := newNotificationMutation(c.config, OpUpdateOne, withNotification(_m))
+	return &NotificationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *AdminAuditLogClient) UpdateOneID(id uuid.UUID) *AdminAuditLogUpdateOne {
-	mutation := newAdminAuditLogMutation(c.config, OpUpdateOne, withAdminAuditLogID(id))
-	return &AdminAuditLogUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *NotificationClient) UpdateOneID(id uuid.UUID) *NotificationUpdateOne {
+	mutation := newNotificationMutation(c.config, OpUpdateOne, withNotificationID(id))
+	return &NotificationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for AdminAuditLog.
-func (c *AdminAuditLogClient) Delete() *AdminAuditLogDelete {
-	mutation := newAdminAuditLogMutation(c.config, OpDelete)
-	return &AdminAuditLogDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Notification.
+func (c *NotificationClient) Delete() *NotificationDelete {
+	mutation := newNotificationMutation(c.config, OpDelete)
+	return &NotificationDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *AdminAuditLogClient) DeleteOne(aal *AdminAuditLog) *AdminAuditLogDeleteOne {
-	return c.DeleteOneID(aal.ID)
+func (c *NotificationClient) DeleteOne(_m *Notification) *NotificationDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *AdminAuditLogClient) DeleteOneID(id uuid.UUID) *AdminAuditLogDeleteOne {
-	builder := c.Delete().Where(adminauditlog.ID(id))
+func (c *NotificationClient) DeleteOneID(id uuid.UUID) *NotificationDeleteOne {
+	builder := c.Delete().Where(notification.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &AdminAuditLogDeleteOne{builder}
+	return &NotificationDeleteOne{builder}
 }
 
-// Query returns a query builder for AdminAuditLog.
-func (c *AdminAuditLogClient) Query() *AdminAuditLogQuery {
-	return &AdminAuditLogQuery{
+// Query returns a query builder for Notification.
+func (c *NotificationClient) Query() *NotificationQuery {
+	return &NotificationQuery{
 		config: c.config,
-		ctx:    &QueryContext{Type: TypeAdminAuditLog},
+		ctx:    &QueryContext{Type: TypeNotification},
 		inters: c.Interceptors(),
 	}
 }
 
-// Get returns a AdminAuditLog entity by its id.
-func (c *AdminAuditLogClient) Get(ctx context.Context, id uuid.UUID) (*AdminAuditLog, error) {
-	return c.Query().Where(adminauditlog.ID(id)).Only(ctx)
+// Get returns a Notification entity by its id.
+func (c *NotificationClient) Get(ctx context.Context, id uuid.UUID) (*Notification, error) {
+	return c.Query().Where(notification.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *AdminAuditLogClient) GetX(ctx context.Context, id uuid.UUID) *AdminAuditLog {
+func (c *NotificationClient) GetX(ctx context.Context, id uuid.UUID) *Notification {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -336,28 +336,44 @@ func (c *AdminAuditLogClient) GetX(ctx context.Context, id uuid.UUID) *AdminAudi
 	return obj
 }
 
+// QueryUser queries the user edge of a Notification.
+func (c *NotificationClient) QueryUser(_m *Notification) *UserQuery {
+	query := (&UserClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(notification.Table, notification.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, notification.UserTable, notification.UserColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
-func (c *AdminAuditLogClient) Hooks() []Hook {
-	return c.hooks.AdminAuditLog
+func (c *NotificationClient) Hooks() []Hook {
+	return c.hooks.Notification
 }
 
 // Interceptors returns the client interceptors.
-func (c *AdminAuditLogClient) Interceptors() []Interceptor {
-	return c.inters.AdminAuditLog
+func (c *NotificationClient) Interceptors() []Interceptor {
+	return c.inters.Notification
 }
 
-func (c *AdminAuditLogClient) mutate(ctx context.Context, m *AdminAuditLogMutation) (Value, error) {
+func (c *NotificationClient) mutate(ctx context.Context, m *NotificationMutation) (Value, error) {
 	switch m.Op() {
 	case OpCreate:
-		return (&AdminAuditLogCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&NotificationCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdate:
-		return (&AdminAuditLogUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&NotificationUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdateOne:
-		return (&AdminAuditLogUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&NotificationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpDelete, OpDeleteOne:
-		return (&AdminAuditLogDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+		return (&NotificationDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
-		return nil, fmt.Errorf("db: unknown AdminAuditLog mutation op: %q", m.Op())
+		return nil, fmt.Errorf("db: unknown Notification mutation op: %q", m.Op())
 	}
 }
 
@@ -416,8 +432,8 @@ func (c *ProductClient) Update() *ProductUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *ProductClient) UpdateOne(pr *Product) *ProductUpdateOne {
-	mutation := newProductMutation(c.config, OpUpdateOne, withProduct(pr))
+func (c *ProductClient) UpdateOne(_m *Product) *ProductUpdateOne {
+	mutation := newProductMutation(c.config, OpUpdateOne, withProduct(_m))
 	return &ProductUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -434,8 +450,8 @@ func (c *ProductClient) Delete() *ProductDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *ProductClient) DeleteOne(pr *Product) *ProductDeleteOne {
-	return c.DeleteOneID(pr.ID)
+func (c *ProductClient) DeleteOne(_m *Product) *ProductDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -470,16 +486,16 @@ func (c *ProductClient) GetX(ctx context.Context, id uuid.UUID) *Product {
 }
 
 // QueryUser queries the user edge of a Product.
-func (c *ProductClient) QueryUser(pr *Product) *UserQuery {
+func (c *ProductClient) QueryUser(_m *Product) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := pr.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(product.Table, product.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, product.UserTable, product.UserColumn),
 		)
-		fromV = sqlgraph.Neighbors(pr.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -565,8 +581,8 @@ func (c *SessionClient) Update() *SessionUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *SessionClient) UpdateOne(s *Session) *SessionUpdateOne {
-	mutation := newSessionMutation(c.config, OpUpdateOne, withSession(s))
+func (c *SessionClient) UpdateOne(_m *Session) *SessionUpdateOne {
+	mutation := newSessionMutation(c.config, OpUpdateOne, withSession(_m))
 	return &SessionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -583,8 +599,8 @@ func (c *SessionClient) Delete() *SessionDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *SessionClient) DeleteOne(s *Session) *SessionDeleteOne {
-	return c.DeleteOneID(s.ID)
+func (c *SessionClient) DeleteOne(_m *Session) *SessionDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -619,16 +635,16 @@ func (c *SessionClient) GetX(ctx context.Context, id uuid.UUID) *Session {
 }
 
 // QueryUser queries the user edge of a Session.
-func (c *SessionClient) QueryUser(s *Session) *UserQuery {
+func (c *SessionClient) QueryUser(_m *Session) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := s.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(session.Table, session.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, session.UserTable, session.UserColumn),
 		)
-		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -714,8 +730,8 @@ func (c *UserClient) Update() *UserUpdate {
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *UserClient) UpdateOne(u *User) *UserUpdateOne {
-	mutation := newUserMutation(c.config, OpUpdateOne, withUser(u))
+func (c *UserClient) UpdateOne(_m *User) *UserUpdateOne {
+	mutation := newUserMutation(c.config, OpUpdateOne, withUser(_m))
 	return &UserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
@@ -732,8 +748,8 @@ func (c *UserClient) Delete() *UserDelete {
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *UserClient) DeleteOne(u *User) *UserDeleteOne {
-	return c.DeleteOneID(u.ID)
+func (c *UserClient) DeleteOne(_m *User) *UserDeleteOne {
+	return c.DeleteOneID(_m.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
@@ -768,32 +784,48 @@ func (c *UserClient) GetX(ctx context.Context, id uuid.UUID) *User {
 }
 
 // QueryProducts queries the products edge of a User.
-func (c *UserClient) QueryProducts(u *User) *ProductQuery {
+func (c *UserClient) QueryProducts(_m *User) *ProductQuery {
 	query := (&ProductClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := u.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(product.Table, product.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.ProductsTable, user.ProductsColumn),
 		)
-		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // QuerySessions queries the sessions edge of a User.
-func (c *UserClient) QuerySessions(u *User) *SessionQuery {
+func (c *UserClient) QuerySessions(_m *User) *SessionQuery {
 	query := (&SessionClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := u.ID
+		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(session.Table, session.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.SessionsTable, user.SessionsColumn),
 		)
-		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryNotifications queries the notifications edge of a User.
+func (c *UserClient) QueryNotifications(_m *User) *NotificationQuery {
+	query := (&NotificationClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(notification.Table, notification.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.NotificationsTable, user.NotificationsColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
@@ -827,9 +859,9 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		AdminAuditLog, Product, Session, User []ent.Hook
+		Notification, Product, Session, User []ent.Hook
 	}
 	inters struct {
-		AdminAuditLog, Product, Session, User []ent.Interceptor
+		Notification, Product, Session, User []ent.Interceptor
 	}
 )

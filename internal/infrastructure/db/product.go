@@ -19,20 +19,32 @@ type Product struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
-	// Name holds the value of the "name" field.
-	Name string `json:"name,omitempty"`
-	// Brand holds the value of the "brand" field.
-	Brand string `json:"brand,omitempty"`
-	// Category holds the value of the "category" field.
-	Category string `json:"category,omitempty"`
-	// Price holds the value of the "price" field.
-	Price float64 `json:"price,omitempty"`
-	// CreatorID holds the value of the "creator_id" field.
-	CreatorID uuid.UUID `json:"creator_id,omitempty"`
-	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	// CreateTime holds the value of the "create_time" field.
+	CreateTime time.Time `json:"create_time"`
+	// UpdateTime holds the value of the "update_time" field.
+	UpdateTime time.Time `json:"update_time"`
+	// nama_produk / product title
+	Title string `json:"title"`
+	// ShortDescription holds the value of the "short_description" field.
+	ShortDescription string `json:"short_description"`
+	// LongDescription holds the value of the "long_description" field.
+	LongDescription string `json:"long_description"`
+	// price in smallest currency unit (IDR -> 107000)
+	Price int64 `json:"price"`
+	// Currency holds the value of the "currency" field.
+	Currency string `json:"currency"`
+	// Stock holds the value of the "stock" field.
+	Stock int `json:"stock"`
+	// weight in grams, convert if source uses different unit
+	WeightGrams int `json:"weight_grams"`
+	// PackageLengthMm holds the value of the "package_length_mm" field.
+	PackageLengthMm int `json:"package_length_mm"`
+	// PackageWidthMm holds the value of the "package_width_mm" field.
+	PackageWidthMm int `json:"package_width_mm"`
+	// PackageHeightMm holds the value of the "package_height_mm" field.
+	PackageHeightMm int `json:"package_height_mm"`
+	// UserID holds the value of the "user_id" field.
+	UserID uuid.UUID `json:"user_id"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ProductQuery when eager-loading is set.
 	Edges        ProductEdges `json:"edges"`
@@ -64,13 +76,13 @@ func (*Product) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case product.FieldPrice:
-			values[i] = new(sql.NullFloat64)
-		case product.FieldName, product.FieldBrand, product.FieldCategory:
+		case product.FieldPrice, product.FieldStock, product.FieldWeightGrams, product.FieldPackageLengthMm, product.FieldPackageWidthMm, product.FieldPackageHeightMm:
+			values[i] = new(sql.NullInt64)
+		case product.FieldTitle, product.FieldShortDescription, product.FieldLongDescription, product.FieldCurrency:
 			values[i] = new(sql.NullString)
-		case product.FieldCreatedAt, product.FieldUpdatedAt:
+		case product.FieldCreateTime, product.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
-		case product.FieldID, product.FieldCreatorID:
+		case product.FieldID, product.FieldUserID:
 			values[i] = new(uuid.UUID)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -81,7 +93,7 @@ func (*Product) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Product fields.
-func (pr *Product) assignValues(columns []string, values []any) error {
+func (_m *Product) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -91,52 +103,88 @@ func (pr *Product) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*uuid.UUID); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value != nil {
-				pr.ID = *value
+				_m.ID = *value
 			}
-		case product.FieldName:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field name", values[i])
+		case product.FieldCreateTime:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field create_time", values[i])
 			} else if value.Valid {
-				pr.Name = value.String
+				_m.CreateTime = value.Time
 			}
-		case product.FieldBrand:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field brand", values[i])
+		case product.FieldUpdateTime:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field update_time", values[i])
 			} else if value.Valid {
-				pr.Brand = value.String
+				_m.UpdateTime = value.Time
 			}
-		case product.FieldCategory:
+		case product.FieldTitle:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field category", values[i])
+				return fmt.Errorf("unexpected type %T for field title", values[i])
 			} else if value.Valid {
-				pr.Category = value.String
+				_m.Title = value.String
+			}
+		case product.FieldShortDescription:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field short_description", values[i])
+			} else if value.Valid {
+				_m.ShortDescription = value.String
+			}
+		case product.FieldLongDescription:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field long_description", values[i])
+			} else if value.Valid {
+				_m.LongDescription = value.String
 			}
 		case product.FieldPrice:
-			if value, ok := values[i].(*sql.NullFloat64); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field price", values[i])
 			} else if value.Valid {
-				pr.Price = value.Float64
+				_m.Price = value.Int64
 			}
-		case product.FieldCreatorID:
+		case product.FieldCurrency:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field currency", values[i])
+			} else if value.Valid {
+				_m.Currency = value.String
+			}
+		case product.FieldStock:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field stock", values[i])
+			} else if value.Valid {
+				_m.Stock = int(value.Int64)
+			}
+		case product.FieldWeightGrams:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field weight_grams", values[i])
+			} else if value.Valid {
+				_m.WeightGrams = int(value.Int64)
+			}
+		case product.FieldPackageLengthMm:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field package_length_mm", values[i])
+			} else if value.Valid {
+				_m.PackageLengthMm = int(value.Int64)
+			}
+		case product.FieldPackageWidthMm:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field package_width_mm", values[i])
+			} else if value.Valid {
+				_m.PackageWidthMm = int(value.Int64)
+			}
+		case product.FieldPackageHeightMm:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field package_height_mm", values[i])
+			} else if value.Valid {
+				_m.PackageHeightMm = int(value.Int64)
+			}
+		case product.FieldUserID:
 			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field creator_id", values[i])
+				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value != nil {
-				pr.CreatorID = *value
-			}
-		case product.FieldCreatedAt:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field created_at", values[i])
-			} else if value.Valid {
-				pr.CreatedAt = value.Time
-			}
-		case product.FieldUpdatedAt:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
-			} else if value.Valid {
-				pr.UpdatedAt = value.Time
+				_m.UserID = *value
 			}
 		default:
-			pr.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -144,58 +192,76 @@ func (pr *Product) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the Product.
 // This includes values selected through modifiers, order, etc.
-func (pr *Product) Value(name string) (ent.Value, error) {
-	return pr.selectValues.Get(name)
+func (_m *Product) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryUser queries the "user" edge of the Product entity.
-func (pr *Product) QueryUser() *UserQuery {
-	return NewProductClient(pr.config).QueryUser(pr)
+func (_m *Product) QueryUser() *UserQuery {
+	return NewProductClient(_m.config).QueryUser(_m)
 }
 
 // Update returns a builder for updating this Product.
 // Note that you need to call Product.Unwrap() before calling this method if this Product
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (pr *Product) Update() *ProductUpdateOne {
-	return NewProductClient(pr.config).UpdateOne(pr)
+func (_m *Product) Update() *ProductUpdateOne {
+	return NewProductClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the Product entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (pr *Product) Unwrap() *Product {
-	_tx, ok := pr.config.driver.(*txDriver)
+func (_m *Product) Unwrap() *Product {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("db: Product is not a transactional entity")
 	}
-	pr.config.driver = _tx.drv
-	return pr
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (pr *Product) String() string {
+func (_m *Product) String() string {
 	var builder strings.Builder
 	builder.WriteString("Product(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", pr.ID))
-	builder.WriteString("name=")
-	builder.WriteString(pr.Name)
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
+	builder.WriteString("create_time=")
+	builder.WriteString(_m.CreateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("brand=")
-	builder.WriteString(pr.Brand)
+	builder.WriteString("update_time=")
+	builder.WriteString(_m.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("category=")
-	builder.WriteString(pr.Category)
+	builder.WriteString("title=")
+	builder.WriteString(_m.Title)
+	builder.WriteString(", ")
+	builder.WriteString("short_description=")
+	builder.WriteString(_m.ShortDescription)
+	builder.WriteString(", ")
+	builder.WriteString("long_description=")
+	builder.WriteString(_m.LongDescription)
 	builder.WriteString(", ")
 	builder.WriteString("price=")
-	builder.WriteString(fmt.Sprintf("%v", pr.Price))
+	builder.WriteString(fmt.Sprintf("%v", _m.Price))
 	builder.WriteString(", ")
-	builder.WriteString("creator_id=")
-	builder.WriteString(fmt.Sprintf("%v", pr.CreatorID))
+	builder.WriteString("currency=")
+	builder.WriteString(_m.Currency)
 	builder.WriteString(", ")
-	builder.WriteString("created_at=")
-	builder.WriteString(pr.CreatedAt.Format(time.ANSIC))
+	builder.WriteString("stock=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Stock))
 	builder.WriteString(", ")
-	builder.WriteString("updated_at=")
-	builder.WriteString(pr.UpdatedAt.Format(time.ANSIC))
+	builder.WriteString("weight_grams=")
+	builder.WriteString(fmt.Sprintf("%v", _m.WeightGrams))
+	builder.WriteString(", ")
+	builder.WriteString("package_length_mm=")
+	builder.WriteString(fmt.Sprintf("%v", _m.PackageLengthMm))
+	builder.WriteString(", ")
+	builder.WriteString("package_width_mm=")
+	builder.WriteString(fmt.Sprintf("%v", _m.PackageWidthMm))
+	builder.WriteString(", ")
+	builder.WriteString("package_height_mm=")
+	builder.WriteString(fmt.Sprintf("%v", _m.PackageHeightMm))
+	builder.WriteString(", ")
+	builder.WriteString("user_id=")
+	builder.WriteString(fmt.Sprintf("%v", _m.UserID))
 	builder.WriteByte(')')
 	return builder.String()
 }

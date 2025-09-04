@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -18,14 +17,14 @@ func NewAuthMiddleware(api huma.API, secretKey string) func(ctx huma.Context, ne
 			return
 		}
 
-		fmt.Println("Token:", tokenStr)
+		// fmt.Println("Token:", tokenStr)
 
 		// Parse and validate token using shared secret
 		token, err := jwt.ParseString(tokenStr,
 			jwt.WithKey(jwa.HS256, []byte(secretKey)),
 			jwt.WithValidate(true),
 		)
-		fmt.Println("Parsed Token:", token)
+		// fmt.Println("Parsed Token:", token)
 		if err != nil {
 			huma.WriteErr(api, ctx, http.StatusUnauthorized, "Invalid token")
 			return
